@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edit_title"
-            android:hint="Ttile" />
+            android:hint="Title" />
 
         <EditText
             android:layout_width="match_parent"
@@ -73,7 +73,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/create_event_button"
+            android:id="@+id/upload_event_button"
             android:text="Upload"/>
 
     </LinearLayout>

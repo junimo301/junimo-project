@@ -1,5 +1,7 @@
 package com.example.junimoapp.Organizer;
 
+import android.content.Intent;
+
 public class OrganizerEvent {
     private String eventID;
     private String title;

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.junimoapp.R;
 
@@ -23,7 +24,7 @@ public class CreateEvent extends AppCompatActivity {
      *
      * */
     EditText editTitle, editDescription, editStartDate, editEndDate, editEventLocation, editMaxCapacity, editWaitingList, editPrice, editGeoLocation, editPoster;
-    Button createEventButton;
+    Button uploadNewEvent;
     private OrganizerEvent createdEvent = null;
 
     @Override
@@ -44,7 +45,7 @@ public class CreateEvent extends AppCompatActivity {
         editGeoLocation = findViewById(R.id.edit_geo_location);
         editPoster = findViewById(R.id.edit_poster);
         //button id
-        createEventButton = findViewById(R.id.create_event_button);
+        uploadNewEvent = findViewById(R.id.upload_event_button);
 
         String eventID = getIntent().getStringExtra("event_Id");
         if (eventID != null) {
@@ -66,20 +67,51 @@ public class CreateEvent extends AppCompatActivity {
 
 
         //buttons
-        createEventButton.setOnClickListener(new View.OnClickListener() {
+        uploadNewEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String title = editTitle.getText().toString();
+                //optional fields
                 String description = editDescription.getText().toString();
                 String startDate = editStartDate.getText().toString();
                 String endDate = editEndDate.getText().toString();
-                int maxCapacity = Integer.parseInt(editMaxCapacity.getText().toString());
-                int waitingListLimit = Integer.parseInt(editWaitingList.getText().toString());
-                double price = Double.parseDouble(editPrice.getText().toString());
-                String geoLocation = editGeoLocation.getText().toString();
-                String eventLocation = editEventLocation.getText().toString();
+                String title = editTitle.getText().toString();
                 String poster = editPoster.getText().toString();
+                Integer waitingListLimit = null;
+                if (!editWaitingList.getText().toString().isEmpty()) {
+                    waitingListLimit = Integer.parseInt(editWaitingList.getText().toString());
+                }
+                //required fields
+                if (title.isEmpty()) {
+                    editTitle.setError("*Field Required*");
+                    editTitle.requestFocus();
+                    return;
+                }
+                String geoLocation = editGeoLocation.getText().toString();
+                if (geoLocation.isEmpty()) {
+                    editGeoLocation.setError("*Field Required*");
+                    editGeoLocation.requestFocus();
+                    return;
+                }
+                String eventLocation = editEventLocation.getText().toString();
+                if (eventLocation.isEmpty()) {
+                    editEventLocation.setError("*Field Required*");
+                    editEventLocation.requestFocus();
+                    return;
+                }
+                if (editMaxCapacity.getText().toString().isEmpty()) {
+                    editMaxCapacity.setError("*Field Required*");
+                    editMaxCapacity.requestFocus();
+                    return;
+                } int maxCapacity = Integer.parseInt(editMaxCapacity.getText().toString());
 
+                if (editPrice.getText().toString().isEmpty()) {
+                    editPrice.setError("*Field Required*");
+                    editPrice.requestFocus();
+                    return;
+                } double price = Double.parseDouble(editPrice.getText().toString());
+
+
+                //event ID
                 String eventID;
                 if (createdEvent != null) {
                     eventID = createdEvent.getEventID();
@@ -88,9 +120,12 @@ public class CreateEvent extends AppCompatActivity {
                     eventID = UUID.randomUUID().toString();
                 }
 
+                //creates event
                 OrganizerEvent saveEvent = new OrganizerEvent(title, description, startDate, endDate, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation);
 
                 EventData.addOrEditEvent(saveEvent);
+                Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();
+                finish();
 
 
                 //TEST
@@ -102,7 +137,7 @@ public class CreateEvent extends AppCompatActivity {
                     logMessage = "event created: " + saveEvent.getTitle();
                 }
 
-                Log.d("createEvent", "Event created: " + saveEvent.getTitle());
+                Log.d("createEvent", logMessage);
             }
         });
     }

@@ -1,5 +1,6 @@
 package com.example.junimoapp.Organizer;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -56,8 +57,16 @@ public class OrganizerStartScreen extends AppCompatActivity {
         //----------VIEW MY EVENTS-------------------
         scrollable = findViewById(R.id.scrollable);
         scrollable.setLayoutManager(new LinearLayoutManager(this));
-        eventList = EventTestData.getEvents();  //Using fake data to test
+        eventList = EventData.listOfEvents();
         myEvents = new ListOfMyEvents(eventList);
         scrollable.setAdapter(myEvents);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        eventList.clear();
+        eventList.addAll(EventData.listOfEvents());
+        myEvents.notifyDataSetChanged();
     }
 }

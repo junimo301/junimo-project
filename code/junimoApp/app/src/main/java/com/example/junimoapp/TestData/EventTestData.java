@@ -8,7 +8,7 @@ import java.util.List;
 public class EventTestData {
     /*
     * TEST DATA: fake event details to test myEvents
-    *
+    * NOT CURRENTLY IMPLEMENTED
     * */
     public static List<OrganizerEvent> getEvents() {
 
