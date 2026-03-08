@@ -2,7 +2,6 @@ package com.example.junimoapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
@@ -11,9 +10,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.junimoapp.Organizer.OrganizerStartScreen;
+
 public class MainActivity extends AppCompatActivity {
-    Button createEventButton;
-    Button editEventButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,27 +25,11 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        createEventButton = findViewById(R.id.create_event_button);
-        editEventButton = findViewById(R.id.edit_event_button);
+        Button organizerButton = findViewById(R.id.organizer_button);
 
-        //HARDCODED ID FOR TESTING
-        String currentEventID = "test-event-id-1234";
-        editEventButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent editCurrentEvent = new Intent(MainActivity.this, CreateEvent.class);
-                editCurrentEvent.putExtra("event_Id", currentEventID);
-                startActivity(editCurrentEvent);
-            }
-        });
-
-        createEventButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent createNewEvent = new Intent(MainActivity.this, CreateEvent.class);
-                startActivity(createNewEvent);
-            }
+        organizerButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, OrganizerStartScreen.class);
+            startActivity(intent);
         });
     }
 }

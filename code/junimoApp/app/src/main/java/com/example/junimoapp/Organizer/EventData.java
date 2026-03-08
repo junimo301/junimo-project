@@ -1,4 +1,4 @@
-package com.example.junimoapp;
+package com.example.junimoapp.Organizer;
 
 import java.util.ArrayList;
 import java.util.List;

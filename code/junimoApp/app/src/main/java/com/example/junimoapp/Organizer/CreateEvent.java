@@ -1,19 +1,15 @@
-package com.example.junimoapp;
+package com.example.junimoapp.Organizer;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
-
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.junimoapp.OrganizerEvent;
+import com.example.junimoapp.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Date;
 import java.util.UUID;
 
 public class CreateEvent extends AppCompatActivity {

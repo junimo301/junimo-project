@@ -1,4 +1,4 @@
-package com.example.junimoapp;
+package com.example.junimoapp.Organizer;
 
 public class Map extends EventData {
     /*

@@ -1,4 +1,4 @@
-package com.example.junimoapp;
+package com.example.junimoapp.Organizer;
 
 public class OrganizerEvent {
     private String eventID;

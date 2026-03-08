@@ -12,45 +12,53 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/edit_title"/>
+            android:id="@+id/edit_title"
+            android:hint="Ttile" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/edit_description"/>
+            android:id="@+id/edit_description"
+            android:hint="Description"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/edit_start_date"/>
+            android:id="@+id/edit_start_date"
+            android:hint="Start Date"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/edit_end_date"/>
+            android:id="@+id/edit_end_date"
+            android:hint="End Date"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/edit_event_location"/>
+            android:id="@+id/edit_event_location"
+            android:hint="Location"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edit_max_capacity"
-            android:inputType="number"/>
+            android:inputType="number"
+            android:hint="Max Capacity"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edit_waiting_list"
-            android:inputType="number"/>
+            android:inputType="number"
+            android:hint="Waiting List Limit"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edit_price"
-            android:inputType="numberDecimal"/>
+            android:inputType="numberDecimal"
+            android:hint="Price"/>
 
         <EditText
             android:layout_width="match_parent"
