@@ -1,6 +1,6 @@
 package com.example.junimoapp;
 
-public class Entrants extends OrganizerStart {
+public class Entrants extends EventData {
     /*
     * User stories:
     * US 02.06.01 As an organizer I want to view a list of all chosen entrants who are invited to apply.

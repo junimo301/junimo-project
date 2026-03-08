@@ -1,5 +1,5 @@
 package com.example.junimoapp;
 
-public class QRCode extends OrganizerStart {
+public class QRCode extends EventData {
     //
 }

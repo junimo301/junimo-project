@@ -1,4 +1,4 @@
 package com.example.junimoapp;
 
-public class Notifications extends OrganizerStart {
+public class Notifications extends EventData {
 }
