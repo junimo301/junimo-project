@@ -14,12 +14,15 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.junimoapp.Organizer.OrganizerEvent;
 import com.example.junimoapp.Organizer.OrganizerStartScreen;
+import com.example.junimoapp.TestData.EventTestData;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,8 +48,20 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, OrganizerStartScreen.class);
             startActivity(intent);
         });
+
+        eventArrayList = new ArrayList<>();
+        eventArrayAdapter = new ArrayAdapter<>(this, 0);
+
+        //testing
+
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
+        EventTestData test = new EventTestData();
+        List<OrganizerEvent> testList = test.getEvents();
+        OrganizerEvent testEvent = testList.get(0);
+        testAdd(testEvent);
+        testEvent = testList.get(1);
+        testAdd(testEvent);
 
         eventsRef.addSnapshotListener((value,error)-> {
             if(error != null){
@@ -59,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
                     String description = snapshot.getString("Description");
                     String startDate = snapshot.getString("startDate");
                     String endDate = snapshot.getString("endDate");
-                    String maxCapacity = snapshot.getString("maxCapacity");  //cant find a way to get integer??
-                    String waitingListLimit = snapshot.getString("waitingListLimit");
+                    Integer maxCapacity = (snapshot.getLong("maxCapacity")).intValue();
+                    Integer waitingListLimit = (snapshot.getLong("waitingListLimit")).intValue();
                     double price = snapshot.getDouble("price");
                     GeoPoint geoLocation = snapshot.getGeoPoint("geoLocation"); //geoPoint is a type apparently? seems helpful??
                     String poster = snapshot.getString("poster");
@@ -68,10 +83,15 @@ public class MainActivity extends AppCompatActivity {
                     String eventLocation = snapshot.getString("eventLocation");
 
 
-                    eventArrayList.add(new OrganizerEvent(title,description,startDate,endDate,Integer.parseInt(maxCapacity),Integer.parseInt(waitingListLimit),price,geoLocation,poster,eventID,eventLocation));
+                    eventArrayList.add(new OrganizerEvent(title,description,startDate,endDate,maxCapacity,waitingListLimit,price,geoLocation,poster,eventID,eventLocation));
                 }
                 eventArrayAdapter.notifyDataSetChanged();
             }
         });
+    }
+    public void testAdd(OrganizerEvent testEvent) {
+        //adds event to database... maybe?
+        DocumentReference docRef = eventsRef.document(testEvent.getEventID());
+        docRef.set(testEvent);
     }
 }

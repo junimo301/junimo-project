@@ -31,9 +31,6 @@ public class CreateEvent extends AppCompatActivity {
     Button uploadNewEvent;
     private OrganizerEvent createdEvent = null;
 
-    private FirebaseFirestore db;
-    private CollectionReference eventsRef;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,13 +131,6 @@ public class CreateEvent extends AppCompatActivity {
                 EventData.addOrEditEvent(saveEvent);
                 Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();
                 finish();
-
-                //adds event to database... maybe?
-                db = FirebaseFirestore.getInstance();
-                eventsRef = db.collection("events");
-
-                DocumentReference docRef = eventsRef.document(saveEvent.getEventID());
-                docRef.set(saveEvent);
 
 
                 //TEST
