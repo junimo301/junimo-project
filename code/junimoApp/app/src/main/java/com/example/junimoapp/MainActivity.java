@@ -11,8 +11,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.junimoapp.Organizer.OrganizerStartScreen;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
+
+    private FirebaseFirestore db;
+
+    private CollectionReference eventsRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,5 +37,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, OrganizerStartScreen.class);
             startActivity(intent);
         });
+        db = FirebaseFirestore.getInstance();
+        eventsRef = db.collection("events");
     }
 }
