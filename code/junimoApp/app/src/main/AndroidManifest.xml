@@ -20,6 +20,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!---OTHER ACTIVITIES -->
+        <activity android:name=".Organizer.OrganizerStartScreen"/>
+        <activity android:name=".Organizer.CreateEvent"/>
+
     </application>
 
 </manifest>
