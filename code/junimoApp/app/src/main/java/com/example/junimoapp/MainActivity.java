@@ -12,10 +12,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.junimoapp.firebase.FirebaseManager;
+import com.example.junimoapp.models.User;
 import com.example.junimoapp.utils.DeviceUtils;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import com.example.junimoapp.Organizer.OrganizerEvent;
@@ -32,19 +35,23 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    FirebaseFirestore db;
     String deviceId;
-    private FirebaseFirestore db;
     private CollectionReference eventsRef;
+    private CollectionReference usersRef;
     private ArrayList<OrganizerEvent> eventArrayList;
     private ArrayAdapter<OrganizerEvent> eventArrayAdapter;
+    private ArrayList<User> userArrayList;
+    private ArrayAdapter<User> userArrayAdapter;
+    private FirebaseManager firebase = new FirebaseManager();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         FirebaseApp.initializeApp(this);
-        db = FirebaseFirestore.getInstance();
+        CollectionReference eventsRef = firebase.getDB().collection("events");
+        CollectionReference usersRef = firebase.getDB().collection("users");
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -53,23 +60,20 @@ public class MainActivity extends AppCompatActivity {
         deviceId = DeviceUtils.getDeviceId(this);
 
         //test user document
-        Map<String, Object> testUser = new HashMap<>();
-        testUser.put("deviceId", deviceId);
-        testUser.put("test", "connected");
+        User testUser = new User(deviceId,"name","email","phone");
 
         //write to firestore
-        db.collection("users")
-                .document(deviceId)
-                .set(testUser)
-                .addOnSuccessListener(unused -> {
+        boolean check= firebase.AddUser(testUser,usersRef);
 
-                    //open user homepage when firebase succeeds
-                    Intent intent = new Intent(MainActivity.this, UserHomeActivity.class);
-                    startActivity(intent);
+        if(check) {
+            //open user homepage when firebase succeeds
+            Intent intent = new Intent(MainActivity.this, UserHomeActivity.class);
+            startActivity(intent);
 
-                    //close mainactivity
-                    finish();
-                });
+            //close mainactivity
+            finish();
+        }
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -84,19 +88,28 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        userArrayList= new ArrayList<>();
+        userArrayAdapter = new ArrayAdapter<>(this,0);
+
+        usersRef.addSnapshotListener((value, error)->{
+            if(error != null){
+                Log.e("Firestore",error.toString());
+            }
+            if(value!=null && !value.isEmpty()){
+                userArrayList.clear();
+                for(QueryDocumentSnapshot snapshot : value){
+                    String deviceId = snapshot.getString("deviceId");
+                    String name = snapshot.getString("name");
+                    String email = snapshot.getString("email");
+                    String phone = snapshot.getString("phone");
+
+                    userArrayList.add(new User(deviceId,name,email,phone));
+                }
+                userArrayAdapter.notifyDataSetChanged();
+            }
+        });
         eventArrayList = new ArrayList<>();
         eventArrayAdapter = new ArrayAdapter<>(this, 0);
-
-        //testing
-
-        db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("events");
-        EventTestData test = new EventTestData();
-        List<OrganizerEvent> testList = test.getEvents();
-        OrganizerEvent testEvent = testList.get(0);
-        testAdd(testEvent);
-        testEvent = testList.get(1);
-        testAdd(testEvent);
 
         eventsRef.addSnapshotListener((value,error)-> {
             if(error != null){
@@ -124,9 +137,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    public void testAdd(OrganizerEvent testEvent) {
-        //adds event to database... maybe?
-        DocumentReference docRef = eventsRef.document(testEvent.getEventID());
-        docRef.set(testEvent);
-    }
+
 }
