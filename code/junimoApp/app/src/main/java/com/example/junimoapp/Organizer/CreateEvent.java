@@ -8,6 +8,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.junimoapp.R;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -59,8 +63,8 @@ public class CreateEvent extends AppCompatActivity {
                 editMaxCapacity.setText(String.valueOf(createdEvent.getMaxCapacity()));
                 editWaitingList.setText(String.valueOf(createdEvent.getWaitingListLimit()));
                 editPrice.setText(String.valueOf(createdEvent.getPrice()));
-                editGeoLocation.setText(createdEvent.getGeoLocation());
-                editEventLocation.setText(createdEvent.getEventLocation());
+                editGeoLocation.setText(createdEvent.getGeoLocation().toString());
+                editEventLocation.setText(createdEvent.getEventLocation().toString());
                 editPoster.setText(createdEvent.getPoster());
             }
         }
@@ -86,8 +90,9 @@ public class CreateEvent extends AppCompatActivity {
                     editTitle.requestFocus();
                     return;
                 }
-                String geoLocation = editGeoLocation.getText().toString();
-                if (geoLocation.isEmpty()) {
+                String geoLocation_string = editGeoLocation.getText().toString();
+                GeoPoint geoLocation = new GeoPoint(00000,00000);//needs to be fixed
+                if (geoLocation_string.isEmpty()) {
                     editGeoLocation.setError("*Field Required*");
                     editGeoLocation.requestFocus();
                     return;
