@@ -13,6 +13,10 @@ import com.example.junimoapp.R;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -72,7 +76,8 @@ public class CreateEvent extends AppCompatActivity {
                 editMaxCapacity.setText(String.valueOf(createdEvent.getMaxCapacity()));
                 editWaitingList.setText(String.valueOf(createdEvent.getWaitingListLimit()));
                 editPrice.setText(String.valueOf(createdEvent.getPrice()));
-                editGeoLocation.setText(createdEvent.getGeoLocation());
+                editGeoLocation.setText(createdEvent.getGeoLocation().toString());
+                editEventLocation.setText(createdEvent.getEventLocation());
                 editPoster.setText(createdEvent.getPoster());
             }
         }
@@ -120,6 +125,11 @@ public class CreateEvent extends AppCompatActivity {
                 if (dateEvent.isEmpty()) {
                     editDateEvent.setError("*Field Required*");
                     editDateEvent.requestFocus();
+                String geoLocation_string = editGeoLocation.getText().toString();
+                GeoPoint geoLocation = new GeoPoint(00000,00000);//needs to be something they choose?
+                if (geoLocation_string.isEmpty()) {
+                    editGeoLocation.setError("*Field Required*");
+                    editGeoLocation.requestFocus();
                     return;
                 }
                 String eventLocation = editEventLocation.getText().toString();

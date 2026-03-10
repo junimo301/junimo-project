@@ -2,6 +2,11 @@ package com.example.junimoapp.Organizer;
 
 import android.content.Intent;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.GeoPoint;
+
+import java.util.ArrayList;
+
 public class OrganizerEvent {
     private String eventID;
     private String title;
@@ -14,11 +19,12 @@ public class OrganizerEvent {
     private double price;
 
     private String QRCode = null; //generate QR code for events
-    private String geoLocation; //entrants location, use Location later
+    private GeoPoint geoLocation; //entrants location, use Location later
     private String eventLocation; //for event location
     private String poster;  //event images
+    private ArrayList<String> waitList;
 
-    public OrganizerEvent(String title, String description, String startDate, String endDate, String dateEvent, int maxCapacity, int waitingListLimit, double price, String geoLocation, String poster, String eventID, String eventLocation) {
+    public OrganizerEvent(String title, String description, String startDate, String endDate, String dateEvent, int maxCapacity, int waitingListLimit, double price, GeoPoint geoLocation, String poster, String eventID, String eventLocation) {
         this.title = title;
         this.description = description;
         this.startDate = startDate;
@@ -32,6 +38,7 @@ public class OrganizerEvent {
         this.eventLocation = eventLocation;
         this.poster = poster;
         this.eventID = eventID;
+        this.waitList = new ArrayList<String>();
     }
 
     //setters and getters
@@ -115,11 +122,11 @@ public class OrganizerEvent {
         this.price = price;
     }
 
-    public String getGeoLocation() {
+    public GeoPoint getGeoLocation() {
         return geoLocation;
     }
 
-    public void setGeoLocation(String geoLocation) {
+    public void setGeoLocation(GeoPoint geoLocation) {
         this.geoLocation = geoLocation;
     }
 
@@ -137,5 +144,18 @@ public class OrganizerEvent {
 
     public void setPoster(String poster) {
         this.poster = poster;
+    }
+
+    //Methods
+
+    //Register for wait list of event returns true/false on success/failure
+    public boolean Register(String account){
+        if(waitList.contains(account)){
+            return false;
+        }
+        else {
+            waitList.add(account);
+            return true;
+        }
     }
 }
