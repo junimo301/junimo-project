@@ -111,7 +111,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-
+        //code that gets the list of users from firebase, maybe should be moved to where it is needed (like admin?)
+        //is it in admin already??
         userArrayList= new ArrayList<>();
         userArrayAdapter = new ArrayAdapter<>(this,0);
 
@@ -132,6 +133,8 @@ public class MainActivity extends AppCompatActivity {
                 userArrayAdapter.notifyDataSetChanged();
             }
         });
+
+        //gets event list from firebase, needed here as the app opens to browsing events
         eventArrayList = new ArrayList<>();
         eventArrayAdapter = new ArrayAdapter<>(this, 0);
 
@@ -142,11 +145,12 @@ public class MainActivity extends AppCompatActivity {
             if(value != null && !value.isEmpty()){
                 eventArrayList.clear();
                 for(QueryDocumentSnapshot snapshot : value){
+                    //Fields in events
                     String title = snapshot.getString("Title");
                     String description = snapshot.getString("Description");
                     String startDate = snapshot.getString("startDate");
                     String endDate = snapshot.getString("endDate");
-                    Integer maxCapacity = (snapshot.getLong("maxCapacity")).intValue();
+                    Integer maxCapacity = (snapshot.getLong("maxCapacity")).intValue(); //int is not allowed in firebase, long converted to int instead
                     Integer waitingListLimit = (snapshot.getLong("waitingListLimit")).intValue();
                     double price = snapshot.getDouble("price");
                     GeoPoint geoLocation = snapshot.getGeoPoint("geoLocation"); //geoPoint is a type apparently? seems helpful??

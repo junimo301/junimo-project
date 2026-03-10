@@ -34,7 +34,7 @@ public class OrganizerEvent {
         this.eventLocation = eventLocation;
         this.poster = poster;
         this.eventID = eventID;
-        this.waitList = new ArrayList<String>();
+        this.waitList = new ArrayList<String>();    //list of deviceIds/userIds
     }
 
     //setters and getters
@@ -126,7 +126,14 @@ public class OrganizerEvent {
         this.poster = poster;
     }
 
-    //Methods
+    public ArrayList<String> getWaitList() {
+        return waitList;
+    }
+
+    public void setWaitList(ArrayList<String> waitList) {
+        this.waitList = waitList;
+    }
+//Methods
 
     //Register for wait list of event returns true/false on success/failure
     public boolean Register(String account){
