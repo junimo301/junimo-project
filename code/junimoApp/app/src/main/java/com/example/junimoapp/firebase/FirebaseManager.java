@@ -1,22 +1,12 @@
 package com.example.junimoapp.firebase;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
-import com.example.junimoapp.Organizer.OrganizerEvent;
+import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.Pipeline;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -40,7 +30,7 @@ public class FirebaseManager {
      * @return
      * true on success, false on failure
      */
-    public boolean addEvent(OrganizerEvent event, CollectionReference eventsRef) {
+    public boolean addEvent(Event event, CollectionReference eventsRef) {
         AtomicBoolean check = new AtomicBoolean(false);
         DocumentReference docRef = eventsRef.document(event.getEventID());
         docRef.set(event).addOnSuccessListener(unused->{
@@ -81,7 +71,7 @@ public class FirebaseManager {
      * @return
      * returns true on success, false on failure
      */
-    public boolean updateEvent(CollectionReference eventsRef, OrganizerEvent event, String field, String newValue) {
+    public boolean updateEvent(CollectionReference eventsRef, Event event, String field, String newValue) {
         AtomicBoolean check = new AtomicBoolean(false);
         DocumentReference docRef = eventsRef.document(event.getEventID());
         docRef.update(field, newValue).addOnSuccessListener(unused->{
@@ -102,7 +92,7 @@ public class FirebaseManager {
      * @return
      * returns true on success, false on failure
      */
-    public boolean updateEvent(CollectionReference eventsRef, OrganizerEvent event, String field, Long newValue) {
+    public boolean updateEvent(CollectionReference eventsRef, Event event, String field, Long newValue) {
         AtomicBoolean check = new AtomicBoolean(false);
         DocumentReference docRef = eventsRef.document(event.getEventID());
         docRef.update(field, newValue).addOnSuccessListener(unused->{
@@ -123,7 +113,7 @@ public class FirebaseManager {
      * @return
      * returns true on success, false on failure
      */
-    public boolean updateEvent(CollectionReference eventsRef, OrganizerEvent event, String field, GeoPoint newValue) {
+    public boolean updateEvent(CollectionReference eventsRef, Event event, String field, GeoPoint newValue) {
         AtomicBoolean check = new AtomicBoolean(false);
         DocumentReference docRef = eventsRef.document(event.getEventID());
         docRef.update(field, newValue).addOnSuccessListener(unused->{
@@ -144,7 +134,7 @@ public class FirebaseManager {
      * @return
      * returns true on success, false on failure
      */
-    public boolean updateEvent(CollectionReference eventsRef, OrganizerEvent event, String field, ArrayList<String> newValue) {
+    public boolean updateEvent(CollectionReference eventsRef, Event event, String field, ArrayList<String> newValue) {
         AtomicBoolean check = new AtomicBoolean(false);
         DocumentReference docRef = eventsRef.document(event.getEventID());
         docRef.update(field, newValue).addOnSuccessListener(unused->{
@@ -165,7 +155,7 @@ public class FirebaseManager {
      * @return
      * returns true on success, false on failure
      */
-    public boolean updateEvent(CollectionReference eventsRef, OrganizerEvent event, String field, double newValue) {
+    public boolean updateEvent(CollectionReference eventsRef, Event event, String field, double newValue) {
         AtomicBoolean check = new AtomicBoolean(false);
         DocumentReference docRef = eventsRef.document(event.getEventID());
         docRef.update(field, newValue).addOnSuccessListener(unused->{
@@ -196,4 +186,6 @@ public class FirebaseManager {
         });
         return check.get();
     }
+
+    //to do add load in users and load in events
 }

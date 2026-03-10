@@ -1,6 +1,5 @@
 package com.example.junimoapp.Organizer;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +8,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.junimoapp.models.Event;
+
 import java.util.List;
 
 public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventViewHolder> {
-    private List<OrganizerEvent> eventList;
-    public ListOfMyEvents(List<OrganizerEvent> eventList) {
+    private List<Event> eventList;
+    public ListOfMyEvents(List<Event> eventList) {
         this.eventList = eventList;
     }
 
@@ -36,7 +37,7 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
 
     @Override
     public void onBindViewHolder(@NonNull ListOfMyEvents.EventViewHolder holder, int position) {
-        OrganizerEvent event =eventList.get(position);
+        Event event =eventList.get(position);
         holder.title.setText(event.getTitle());
         holder.description.setText(event.getDescription());
 

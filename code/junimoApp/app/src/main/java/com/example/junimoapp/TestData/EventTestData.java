@@ -1,6 +1,6 @@
 package com.example.junimoapp.TestData;
 
-import com.example.junimoapp.Organizer.OrganizerEvent;
+import com.example.junimoapp.models.Event;
 import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
@@ -11,11 +11,11 @@ public class EventTestData {
     * TEST DATA: fake event details to test myEvents
     * NOT CURRENTLY IMPLEMENTED
     * */
-    public static List<OrganizerEvent> getEvents() {
+    public static List<Event> getEvents() {
 
-        List<OrganizerEvent> events = new ArrayList<>();
+        List<Event> events = new ArrayList<>();
 
-        events.add(new OrganizerEvent(
+        events.add(new Event(
                 "Music Festival",
                 "Outdoor concert with local bands",
                 "2026-06-01",
@@ -29,7 +29,7 @@ public class EventTestData {
                 "Downtown Park"
         ));
 
-        events.add(new OrganizerEvent(
+        events.add(new Event(
                 "Hackathon",
                 "24 hour coding competition",
                 "2026-07-05",
@@ -43,7 +43,7 @@ public class EventTestData {
                 "University Hall"
         ));
 
-        events.add(new OrganizerEvent(
+        events.add(new Event(
                 "Art Workshop",
                 "Learn watercolor painting",
                 "2026-05-15",

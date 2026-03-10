@@ -8,9 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.junimoapp.R;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.junimoapp.models.Event;
 import com.google.firebase.firestore.GeoPoint;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +27,7 @@ public class CreateEvent extends AppCompatActivity {
      * */
     EditText editTitle, editDescription, editStartDate, editEndDate, editEventLocation, editMaxCapacity, editWaitingList, editPrice, editGeoLocation, editPoster;
     Button uploadNewEvent;
-    private OrganizerEvent createdEvent = null;
+    private Event createdEvent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +124,7 @@ public class CreateEvent extends AppCompatActivity {
                 }
 
                 //creates event
-                OrganizerEvent saveEvent = new OrganizerEvent(title, description, startDate, endDate, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation);
+                Event saveEvent = new Event(title, description, startDate, endDate, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation);
 
                 EventData.addOrEditEvent(saveEvent);
                 Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();

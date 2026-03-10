@@ -1,6 +1,5 @@
 package com.example.junimoapp.Organizer;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.junimoapp.R;
-import com.example.junimoapp.TestData.EventTestData;
+import com.example.junimoapp.models.Event;
 
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class OrganizerStartScreen extends AppCompatActivity {
     //view my events
     private RecyclerView scrollable;
     private ListOfMyEvents myEvents;
-    private List<OrganizerEvent> eventList;
+    private List<Event> eventList;
 
 
     @Override
