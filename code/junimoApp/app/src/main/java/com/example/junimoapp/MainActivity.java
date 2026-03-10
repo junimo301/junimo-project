@@ -12,6 +12,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.junimoapp.admin.AdminHomeActivity;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.utils.DeviceUtils;
@@ -88,16 +89,16 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        userArrayList= new ArrayList<>();
-        userArrayAdapter = new ArrayAdapter<>(this,0);
         //Admin button
         Button adminButton = findViewById(R.id.admin_button);
         adminButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, AdminHomeActivity.class);
             startActivity(intent);
         });
-        eventArrayList = new ArrayList<>();
-        eventArrayAdapter = new ArrayAdapter<>(this, 0);
+
+
+        userArrayList= new ArrayList<>();
+        userArrayAdapter = new ArrayAdapter<>(this,0);
 
         usersRef.addSnapshotListener((value, error)->{
             if(error != null){
