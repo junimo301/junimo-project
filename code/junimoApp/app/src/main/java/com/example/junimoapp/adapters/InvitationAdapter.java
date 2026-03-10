@@ -33,7 +33,7 @@ public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_invitation, parent, false);
+                .inflate(R.layout.invite_page, parent, false);
         return new ViewHolder(view);
     }
 
