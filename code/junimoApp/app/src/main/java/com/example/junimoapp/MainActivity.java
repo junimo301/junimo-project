@@ -12,6 +12,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.junimoapp.TestData.UserTestData;
 import com.example.junimoapp.admin.AdminHomeActivity;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.User;
@@ -60,11 +61,25 @@ public class MainActivity extends AppCompatActivity {
         //get device id
         deviceId = DeviceUtils.getDeviceId(this);
 
-        //test user document
-        User testUser = new User(deviceId,"name","email","phone");
+        //test event document
+        EventTestData testEvents= new EventTestData();
+        OrganizerEvent testEvent = testEvents.getEvents().get(0);
+        OrganizerEvent testEvent1 = testEvents.getEvents().get(1);
+        OrganizerEvent testEvent2 = testEvents.getEvents().get(2);
+        //write to firestore
+        firebase.addEvent(testEvent,eventsRef);
+        firebase.addEvent(testEvent1,eventsRef);
+        firebase.addEvent(testEvent2,eventsRef);
 
+        //test user document
+        UserTestData testUsers= new UserTestData();
+        User testUser = testUsers.getUsers().get(0);
+        User testUser1 = testUsers.getUsers().get(1);
+        User testUser2 = testUsers.getUsers().get(2);
         //write to firestore
         boolean check= firebase.addUser(testUser,usersRef);
+        firebase.addUser(testUser1,usersRef);
+        firebase.addUser(testUser2,usersRef);
 
         if(check) {
             //open user homepage when firebase succeeds
