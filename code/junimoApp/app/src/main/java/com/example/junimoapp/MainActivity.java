@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         User testUser = new User(deviceId,"name","email","phone");
 
         //write to firestore
-        boolean check= firebase.AddUser(testUser,usersRef);
+        boolean check= firebase.addUser(testUser,usersRef);
 
         if(check) {
             //open user homepage when firebase succeeds
