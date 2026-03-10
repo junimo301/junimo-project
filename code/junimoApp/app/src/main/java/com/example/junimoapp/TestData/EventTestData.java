@@ -1,3 +1,4 @@
+/*
 package com.example.junimoapp.TestData;
 
 import com.example.junimoapp.Organizer.OrganizerEvent;
@@ -10,7 +11,7 @@ public class EventTestData {
     /*
     * TEST DATA: fake event details to test myEvents
     * NOT CURRENTLY IMPLEMENTED
-    * */
+    *
     public static List<OrganizerEvent> getEvents() {
 
         List<OrganizerEvent> events = new ArrayList<>();
@@ -60,3 +61,4 @@ public class EventTestData {
         return events;
     }
 }
+*/
