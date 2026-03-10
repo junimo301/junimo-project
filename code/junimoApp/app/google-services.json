@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "131790420003",
+    "project_id": "junimo-a6cce",
+    "storage_bucket": "junimo-a6cce.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131790420003:android:867cd1a2d170b3ea821996",
+        "android_client_info": {
+          "package_name": "com.example.junimoapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDf_I9-k14Vzt5A8tAb5q0eOYpZ1P3jdlM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

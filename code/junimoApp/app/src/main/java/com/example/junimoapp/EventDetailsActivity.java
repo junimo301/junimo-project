@@ -24,7 +24,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_details);
+        setContentView(R.layout.indivdual_invite_page);
 
         db = FirebaseManager.getDB();
         deviceId = DeviceUtils.getDeviceId(this);
