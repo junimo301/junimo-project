@@ -30,6 +30,11 @@
         <activity android:name=".Organizer.OrganizerStartScreen" />
         <activity android:name=".Organizer.CreateEvent" />
 
+        <activity android:name=".admin.AdminHomeActivity" />
+        <activity android:name=".admin.AdminBrowseEventsActivity" />
+        <activity android:name=".admin.AdminBrowseProfilesActivity" />
+        <activity android:name=".admin.AdminBrowseImagesActivity" />
+
     </application>
 
 </manifest>
