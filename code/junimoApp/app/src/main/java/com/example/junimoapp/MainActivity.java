@@ -90,6 +90,14 @@ public class MainActivity extends AppCompatActivity {
 
         userArrayList= new ArrayList<>();
         userArrayAdapter = new ArrayAdapter<>(this,0);
+        //Admin button
+        Button adminButton = findViewById(R.id.admin_button);
+        adminButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, AdminHomeActivity.class);
+            startActivity(intent);
+        });
+        eventArrayList = new ArrayList<>();
+        eventArrayAdapter = new ArrayAdapter<>(this, 0);
 
         usersRef.addSnapshotListener((value, error)->{
             if(error != null){
