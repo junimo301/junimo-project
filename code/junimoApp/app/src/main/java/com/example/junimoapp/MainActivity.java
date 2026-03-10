@@ -2,6 +2,7 @@ package com.example.junimoapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+import com.example.junimoapp.Organizer.OrganizerStartScreen;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,6 +59,13 @@ public class MainActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        Button organizerButton = findViewById(R.id.organizer_button);
+
+        organizerButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, OrganizerStartScreen.class);
+            startActivity(intent);
         });
     }
 }
