@@ -8,7 +8,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.junimoapp.R;
+import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.GeoPoint;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -125,6 +127,11 @@ public class CreateEvent extends AppCompatActivity {
 
                 //creates event
                 Event saveEvent = new Event(title, description, startDate, endDate, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation);
+
+                //add to firebase
+                FirebaseManager firebase = new FirebaseManager();
+                CollectionReference eventsRef=firebase.getDB().collection("events");
+                firebase.addEvent(saveEvent,eventsRef);
 
                 EventData.addOrEditEvent(saveEvent);
                 Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();
