@@ -54,29 +54,29 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        boolean check=false;
-        //get device id
-        deviceId = DeviceUtils.getDeviceId(this);
-        ArrayList<User> allUsers= firebase.getUsers(usersRef);
-        for(User i : allUsers){
-            if(i.getDeviceId().equals(deviceId)){
-                check = true;
+        Button userButton=findViewById(R.id.user_button);
+        userButton.setOnClickListener(v -> {
+            boolean check=false;
+            //get device id
+            deviceId = DeviceUtils.getDeviceId(this);
+            ArrayList<User> allUsers= firebase.getUsers(usersRef);
+            for(User i : allUsers){
+                if(i.getDeviceId().equals(deviceId)){
+                    check = true;
+                }
             }
-        }
-        if(!check){
-            //send to login page
-            User user = new User(deviceId,"new user","new","5555555");
-            check=firebase.addUser(user, usersRef);
-        }
+            if(check){
+                //send to user activity if user exists
+                Intent intent = new Intent(MainActivity.this,UserHomeActivity.class);
+                startActivity(intent);
+            }
+            else {
+                //send to login page if device id is not in users
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
+            }
 
-        if(check) {
-            //open user homepage when firebase succeeds
-            Intent intent = new Intent(MainActivity.this, UserHomeActivity.class);
-            startActivity(intent);
-
-            //close main activity
-            finish();
-        }
+        });
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -98,18 +98,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, AdminHomeActivity.class);
             startActivity(intent);
         });
-
-        //code that gets the list of users from firebase, maybe should be moved to where it is needed (like admin?)
-        //is it in admin already??
-        userArrayAdapter = new ArrayAdapter<>(this,0);
-        userArrayList = firebase.getUsers(usersRef);
-        userArrayAdapter.notifyDataSetChanged();
-
-
-        //gets event list from firebase, needed here as the app opens to browsing events
-        eventArrayAdapter = new ArrayAdapter<>(this, 0);
-        eventArrayList = firebase.getEvents(eventsRef);
-        eventArrayAdapter.notifyDataSetChanged();
 
     }
 

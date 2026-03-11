@@ -164,14 +164,32 @@ public class Event {
     }
 
     //Methods
-    //Register for wait list of event returns true/false on success/failure
-    public boolean Register(String account){
-        if(waitList.contains(account)){
+
+    /**
+     * Add user ID to waitList array
+     * @param accountId
+     * user device id
+     * @return
+     * true or false on success or failure
+     */
+    public boolean enrollInWaitList(String accountId){
+        if(waitList.contains(accountId)){
             return false;
         }
         else {
-            waitList.add(account);
+            waitList.add(accountId);
             return true;
         }
     }
+
+    public boolean removeFromWaitList(String accountId) {
+        if(waitList.contains(accountId)){
+            waitList.remove(accountId);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 }
