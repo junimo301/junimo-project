@@ -9,16 +9,8 @@ import android.widget.Toast;
 
 import com.example.junimoapp.R;
 import com.example.junimoapp.models.Event;
-import com.example.junimoapp.models.User;
-import com.example.junimoapp.models.UserSession;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.example.junimoapp.firebase.FirebaseManager;
-import com.example.junimoapp.models.Event;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -173,6 +165,7 @@ public class CreateEvent extends AppCompatActivity {
                 FirebaseManager firebase = new FirebaseManager();
                 CollectionReference eventsRef = firebase.getDB().collection("events");
                 firebase.addEvent(saveEvent, eventsRef);
+
 
                 if (QRCodeString != null) {
                     saveEvent.setQRCode(QRCodeString);

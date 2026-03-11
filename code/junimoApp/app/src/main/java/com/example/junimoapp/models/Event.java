@@ -182,6 +182,13 @@ public class Event {
         }
     }
 
+    /**
+     * Remove user id from waitlist array
+     * @param accountId
+     * user device id
+     * @return
+     * true/false on success/failure
+     */
     public boolean removeFromWaitList(String accountId) {
         if(waitList.contains(accountId)){
             waitList.remove(accountId);

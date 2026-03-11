@@ -49,6 +49,24 @@ public class FirebaseManager {
     }
 
     /**
+     * Deletes an event from firebase, returns true/false on success/failure
+     * @param event
+     * event to be deleted
+     * @param eventsRef
+     * collection reference to events collection
+     * @return
+     * true/false on success/failure
+     */
+    public boolean deleteEvent(Event event, CollectionReference eventsRef) {
+        AtomicBoolean check = new AtomicBoolean(false);
+        DocumentReference docRef = eventsRef.document(event.getEventID());
+        docRef.delete().addOnSuccessListener(unused->{
+            check.set(true);
+        });
+        return check.get();
+    }
+
+    /**
      * Adds a user to firebase, returns true on success, otherwise false
      * @param user
      * the user to be added
