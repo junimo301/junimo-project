@@ -1,6 +1,5 @@
 package com.example.junimoapp.Organizer;
 
-import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.junimoapp.models.Event;
 
 import com.example.junimoapp.R;
+import com.example.junimoapp.models.Event;
 
 import java.util.List;
 

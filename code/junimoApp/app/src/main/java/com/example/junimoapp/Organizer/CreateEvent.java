@@ -1,15 +1,16 @@
 package com.example.junimoapp.Organizer;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.junimoapp.R;
+import com.example.junimoapp.models.Event;
+import com.example.junimoapp.models.User;
+import com.example.junimoapp.models.UserSession;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -39,8 +40,10 @@ public class CreateEvent extends AppCompatActivity {
     private Event createdEvent = null;
     Button QRCodeButton;
     private String QRCodeString = null;
-    private OrganizerEvent createdEvent = null;
+    private Event createdEvent = null;
     private String eventID;
+    private String organizerID;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +132,8 @@ public class CreateEvent extends AppCompatActivity {
                 if (dateEvent.isEmpty()) {
                     editDateEvent.setError("*Field Required*");
                     editDateEvent.requestFocus();
+                }
+            
                     String geoLocation_string = editGeoLocation.getText().toString();
                     GeoPoint geoLocation = new GeoPoint(00000, 00000);//needs to be something they choose?
                     if (geoLocation_string.isEmpty()) {

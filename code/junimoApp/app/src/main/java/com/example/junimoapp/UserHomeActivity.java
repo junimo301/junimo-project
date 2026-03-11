@@ -23,9 +23,11 @@ public class UserHomeActivity extends AppCompatActivity {
         profileButton = findViewById(R.id.profileButton);
         guidelinesButton = findViewById(R.id.guidelinesButton);
 
+        /*
         //open events page
-//        eventsButton.setOnClickListener(v ->
-//                startActivity(new Intent(this, EventsActivity.class)));
+        eventsButton.setOnClickListener(v ->
+                startActivity(new Intent(this, EventsActivity.class)));
+         */
 
         //open invitations page
         invitationsButton.setOnClickListener(v ->
@@ -35,8 +37,10 @@ public class UserHomeActivity extends AppCompatActivity {
         profileButton.setOnClickListener(v ->
                 startActivity(new Intent(this, ProfileActivity.class)));
 
+        /*
         //open lottery guidelines page
-//        guidelinesButton.setOnClickListener(v ->
-//                startActivity(new Intent(this, GuidelinesActivity.class)));
+        guidelinesButton.setOnClickListener(v ->
+                startActivity(new Intent(this, GuidelinesActivity.class)));
+         */
     }
 }
