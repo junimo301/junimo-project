@@ -9,11 +9,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.junimoapp.R;
 
 /**
- * AdminHomeActivity is the main home page for admin to browse events/profiles/images
+ * AdminHomeActivity is the main home page for admin to browse (and delete) events/profiles/images
  * (and later notifications, too)
  * User stories: 03.01.01, 03.02.01, 03.03.01
  */
 public class AdminHomeActivity extends AppCompatActivity {
+
+    /**
+     * Called when activity is created - has the setup for all of the admin functions
+     * and buttons and such
+     * @param savedInstanceState typical var that's default to onCreate
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,13 +30,13 @@ public class AdminHomeActivity extends AppCompatActivity {
         Button browseProfilesButton = findViewById(R.id.adminBrowseProfilesButton);
         //Button browseImagesButton = findViewById(R.id.adminBrowseImagesButton);
 
-        //navigation for the event browsing button
+        //navigation for the event browsing button (click listener)
         browseEventsButton.setOnClickListener(v -> startActivity(new Intent(this, AdminBrowseEventsActivity.class)));
 
-        //navigation for the profile browsing button
+        //navigation for the profile browsing button (click listener)
         browseProfilesButton.setOnClickListener(v -> startActivity(new Intent(this, AdminBrowseProfilesActivity.class)));
 
-        //navigation for the images browsing button
+        //navigation for the images browsing button (click listener)
         //browseImagesButton.setOnClickListener(v -> startActivity(new Intent(this, AdminBrowseImagesActivity.class)));
 
     }
