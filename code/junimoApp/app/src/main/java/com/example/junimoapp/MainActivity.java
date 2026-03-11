@@ -12,18 +12,18 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.junimoapp.admin.AdminHomeActivity;
 import com.example.junimoapp.utils.DeviceUtils;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.example.junimoapp.Organizer.OrganizerEvent;
+import com.example.junimoapp.models.Event;
 import com.example.junimoapp.Organizer.OrganizerStartScreen;
 import com.example.junimoapp.TestData.EventTestData;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -34,10 +34,10 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseFirestore db;
     String deviceId;
-    private FirebaseFirestore db;
+    //private FirebaseFirestore db;
     private CollectionReference eventsRef;
-    private ArrayList<OrganizerEvent> eventArrayList;
-    private ArrayAdapter<OrganizerEvent> eventArrayAdapter;
+    private ArrayList<Event> eventArrayList;
+    private ArrayAdapter<Event> eventArrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,8 +98,8 @@ public class MainActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
         EventTestData test = new EventTestData();
-        List<OrganizerEvent> testList = test.getEvents();
-        OrganizerEvent testEvent = testList.get(0);
+        List<Event> testList = test.getEvents();
+        Event testEvent = testList.get(0);
         testAdd(testEvent);
         testEvent = testList.get(1);
         testAdd(testEvent);
@@ -115,22 +115,25 @@ public class MainActivity extends AppCompatActivity {
                     String description = snapshot.getString("Description");
                     String startDate = snapshot.getString("startDate");
                     String endDate = snapshot.getString("endDate");
-                    Integer maxCapacity = (snapshot.getLong("maxCapacity")).intValue();
-                    Integer waitingListLimit = (snapshot.getLong("waitingListLimit")).intValue();
+                    String dateEvent = snapshot.getString("dateEvent");
+                    int maxCapacity = (snapshot.getLong("maxCapacity")).intValue();
+                    int waitingListLimit = (snapshot.getLong("waitingListLimit")).intValue();
                     double price = snapshot.getDouble("price");
                     GeoPoint geoLocation = snapshot.getGeoPoint("geoLocation"); //geoPoint is a type apparently? seems helpful??
                     String poster = snapshot.getString("poster");
                     String eventID = snapshot.getString("eventID");
                     String eventLocation = snapshot.getString("eventLocation");
 
+                    String organizerID = snapshot.getString("organizerID");
 
-                    eventArrayList.add(new OrganizerEvent(title,description,startDate,endDate,maxCapacity,waitingListLimit,price,geoLocation,poster,eventID,eventLocation));
+
+                    eventArrayList.add(new Event(title,description,startDate,endDate, dateEvent,maxCapacity,waitingListLimit,price,geoLocation,poster,eventID,eventLocation, organizerID));
                 }
                 eventArrayAdapter.notifyDataSetChanged();
             }
         });
     }
-    public void testAdd(OrganizerEvent testEvent) {
+    public void testAdd(Event testEvent) {
         //adds event to database... maybe?
         DocumentReference docRef = eventsRef.document(testEvent.getEventID());
         docRef.set(testEvent);
