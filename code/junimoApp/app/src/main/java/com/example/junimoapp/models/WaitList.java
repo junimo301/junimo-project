@@ -16,7 +16,7 @@ public class WaitList {
         this.eventID = event.getEventID();
     }
 
-    public void populateWaitList(Event event){
+    public void populateWaitList(Event event, ArrayList<User> allUsers){
         ArrayList<String> deviceIDs=event.getWaitList();
         for(String deviceID : deviceIDs){
 
