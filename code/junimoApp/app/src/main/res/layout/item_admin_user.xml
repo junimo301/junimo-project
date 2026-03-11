@@ -1,44 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!-- Layout for one user item for the admin stuff -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="12dp"
-    android:gravity="center_vertical">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/bg_admin_profile_item"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingTop="12dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="12dp">
 
-    <!-- User's name and email container -->
-    <LinearLayout
+    <TextView
+        android:id="@+id/adminUserName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:text="David Mayer"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/adminUserName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:text="User Name" />
+    <TextView
+        android:id="@+id/adminUserEmail"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:text="user.email@example.com"
+        android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/adminUserEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:text="user.email@example.com" />
-
-    </LinearLayout>
-
-    <!-- button for profile deleting -->
     <Button
         android:id="@+id/adminUserDeleteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
         android:text="Remove"
-        android:backgroundTint="#990F02"
-        android:textColor="#FFFFFF" />
+        android:visibility="gone" />
 
 </LinearLayout>
