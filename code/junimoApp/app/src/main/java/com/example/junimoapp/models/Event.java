@@ -164,7 +164,6 @@ public class Event {
     }
 
     //Methods
-
     //Register for wait list of event returns true/false on success/failure
     public boolean Register(String account){
         if(waitList.contains(account)){

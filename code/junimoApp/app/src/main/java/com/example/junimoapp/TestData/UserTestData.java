@@ -1,6 +1,5 @@
 package com.example.junimoapp.TestData;
 
-import com.example.junimoapp.Organizer.OrganizerEvent;
 import com.example.junimoapp.models.User;
 
 import java.util.ArrayList;
