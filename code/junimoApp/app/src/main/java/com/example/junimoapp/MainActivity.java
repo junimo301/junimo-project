@@ -57,15 +57,15 @@ public class MainActivity extends AppCompatActivity {
         //get device id
         deviceId = DeviceUtils.getDeviceId(this);
 
-        //test event document
-        EventTestData testEvents= new EventTestData();
-        Event testEvent = testEvents.getEvents().get(0);
-        Event testEvent1 = testEvents.getEvents().get(1);
-        Event testEvent2 = testEvents.getEvents().get(2);
-        //write to firestore
-        firebase.addEvent(testEvent,eventsRef);
-        firebase.addEvent(testEvent1,eventsRef);
-        firebase.addEvent(testEvent2,eventsRef);
+//        //test event document
+//        EventTestData testEvents= new EventTestData();
+//        Event testEvent = testEvents.getEvents().get(0);
+//        Event testEvent1 = testEvents.getEvents().get(1);
+//        Event testEvent2 = testEvents.getEvents().get(2);
+//        //write to firestore
+//        firebase.addEvent(testEvent,eventsRef);
+//        firebase.addEvent(testEvent1,eventsRef);
+//        firebase.addEvent(testEvent2,eventsRef);
 
         //test user document
         UserTestData testUsers= new UserTestData();
@@ -109,60 +109,16 @@ public class MainActivity extends AppCompatActivity {
 
         //code that gets the list of users from firebase, maybe should be moved to where it is needed (like admin?)
         //is it in admin already??
-        userArrayList= new ArrayList<>();
         userArrayAdapter = new ArrayAdapter<>(this,0);
+        userArrayList = firebase.getUsers(usersRef);
+        userArrayAdapter.notifyDataSetChanged();
 
-        usersRef.addSnapshotListener((value, error)->{
-            if(error != null){
-                Log.e("Firestore",error.toString());
-            }
-            if(value!=null && !value.isEmpty()){
-                userArrayList.clear();
-                for(QueryDocumentSnapshot snapshot : value){
-                    String deviceId = snapshot.getString("deviceId");
-                    String name = snapshot.getString("name");
-                    String email = snapshot.getString("email");
-                    String phone = snapshot.getString("phone");
-
-                    userArrayList.add(new User(deviceId,name,email,phone));
-                }
-                userArrayAdapter.notifyDataSetChanged();
-            }
-        });
 
         //gets event list from firebase, needed here as the app opens to browsing events
-        eventArrayList = new ArrayList<>();
         eventArrayAdapter = new ArrayAdapter<>(this, 0);
+        eventArrayList = firebase.getEvents(eventsRef);
+        eventArrayAdapter.notifyDataSetChanged();
 
-        eventsRef.addSnapshotListener((value,error)-> {
-            if(error != null){
-                Log.e("Firestore", error.toString());
-            }
-            if(value != null && !value.isEmpty()){
-                eventArrayList.clear();
-                for(QueryDocumentSnapshot snapshot : value){
-                    //Fields in events
-                    String title = snapshot.getString("Title");
-                    String description = snapshot.getString("Description");
-                    String startDate = snapshot.getString("startDate");
-                    String endDate = snapshot.getString("endDate");
-                    String dateEvent = snapshot.getString("dateEvent");
-                    int maxCapacity = (snapshot.getLong("maxCapacity")).intValue();
-                    int waitingListLimit = (snapshot.getLong("waitingListLimit")).intValue();
-                    double price = snapshot.getDouble("price");
-                    GeoPoint geoLocation = snapshot.getGeoPoint("geoLocation"); //geoPoint is a type apparently? seems helpful??
-                    String poster = snapshot.getString("poster");
-                    String eventID = snapshot.getString("eventID");
-                    String eventLocation = snapshot.getString("eventLocation");
-
-                    String organizerID = snapshot.getString("organizerID");
-
-
-                    eventArrayList.add(new Event(title,description,startDate,endDate,dateEvent,maxCapacity,waitingListLimit,price,geoLocation,poster,eventID,eventLocation,organizerID));
-                }
-                eventArrayAdapter.notifyDataSetChanged();
-            }
-        });
     }
 
 }

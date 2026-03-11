@@ -40,7 +40,6 @@ public class CreateEvent extends AppCompatActivity {
     private Event createdEvent = null;
     Button QRCodeButton;
     private String QRCodeString = null;
-    private Event createdEvent = null;
     private String eventID;
     private String organizerID;
 
@@ -115,7 +114,6 @@ public class CreateEvent extends AppCompatActivity {
                 String description = editDescription.getText().toString();
                 String startDate = editStartDate.getText().toString();
                 String endDate = editEndDate.getText().toString();
-                String title = editTitle.getText().toString();
                 String poster = editPoster.getText().toString();
                 Integer waitingListLimit = null;
                 if (!editWaitingList.getText().toString().isEmpty()) {
@@ -133,76 +131,68 @@ public class CreateEvent extends AppCompatActivity {
                     editDateEvent.setError("*Field Required*");
                     editDateEvent.requestFocus();
                 }
-            
-                    String geoLocation_string = editGeoLocation.getText().toString();
-                    GeoPoint geoLocation = new GeoPoint(00000, 00000);//needs to be something they choose?
-                    if (geoLocation_string.isEmpty()) {
-                        editGeoLocation.setError("*Field Required*");
-                        editGeoLocation.requestFocus();
-                        return;
-                    }
-                    String eventLocation = editEventLocation.getText().toString();
-                    if (eventLocation.isEmpty()) {
-                        editEventLocation.setError("*Field Required*");
-                        editEventLocation.requestFocus();
-                        return;
-                    }
-                    if (editMaxCapacity.getText().toString().isEmpty()) {
-                        editMaxCapacity.setError("*Field Required*");
-                        editMaxCapacity.requestFocus();
-                        return;
-                    }
-                    int maxCapacity = Integer.parseInt(editMaxCapacity.getText().toString());
 
-                    if (editPrice.getText().toString().isEmpty()) {
-                        editPrice.setError("*Field Required*");
-                        editPrice.requestFocus();
-                        return;
-                    }
-                    double price = Double.parseDouble(editPrice.getText().toString());
-                    String geoLocation = editGeoLocation.getText().toString();
-                    if (geoLocation.isEmpty()) {
-                        editGeoLocation.setError("*Field Required*");
-                        editGeoLocation.requestFocus();
-                        return;
-                    }
-
-                    //event ID
-                    if (createdEvent != null) {
-                        eventID = createdEvent.getEventID();
-                    } else if (eventID == null) {
-                        eventID = UUID.randomUUID().toString();
-                    }
-
-                    //creates event
-                    Event saveEvent = new Event(title, description, startDate, endDate, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation);
-
-                    //add to firebase
-                    FirebaseManager firebase = new FirebaseManager();
-                    CollectionReference eventsRef = firebase.getDB().collection("events");
-                    firebase.addEvent(saveEvent, eventsRef);
-
-                    if (QRCodeString != null) {
-                        saveEvent.setQRCode(QRCodeString);
-                    }
-
-                    EventData.addOrEditEvent(saveEvent);
-                    Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();
-                    finish();
-
-
-                    //TEST
-                    String logMessage;
-                    if (createdEvent != null) {
-                        logMessage = "Event updated: " + saveEvent.getTitle();
-                    } else {
-                        logMessage = "event created: " + saveEvent.getTitle();
-                    }
-
-                    Log.d("createEvent", logMessage);
+                String geoLocation_string = editGeoLocation.getText().toString();
+                GeoPoint geoLocation = new GeoPoint(00000, 00000);//needs to be something they choose?
+                if (geoLocation_string.isEmpty()) {
+                    editGeoLocation.setError("*Field Required*");
+                    editGeoLocation.requestFocus();
+                    return;
                 }
-            }
+                String eventLocation = editEventLocation.getText().toString();
+                if (eventLocation.isEmpty()) {
+                    editEventLocation.setError("*Field Required*");
+                    editEventLocation.requestFocus();
+                    return;
+                }
+                if (editMaxCapacity.getText().toString().isEmpty()) {
+                    editMaxCapacity.setError("*Field Required*");
+                    editMaxCapacity.requestFocus();
+                    return;
+                }
+                int maxCapacity = Integer.parseInt(editMaxCapacity.getText().toString());
 
+                if (editPrice.getText().toString().isEmpty()) {
+                    editPrice.setError("*Field Required*");
+                    editPrice.requestFocus();
+                    return;
+                }
+                double price = Double.parseDouble(editPrice.getText().toString());
+
+                //event ID
+                if (createdEvent != null) {
+                    eventID = createdEvent.getEventID();
+                } else if (eventID == null) {
+                    eventID = UUID.randomUUID().toString();
+                }
+
+                //creates event
+                Event saveEvent = new Event(title, description, startDate, endDate, dateEvent, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation, organizerID);
+
+                //add to firebase
+                FirebaseManager firebase = new FirebaseManager();
+                CollectionReference eventsRef = firebase.getDB().collection("events");
+                firebase.addEvent(saveEvent, eventsRef);
+
+                if (QRCodeString != null) {
+                    saveEvent.setQRCode(QRCodeString);
+                }
+
+                EventData.addOrEditEvent(saveEvent);
+                Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();
+                finish();
+
+
+                //TEST
+                String logMessage;
+                if (createdEvent != null) {
+                    logMessage = "Event updated: " + saveEvent.getTitle();
+                } else {
+                    logMessage = "event created: " + saveEvent.getTitle();
+                }
+
+                Log.d("createEvent", logMessage);
+            }
         });
     }
 }
