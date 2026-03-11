@@ -23,7 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import com.example.junimoapp.Organizer.OrganizerEvent;
+import com.example.junimoapp.models.Event;
 import com.example.junimoapp.Organizer.OrganizerStartScreen;
 import com.example.junimoapp.TestData.EventTestData;
 import com.google.firebase.firestore.CollectionReference;
@@ -36,16 +36,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
     String deviceId;
+    private FirebaseFirestore db;
     private CollectionReference eventsRef;
     private CollectionReference usersRef;
-    private ArrayList<OrganizerEvent> eventArrayList;
-    private ArrayAdapter<OrganizerEvent> eventArrayAdapter;
     private ArrayList<User> userArrayList;
     private ArrayAdapter<User> userArrayAdapter;
+    private ArrayList<Event> eventArrayList;
+    private ArrayAdapter<Event> eventArrayAdapter;
     private FirebaseManager firebase = new FirebaseManager();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +62,9 @@ public class MainActivity extends AppCompatActivity {
 
         //test event document
         EventTestData testEvents= new EventTestData();
-        OrganizerEvent testEvent = testEvents.getEvents().get(0);
-        OrganizerEvent testEvent1 = testEvents.getEvents().get(1);
-        OrganizerEvent testEvent2 = testEvents.getEvents().get(2);
+        Event testEvent = testEvents.getEvents().get(0);
+        Event testEvent1 = testEvents.getEvents().get(1);
+        Event testEvent2 = testEvents.getEvents().get(2);
         //write to firestore
         firebase.addEvent(testEvent,eventsRef);
         firebase.addEvent(testEvent1,eventsRef);
@@ -150,16 +149,19 @@ public class MainActivity extends AppCompatActivity {
                     String description = snapshot.getString("Description");
                     String startDate = snapshot.getString("startDate");
                     String endDate = snapshot.getString("endDate");
-                    Integer maxCapacity = (snapshot.getLong("maxCapacity")).intValue(); //int is not allowed in firebase, long converted to int instead
-                    Integer waitingListLimit = (snapshot.getLong("waitingListLimit")).intValue();
+                    String dateEvent = snapshot.getString("dateEvent");
+                    int maxCapacity = (snapshot.getLong("maxCapacity")).intValue();
+                    int waitingListLimit = (snapshot.getLong("waitingListLimit")).intValue();
                     double price = snapshot.getDouble("price");
                     GeoPoint geoLocation = snapshot.getGeoPoint("geoLocation"); //geoPoint is a type apparently? seems helpful??
                     String poster = snapshot.getString("poster");
                     String eventID = snapshot.getString("eventID");
                     String eventLocation = snapshot.getString("eventLocation");
 
+                    String organizerID = snapshot.getString("organizerID");
 
-                    eventArrayList.add(new OrganizerEvent(title,description,startDate,endDate,maxCapacity,waitingListLimit,price,geoLocation,poster,eventID,eventLocation));
+
+                    eventArrayList.add(new Event(title,description,startDate,endDate, dateEvent,maxCapacity,waitingListLimit,price,geoLocation,poster,eventID,eventLocation, organizerID));
                 }
                 eventArrayAdapter.notifyDataSetChanged();
             }
