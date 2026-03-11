@@ -7,8 +7,6 @@ public class User {
     private String email;
     private String phone;
 
-    public User() {}
-
     public User(String deviceId, String name, String email, String phone) {
         this.deviceId = deviceId;
         this.name = name;

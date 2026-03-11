@@ -1,5 +1,6 @@
 package com.example.junimoapp;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +21,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     FirebaseFirestore db;
     String deviceId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
