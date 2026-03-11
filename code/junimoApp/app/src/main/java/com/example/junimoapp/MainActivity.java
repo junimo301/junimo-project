@@ -26,6 +26,7 @@ import com.example.junimoapp.models.Event;
 import com.example.junimoapp.Organizer.OrganizerStartScreen;
 import com.example.junimoapp.TestData.EventTestData;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -40,8 +41,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<Event> eventArrayAdapter;
     private ArrayList<User> userArrayList;
     private ArrayAdapter<User> userArrayAdapter;
-    private ArrayList<Event> eventArrayList;
-    private ArrayAdapter<Event> eventArrayAdapter;
     private FirebaseManager firebase = new FirebaseManager();
 
     @Override
@@ -159,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                     String organizerID = snapshot.getString("organizerID");
 
 
-                    eventArrayList.add(new Event(title,description,startDate,endDate,maxCapacity,waitingListLimit,price,geoLocation,poster,eventID,eventLocation));
+                    eventArrayList.add(new Event(title,description,startDate,endDate,dateEvent,maxCapacity,waitingListLimit,price,geoLocation,poster,eventID,eventLocation,organizerID));
                 }
                 eventArrayAdapter.notifyDataSetChanged();
             }
