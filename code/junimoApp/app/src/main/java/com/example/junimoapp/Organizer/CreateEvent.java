@@ -12,7 +12,13 @@ import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
+import com.example.junimoapp.firebase.FirebaseManager;
+import com.example.junimoapp.models.Event;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -32,9 +38,9 @@ public class CreateEvent extends AppCompatActivity {
      * */
     EditText editTitle, editDescription, editStartDate, editEndDate, editDateEvent, editEventLocation, editMaxCapacity, editWaitingList, editPrice, editGeoLocation, editPoster;
     Button uploadNewEvent;
+    private Event createdEvent = null;
     Button QRCodeButton;
     private String QRCodeString = null;
-    private Event createdEvent = null;
     private String eventID;
     private String organizerID;
 
@@ -125,6 +131,13 @@ public class CreateEvent extends AppCompatActivity {
                 if (dateEvent.isEmpty()) {
                     editDateEvent.setError("*Field Required*");
                     editDateEvent.requestFocus();
+                }
+
+                String geoLocation_string = editGeoLocation.getText().toString();
+                GeoPoint geoLocation = new GeoPoint(00000, 00000);//needs to be something they choose?
+                if (geoLocation_string.isEmpty()) {
+                    editGeoLocation.setError("*Field Required*");
+                    editGeoLocation.requestFocus();
                     return;
                 }
                 String eventLocation = editEventLocation.getText().toString();
@@ -137,20 +150,15 @@ public class CreateEvent extends AppCompatActivity {
                     editMaxCapacity.setError("*Field Required*");
                     editMaxCapacity.requestFocus();
                     return;
-                } int maxCapacity = Integer.parseInt(editMaxCapacity.getText().toString());
+                }
+                int maxCapacity = Integer.parseInt(editMaxCapacity.getText().toString());
 
                 if (editPrice.getText().toString().isEmpty()) {
                     editPrice.setError("*Field Required*");
                     editPrice.requestFocus();
                     return;
-                } double price = Double.parseDouble(editPrice.getText().toString());
-
-                String geoLocation_string = editGeoLocation.getText().toString();
-                if (geoLocation_string.isEmpty()) {
-                    editGeoLocation.setError("*Field Required*");
-                    editGeoLocation.requestFocus();
-                    return;
-                } GeoPoint geoLocation = new GeoPoint(00000, 00000);//needs to be something they choose?
+                }
+                double price = Double.parseDouble(editPrice.getText().toString());
 
                 //event ID
                 if (createdEvent != null) {
@@ -168,11 +176,13 @@ public class CreateEvent extends AppCompatActivity {
                     return;
                 }
 
-                FirebaseManager firebase = new FirebaseManager();
-                CollectionReference eventsRef=firebase.getDB().collection("events");
-
                 //creates event
                 Event saveEvent = new Event(title, description, startDate, endDate, dateEvent, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation, organizerID);
+
+                //add to firebase
+                FirebaseManager firebase = new FirebaseManager();
+                CollectionReference eventsRef = firebase.getDB().collection("events");
+                firebase.addEvent(saveEvent, eventsRef);
 
                 if (QRCodeString != null) {
                     saveEvent.setQRCode(QRCodeString);
@@ -194,9 +204,7 @@ public class CreateEvent extends AppCompatActivity {
                 }
 
                 Log.d("createEvent", logMessage);
-
             }
-
         });
     }
 }

@@ -19,6 +19,7 @@ public class WaitList {
     public void populateWaitList(Event event){
         ArrayList<String> deviceIDs=event.getWaitList();
         for(String deviceID : deviceIDs){
+
             //find users by id and add them as users to waitList
         }
     }

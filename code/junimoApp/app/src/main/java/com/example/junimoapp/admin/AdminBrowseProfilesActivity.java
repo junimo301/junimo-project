@@ -22,11 +22,14 @@ import java.util.List;
  * Implements user story 03.02.01
  */
 public class AdminBrowseProfilesActivity extends AppCompatActivity {
+    //TAG for logging, so logs regarding this activity can be filtered
     private static final String TAG = "AdminBrowseProfiles";
 
+    //UI stuff
     private RecyclerView recyclerView;
     private AdminUserAdapter adapter;
     private List<AdminUserAdapter.UserItem> userList;
+
     private FirebaseFirestore db;
 
     @Override
@@ -53,10 +56,14 @@ public class AdminBrowseProfilesActivity extends AppCompatActivity {
 
     /**
      * fetch all documents from the Firestore users collection
+     * on success, clears current user list and refreshes it and
+     * the UI
      */
     private void loadUsers() {
         db.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            //clear the list of the old data
             userList.clear();
+            //iterate through documents
             for (DocumentSnapshot doc : queryDocumentSnapshots) {
                 String docId = doc.getId();
                 String name = doc.getString("name");
@@ -64,31 +71,41 @@ public class AdminBrowseProfilesActivity extends AppCompatActivity {
                 //missing profile info handling:
                 if (name == null || name.isEmpty()) name = "(no name entered)";
                 if (email == null || email.isEmpty()) email = "(no email entered)";
+                //add user to list
                 userList.add(new AdminUserAdapter.UserItem(docId, name, email));
             }
             //notify adapter that data has changed
             adapter.notifyDataSetChanged();
         })
                 .addOnFailureListener(e -> {
+                    //log error (debugging purposes)
                     Log.e(TAG, "Failed to load users", e);
+                    //notify user that something failed
                     Toast.makeText(this, "Failed to load users", Toast.LENGTH_SHORT).show();
                 });
     }
 
     /**
-     * show confirmation dialog when the admin clocks delete
+     * show confirmation dialog when the admin clicks delete, so they have to be
+     * sure they want to delete and have a chance to cancel
+     * @param user The UserItem associated w/ the clicked row
      */
     private void onDeleteUserClicked(AdminUserAdapter.UserItem user) {
+        //get user confirmation
         new AlertDialog.Builder(this)
                 .setTitle("Remove Profile")
                 .setMessage("Are you sure you want to remove \"" + user.name + "\"'s profile? (Permanent!)")
+                //delete the user
                 .setPositiveButton("Remove", (dialog, which) -> deleteUserFromFirestore(user))
+                //don't delete (dismiss dialog)
                 .setNegativeButton("Cancel", null)
                 .show();
     }
 
     /**
-     * deletes the user's document from the Firestore users collection
+     * deletes the user's document from the Firestore users collection.
+     * On success, removes them from the list as well and updates UI
+     * @param user the UserItem being deleted
      */
     private void deleteUserFromFirestore(AdminUserAdapter.UserItem user) {
         db.collection("users").document(user.documentId).delete()
