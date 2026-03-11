@@ -2,6 +2,8 @@ package com.example.junimoapp.firebase;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
 import com.google.firebase.firestore.CollectionReference;
