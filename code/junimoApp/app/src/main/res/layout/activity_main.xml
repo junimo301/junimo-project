@@ -19,6 +19,8 @@
             android:id="@+id/organizer_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Organizer"
+            android:layout_marginTop="40dp"/>
             android:text="Organizer" />
 
         <!--Admin Button -->

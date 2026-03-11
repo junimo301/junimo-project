@@ -1,16 +1,23 @@
 package com.example.junimoapp.Organizer;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.junimoapp.R;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,12 +31,16 @@ public class CreateEvent extends AppCompatActivity {
      * US 02.01.04 As an organizer, I want to set a registration period.
      * US 02.03.01 As an organizer I want to OPTIONALLY limit the number of entrants who can join my waiting list.
      *
-     * Create Event: title, description, date, location, max capcity, registration period, waiting list, price, geo location, poster
+     * Create Event: title, description, date, location, max capacity, registration period, waiting list, price, geo location, poster
      *
      * */
-    EditText editTitle, editDescription, editStartDate, editEndDate, editEventLocation, editMaxCapacity, editWaitingList, editPrice, editGeoLocation, editPoster;
+    EditText editTitle, editDescription, editStartDate, editEndDate, editDateEvent, editEventLocation, editMaxCapacity, editWaitingList, editPrice, editGeoLocation, editPoster;
     Button uploadNewEvent;
     private Event createdEvent = null;
+    Button QRCodeButton;
+    private String QRCodeString = null;
+    private OrganizerEvent createdEvent = null;
+    private String eventID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +53,7 @@ public class CreateEvent extends AppCompatActivity {
         editDescription = findViewById(R.id.edit_description);
         editStartDate = findViewById(R.id.edit_start_date);
         editEndDate = findViewById(R.id.edit_end_date);
+        editDateEvent = findViewById(R.id.edit_date);
         editEventLocation = findViewById(R.id.edit_event_location);
         editMaxCapacity = findViewById(R.id.edit_max_capacity);
         editWaitingList = findViewById(R.id.edit_waiting_list);
@@ -50,8 +62,10 @@ public class CreateEvent extends AppCompatActivity {
         editPoster = findViewById(R.id.edit_poster);
         //button id
         uploadNewEvent = findViewById(R.id.upload_event_button);
+        QRCodeButton = findViewById(R.id.QR_code_button);
 
-        String eventID = getIntent().getStringExtra("event_Id");
+
+        eventID = getIntent().getStringExtra("event_ID");
         if (eventID != null) {
             createdEvent = EventData.searchEventID(eventID);
 
@@ -60,17 +74,37 @@ public class CreateEvent extends AppCompatActivity {
                 editDescription.setText(createdEvent.getDescription());
                 editStartDate.setText(createdEvent.getStartDate());
                 editEndDate.setText(createdEvent.getEndDate());
+                editDateEvent.setText(createdEvent.getDateEvent());
+                editEventLocation.setText(createdEvent.getEventLocation());
                 editMaxCapacity.setText(String.valueOf(createdEvent.getMaxCapacity()));
                 editWaitingList.setText(String.valueOf(createdEvent.getWaitingListLimit()));
                 editPrice.setText(String.valueOf(createdEvent.getPrice()));
                 editGeoLocation.setText(createdEvent.getGeoLocation().toString());
-                editEventLocation.setText(createdEvent.getEventLocation().toString());
+                editEventLocation.setText(createdEvent.getEventLocation());
                 editPoster.setText(createdEvent.getPoster());
             }
         }
 
+        //QR code
+        QRCodeButton.setOnClickListener(view -> {
+            if (QRCodeString == null) {
+                String QREventID;
+                if (createdEvent != null) {
+                    QREventID = createdEvent.getEventID();
+                } else {
+                    QREventID = UUID.randomUUID().toString();
+                }
+                QRCodeString = "junimo://event?id=" + QREventID;
+                if (createdEvent != null) {
+                    createdEvent.setQRCode(QRCodeString);
+                }
+                Toast.makeText(CreateEvent.this, "QR code generated", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(CreateEvent.this, "QR already exists", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        //buttons
+        //inputs
         uploadNewEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,13 +119,18 @@ public class CreateEvent extends AppCompatActivity {
                     waitingListLimit = Integer.parseInt(editWaitingList.getText().toString());
                 }
                 //required fields
+                String title = editTitle.getText().toString();
                 if (title.isEmpty()) {
                     editTitle.setError("*Field Required*");
                     editTitle.requestFocus();
                     return;
                 }
+                String dateEvent = editDateEvent.getText().toString();
+                if (dateEvent.isEmpty()) {
+                    editDateEvent.setError("*Field Required*");
+                    editDateEvent.requestFocus();
                 String geoLocation_string = editGeoLocation.getText().toString();
-                GeoPoint geoLocation = new GeoPoint(00000,00000);//needs to be fixed
+                GeoPoint geoLocation = new GeoPoint(00000,00000);//needs to be something they choose?
                 if (geoLocation_string.isEmpty()) {
                     editGeoLocation.setError("*Field Required*");
                     editGeoLocation.requestFocus();
@@ -114,14 +153,18 @@ public class CreateEvent extends AppCompatActivity {
                     editPrice.requestFocus();
                     return;
                 } double price = Double.parseDouble(editPrice.getText().toString());
-
+                String geoLocation = editGeoLocation.getText().toString();
+                if (geoLocation.isEmpty()) {
+                    editGeoLocation.setError("*Field Required*");
+                    editGeoLocation.requestFocus();
+                    return;
+                }
 
                 //event ID
-                String eventID;
                 if (createdEvent != null) {
                     eventID = createdEvent.getEventID();
                 }
-                else {
+                else if (eventID == null){
                     eventID = UUID.randomUUID().toString();
                 }
 
@@ -132,6 +175,10 @@ public class CreateEvent extends AppCompatActivity {
                 FirebaseManager firebase = new FirebaseManager();
                 CollectionReference eventsRef=firebase.getDB().collection("events");
                 firebase.addEvent(saveEvent,eventsRef);
+
+                if (QRCodeString != null) {
+                    saveEvent.setQRCode(QRCodeString);
+                }
 
                 EventData.addOrEditEvent(saveEvent);
                 Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();
@@ -149,7 +196,9 @@ public class CreateEvent extends AppCompatActivity {
 
                 Log.d("createEvent", logMessage);
             }
-        });
-    }
+        }
+
+    });
+}
 }
 

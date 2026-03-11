@@ -36,6 +36,12 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/edit_date"
+            android:hint="Date"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/edit_event_location"
             android:hint="Location"/>
 
@@ -63,12 +69,21 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/edit_geo_location"/>
+            android:id="@+id/edit_geo_location"
+            android:hint="Geo Location"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/edit_poster"/>
+            android:id="@+id/edit_poster"
+            android:hint="Poster"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/QR_code_button"
+            android:text="Generate QR Code"/>
+
 
         <Button
             android:layout_width="match_parent"

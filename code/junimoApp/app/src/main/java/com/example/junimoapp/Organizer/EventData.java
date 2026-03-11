@@ -20,9 +20,11 @@ public class EventData {
         return null;
     }
     public static void addOrEditEvent(Event event) {
-        Event created = searchEventID(event.getEventID());
-        if (created != null) {
-            events.remove(created);
+        for (int i = 0; i < events.size(); i++) {
+            if (events.get(i).getEventID().equals(event.getEventID())) {
+                events.set( i, event);
+                return;
+            }
         }
         events.add(event);
     }
