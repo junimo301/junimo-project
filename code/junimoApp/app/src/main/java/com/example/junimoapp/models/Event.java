@@ -164,6 +164,13 @@ public class Event {
     }
 
     //Methods
+    public ArrayList<String> getWaitList() {
+        return waitList;
+    }
+
+    public void setWaitList(ArrayList<String> waitList) {
+        this.waitList = waitList;
+    }
 
     //Register for wait list of event returns true/false on success/failure
     public boolean Register(String account){

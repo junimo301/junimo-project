@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.junimoapp.R;
 import com.example.junimoapp.models.Event;
-//import com.example.junimoapp.TestData.EventTestData;
+import com.example.junimoapp.TestData.EventTestData;
 
 import java.util.List;
 
