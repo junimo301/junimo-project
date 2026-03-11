@@ -28,6 +28,7 @@ import com.example.junimoapp.Organizer.OrganizerStartScreen;
 import com.example.junimoapp.TestData.EventTestData;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -61,9 +62,9 @@ public class MainActivity extends AppCompatActivity {
 
         //test event document
         EventTestData testEvents= new EventTestData();
-        OrganizerEvent testEvent = testEvents.getEvents().get(0);
-        OrganizerEvent testEvent1 = testEvents.getEvents().get(1);
-        OrganizerEvent testEvent2 = testEvents.getEvents().get(2);
+        Event testEvent = testEvents.getEvents().get(0);
+        Event testEvent1 = testEvents.getEvents().get(1);
+        Event testEvent2 = testEvents.getEvents().get(2);
         //write to firestore
         firebase.addEvent(testEvent,eventsRef);
         firebase.addEvent(testEvent1,eventsRef);
