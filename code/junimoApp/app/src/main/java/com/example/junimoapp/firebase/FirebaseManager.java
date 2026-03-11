@@ -2,12 +2,18 @@ package com.example.junimoapp.firebase;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -204,7 +210,6 @@ public class FirebaseManager {
                 Log.e("Firestore", error.toString());
             }
             if(value != null && !value.isEmpty()){
-                eventArrayList.clear();
                 for(QueryDocumentSnapshot snapshot : value){
                     //Fields in events
                     String title = snapshot.getString("Title");
@@ -257,5 +262,24 @@ public class FirebaseManager {
         return userArrayList;
     }
 
-    //to do add load in users and load in events
+    public User getUserById(String deviceId, CollectionReference usersRef){
+        final User[] user = new User[1];
+        usersRef.document(deviceId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d("Firestore", "DocumentSnapshot data: " + document.getData());
+                        user[0] = new User(deviceId, document.getString("name"),document.getString("email"),document.getString("phone"));
+                    } else {
+                        Log.d("Firestore", "No such document");
+                    }
+                } else {
+                    Log.d("Firestore", "get failed with ", task.getException());
+                }
+            }
+        });
+        return user[0];
+    }
 }
