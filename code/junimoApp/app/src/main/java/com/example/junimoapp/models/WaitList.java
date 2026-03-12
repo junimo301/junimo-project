@@ -1,5 +1,6 @@
 package com.example.junimoapp.models;
 
+import com.example.junimoapp.models.Event;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.google.firebase.firestore.CollectionReference;
 
