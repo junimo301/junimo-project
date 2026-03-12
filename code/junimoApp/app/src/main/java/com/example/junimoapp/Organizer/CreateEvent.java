@@ -18,6 +18,8 @@ import com.google.firebase.firestore.GeoPoint;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 public class CreateEvent extends AppCompatActivity {
@@ -141,10 +143,31 @@ public class CreateEvent extends AppCompatActivity {
                 String description = editDescription.getText().toString();
                 String startDate = editStartDate.getText().toString();
                 String endDate = editEndDate.getText().toString();
+                if (!startDate.isEmpty() && !endDate.isEmpty()) {
+                    try {
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        Date start = format.parse(startDate);
+                        Date end = format.parse(endDate);
+
+                        if (start.after(end)) {
+                            editStartDate.setError("Start date must be before end date");
+                            editStartDate.requestFocus();
+                            return;
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(CreateEvent.this, "Invalid date format", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
                 String poster = editPoster.getText().toString();
                 Integer waitingListLimit = null;
                 if (!editWaitingList.getText().toString().isEmpty()) {
                     waitingListLimit = Integer.parseInt(editWaitingList.getText().toString());
+                }
+                if (waitingListLimit != null && waitingListLimit < 0) {
+                    editWaitingList.setError("Waiting list limit must be a positive integer");
+                    editWaitingList.requestFocus();
+                    return;
                 }
                 //required fields
                 String title = editTitle.getText().toString();
@@ -157,6 +180,7 @@ public class CreateEvent extends AppCompatActivity {
                 if (dateEvent.isEmpty()) {
                     editDateEvent.setError("*Field Required*");
                     editDateEvent.requestFocus();
+                    return;
                 }
 
                 String geoLocation_string = editGeoLocation.getText().toString();
