@@ -67,25 +67,30 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
+                        boolean check = false;
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Log.d("Firestore", document.getId() + " => " + document.getData());
                             String docDeviceId = document.getString("deviceId");
                             String name = document.getString("name");
                             String email = document.getString("email");
                             String phone = document.getString("phone");
-                            Log.d("where is it crashing",deviceId); //literally shows the same id, but doesn't pass the equals??
-                            Log.d("where is it crashing",docDeviceId);
 
-                            if(deviceId.equals(docDeviceId)){
-                                //send to user activity if user exists
-                                Intent intent = new Intent(MainActivity.this,UserHomeActivity.class);
-                                startActivity(intent);
+                            if(docDeviceId.equals(deviceId)){
+                                check=true;
+                                break;
                             }
                         }
-                        //send to login page if device id is not in users
-                        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                        startActivity(intent);
-                        Log.d("where is it crashing","line 87??");
+                        if(!check) {
+                            //send to login page if device id is not in users
+                            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                            startActivity(intent);
+                        }
+                        else{
+                            //send to user activity if user exists
+                            Intent intent = new Intent(MainActivity.this,UserHomeActivity.class);
+                            startActivity(intent);
+
+                        }
                     } else {
                         Log.d("Firestore", "Error getting documents: ", task.getException());
                     }
