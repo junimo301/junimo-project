@@ -2,13 +2,16 @@ package com.example.junimoapp;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.junimoapp.firebase.FirebaseManager;
+import com.example.junimoapp.models.User;
 import com.example.junimoapp.utils.DeviceUtils;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -18,8 +21,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     EditText nameInput, emailInput, phoneInput;
     Button saveBtn;
-
-    FirebaseFirestore db;
     String deviceId;
 
 
@@ -28,7 +29,6 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        db = FirebaseManager.getDB();
         deviceId = DeviceUtils.getDeviceId(this);
 
         nameInput = findViewById(R.id.nameInput);
@@ -36,18 +36,18 @@ public class ProfileActivity extends AppCompatActivity {
         phoneInput = findViewById(R.id.phoneInput);
         saveBtn = findViewById(R.id.saveButton);
 
-        saveBtn.setOnClickListener(v -> saveProfile());
-    }
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name= nameInput.getText().toString();
+                String email = emailInput.getText().toString();
+                String phone = phoneInput.getText().toString();
 
-    private void saveProfile() {
+                User user = new User(deviceId,name,email,phone);
 
-        Map<String, Object> user = new HashMap<>();
-        user.put("name", nameInput.getText().toString());
-        user.put("email", emailInput.getText().toString());
-        user.put("phone", phoneInput.getText().toString());
-
-        db.collection("users")
-                .document(deviceId)
-                .set(user);
+                FirebaseManager firebase= new FirebaseManager();
+                CollectionReference usersRef=firebase.getDB().collection("users");
+                firebase.addUser(user,usersRef);            }
+        });
     }
 }

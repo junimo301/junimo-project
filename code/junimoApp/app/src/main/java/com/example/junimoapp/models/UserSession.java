@@ -2,9 +2,9 @@ package com.example.junimoapp.models;
 
 public class UserSession {
     /*
-    * Tracking login
-    *
-    */
+     * Tracking login
+     *
+     */
     private static User currentUser;
 
     public static User getCurrentUser() {
