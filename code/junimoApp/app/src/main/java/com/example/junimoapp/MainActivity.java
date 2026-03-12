@@ -54,37 +54,29 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        //get device id
-        deviceId = DeviceUtils.getDeviceId(this);
+        Button userButton=findViewById(R.id.user_button);
+        userButton.setOnClickListener(v -> {
+            boolean check=false;
+            //get device id
+            deviceId = DeviceUtils.getDeviceId(this);
+            ArrayList<User> allUsers= firebase.getUsers(usersRef);
+            for(User i : allUsers){
+                if(i.getDeviceId().equals(deviceId)){
+                    check = true;
+                }
+            }
+            if(check){
+                //send to user activity if user exists
+                Intent intent = new Intent(MainActivity.this,UserHomeActivity.class);
+                startActivity(intent);
+            }
+            else {
+                //send to login page if device id is not in users
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
+            }
 
-//        //test event document
-//        EventTestData testEvents= new EventTestData();
-//        Event testEvent = testEvents.getEvents().get(0);
-//        Event testEvent1 = testEvents.getEvents().get(1);
-//        Event testEvent2 = testEvents.getEvents().get(2);
-//        //write to firestore
-//        firebase.addEvent(testEvent,eventsRef);
-//        firebase.addEvent(testEvent1,eventsRef);
-//        firebase.addEvent(testEvent2,eventsRef);
-
-        //test user document
-        UserTestData testUsers= new UserTestData();
-        User testUser = testUsers.getUsers().get(0);
-        User testUser1 = testUsers.getUsers().get(1);
-        User testUser2 = testUsers.getUsers().get(2);
-        //write to firestore
-        boolean check= firebase.addUser(testUser,usersRef);
-        firebase.addUser(testUser1,usersRef);
-        firebase.addUser(testUser2,usersRef);
-
-        if(check) {
-            //open user homepage when firebase succeeds
-            Intent intent = new Intent(MainActivity.this, UserHomeActivity.class);
-            startActivity(intent);
-
-            //close mainactivity
-            finish();
-        }
+        });
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -106,18 +98,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, AdminHomeActivity.class);
             startActivity(intent);
         });
-
-        //code that gets the list of users from firebase, maybe should be moved to where it is needed (like admin?)
-        //is it in admin already??
-        userArrayAdapter = new ArrayAdapter<>(this,0);
-        userArrayList = firebase.getUsers(usersRef);
-        userArrayAdapter.notifyDataSetChanged();
-
-
-        //gets event list from firebase, needed here as the app opens to browsing events
-        eventArrayAdapter = new ArrayAdapter<>(this, 0);
-        eventArrayList = firebase.getEvents(eventsRef);
-        eventArrayAdapter.notifyDataSetChanged();
 
     }
 
