@@ -20,6 +20,10 @@ import java.util.HashMap;
  *  - US 01.06.02: Entrant wants to be able to sign up for a waiting list from event details.
  */
 
+/**
+ * provides details for events, such as the eventID, waitlists, and invitations
+ */
+
 public class EventDetailsActivity extends AppCompatActivity {
 
     FirebaseFirestore db;
@@ -98,7 +102,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
 
     //check if registration period is open
-    private boolean registrationPeriod(String startDate, String endDate) {
+    public boolean registrationPeriod(String startDate, String endDate) {
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             Date start = format.parse(startDate);
@@ -112,6 +116,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     }
 
+    //user can accept an invitation, which adds them to the events waitlist
     private void acceptInvite() {
 
         db.collection("events")
@@ -127,6 +132,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                 .delete();
     }
 
+    //user can decline an invitation
     private void declineInvite() {
 
         db.collection("events")
