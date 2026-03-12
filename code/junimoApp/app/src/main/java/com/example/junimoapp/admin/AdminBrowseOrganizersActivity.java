@@ -1,7 +1,11 @@
 package com.example.junimoapp.admin;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -19,7 +23,15 @@ import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+
+/**
+ * activity for admin to browse/remove organizers
+ * diaplays list of all organizers, allows admin to demote organizers to users
+ * and deletes all events they made
+ * Implements User story 03.05.01
+ */
 public class AdminBrowseOrganizersActivity extends AppCompatActivity {
     private static final String TAG = "AdminBrowseOrganizers";
 
@@ -27,6 +39,9 @@ public class AdminBrowseOrganizersActivity extends AppCompatActivity {
     private AdminOrganizerAdapter adapter;
     private List<AdminOrganizerAdapter.OrganizerItem> organizerList;
     private FirebaseFirestore db;
+
+    private EditText searchInput;
+    private TextView backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,15 +51,26 @@ public class AdminBrowseOrganizersActivity extends AppCompatActivity {
 
         db = FirebaseManager.getDB();
         recyclerView = findViewById(R.id.adminProfilesRecyclerView); //reusing recyclerview
+        searchInput = findViewById(R.id.searchProfilesInput);
+        backButton = findViewById(R.id.backToHomeText);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         organizerList = new ArrayList<>();
         adapter = new AdminOrganizerAdapter(organizerList, this::onDemoteOrganizerClicked);
         recyclerView.setAdapter(adapter);
 
+        //set up listeners
+        setupBackButton();
+        setupSearch();
+
+        //load initial data
         loadOrganizers();
     }
 
+    /**
+     * fetches all organizers from Firestore, populated RecyclerView
+     */
     private void loadOrganizers() {
         db.collection("users").whereEqualTo("organizer", true).get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -56,7 +82,7 @@ public class AdminBrowseOrganizersActivity extends AppCompatActivity {
                         //flagged field not in Firestore, pass false instead
                         organizerList.add(new AdminOrganizerAdapter.OrganizerItem(docId, name, email, false));
                     }
-                    adapter.notifyDataSetChanged();
+                    filterList(searchInput.getText().toString());
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Failed to load organizers", e);
@@ -64,6 +90,61 @@ public class AdminBrowseOrganizersActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * sets up back button listener
+     */
+    private void setupBackButton() {
+        backButton.setOnClickListener(v -> finish());
+    }
+
+    /**
+     * Sets up TextWatcher for search input to filter list
+     */
+    private void setupSearch() {
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterList(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //do nothing
+            }
+        });
+    }
+
+    /**
+     * filters list of organizers based on search
+     *
+     * @param query text to filter for organizer name
+     */
+    private void filterList(String query) {
+        List<AdminOrganizerAdapter.OrganizerItem> filteredList;
+        if (query.isEmpty()) {
+            //empty search, full list
+            filteredList = new ArrayList<>(organizerList);
+        } else {
+            //filter the list
+            String lowerCaseQuery = query.toLowerCase();
+            filteredList = organizerList.stream()
+                    .filter(organizer -> organizer.name.toLowerCase().contains(lowerCaseQuery))
+                    .collect(Collectors.toList());
+        }
+        adapter.filterList(filteredList);
+    }
+
+    /**
+     * displays a confirmation dialog when admin clicks demote button
+     * US 03.05.01
+     *
+     * @param organizer OrganizerItem corresponding to clicked row
+     */
     private void onDemoteOrganizerClicked(AdminOrganizerAdapter.OrganizerItem organizer) {
         new AlertDialog.Builder(this)
                 .setTitle("Remove Organizer Status")
@@ -73,6 +154,12 @@ public class AdminBrowseOrganizersActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * updates user's organizer flag to false in Firestore
+     * Part of US 03.05.01
+     *
+     * @param organizer the organizer to be demoted
+     */
     private void demoteOrganizer(AdminOrganizerAdapter.OrganizerItem organizer) {
         //set organizer flag to false for the user
         db.collection("users").document(organizer.documentId)
@@ -87,6 +174,12 @@ public class AdminBrowseOrganizersActivity extends AppCompatActivity {
                 });
     }
 
+
+    /**
+     * queries for demoted organizer's events, deletes them as a batch
+     *
+     * @param organizer organizer who's events are to be deleted
+     */
     private void deleteOrganizerEvents(AdminOrganizerAdapter.OrganizerItem organizer) {
         db.collection("events").whereEqualTo("organizerID", organizer.documentId).get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -113,4 +206,5 @@ public class AdminBrowseOrganizersActivity extends AppCompatActivity {
                     Toast.makeText(this, "Removed organizer status, but could not find their events to delete.", Toast.LENGTH_LONG).show();
                 });
     }
+
 }

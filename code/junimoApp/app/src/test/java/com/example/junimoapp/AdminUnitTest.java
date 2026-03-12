@@ -264,4 +264,33 @@ public class AdminUnitTest {
         //verify other user is still there
         assertTrue(userList.contains(user2));
     }
+
+
+    /**
+     * US 03.05.01
+     * As an administrator, I want to remove organizers that violate app policy
+     * Simulates organizer creation
+     */
+    @Test
+    public void testOrganizerItemCreationForDemotion() {
+        //create OrganizerItem how AdminBrowseOrganizersActivity does when reading from Firestore
+        com.example.junimoapp.admin.AdminOrganizerAdapter.OrganizerItem organizer =
+                new com.example.junimoapp.admin.AdminOrganizerAdapter.OrganizerItem(
+                        "organizer123", //doc ID
+                        "John Organizer", //name
+                        "organizer@example.com", //email
+                        false //placeholder flagged status
+                );
+
+        //verify fields are stored correctly
+        assertEquals("organizer123", organizer.documentId);
+        assertEquals("John Organizer", organizer.name);
+        assertEquals("organizer@example.com", organizer.email);
+        assertFalse(organizer.flagged);
+
+        //check docId validity (needs to be valid for deletion)
+        assertNotNull(organizer.documentId);
+        assertFalse(organizer.documentId.isEmpty());
+    }
+
 }
