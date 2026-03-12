@@ -43,5 +43,5 @@
         android:text="Guidelines"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileButton" />
+        app:layout_constraintTop_toBottomOf="@id/profileButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>
