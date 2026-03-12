@@ -1,8 +1,15 @@
 package com.example.junimoapp.models;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.firebase.FirebaseManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 
@@ -60,8 +67,23 @@ public class WaitList {
         CollectionReference usersRef = firebase.getDB().collection("users");
 
         for(String deviceID : deviceIDs){
-            User user = firebase.getUserById(deviceID,usersRef);
-            users.add(user);
+            usersRef.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d("Firestore", "DocumentSnapshot data: " + document.getData());
+                            User user = new User(deviceID, document.getString("name"),document.getString("email"),document.getString("phone"));
+                            users.add(user);
+                        } else {
+                            Log.d("Firestore", "No such document");
+                        }
+                    } else {
+                        Log.d("Firestore", "get failed with ", task.getException());
+                    }
+                }
+            });
         }
     }
 
