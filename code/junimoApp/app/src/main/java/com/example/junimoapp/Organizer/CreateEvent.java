@@ -1,5 +1,6 @@
 package com.example.junimoapp.Organizer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,7 +11,6 @@ import android.widget.Toast;
 import com.example.junimoapp.R;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
-import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
 import com.google.firebase.firestore.CollectionReference;
@@ -18,6 +18,8 @@ import com.google.firebase.firestore.GeoPoint;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 public class CreateEvent extends AppCompatActivity {
@@ -31,7 +33,7 @@ public class CreateEvent extends AppCompatActivity {
      *
      * */
     EditText editTitle, editDescription, editStartDate, editEndDate, editDateEvent, editEventLocation, editMaxCapacity, editWaitingList, editPrice, editGeoLocation, editPoster;
-    Button uploadNewEvent;
+    Button uploadNewEvent, previewButton;
     private Event createdEvent = null;
     Button QRCodeButton;
     private String QRCodeString = null;
@@ -44,7 +46,6 @@ public class CreateEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
-        //ids created in "dummy" xml file
         //variable ids
         editTitle = findViewById(R.id.edit_title);
         editDescription = findViewById(R.id.edit_description);
@@ -60,6 +61,7 @@ public class CreateEvent extends AppCompatActivity {
         //button id
         uploadNewEvent = findViewById(R.id.upload_event_button);
         QRCodeButton = findViewById(R.id.QR_code_button);
+        previewButton = findViewById(R.id.preview_event_button);
 
 
         eventID = getIntent().getStringExtra("event_ID");
@@ -101,7 +103,39 @@ public class CreateEvent extends AppCompatActivity {
             }
         });
 
-        //inputs
+        //preview the event
+        previewButton.setOnClickListener( view -> {
+            String title = editTitle.getText().toString();
+            String description = editDescription.getText().toString();
+            String startDate = editStartDate.getText().toString();
+            String endDate = editEndDate.getText().toString();
+            String poster = editPoster.getText().toString();
+            String waitingListLimit = editWaitingList.getText().toString();
+            String dateEvent = editDateEvent.getText().toString();
+            String geoLocation_string = editGeoLocation.getText().toString();
+            String eventLocation = editEventLocation.getText().toString();
+            int maxCapacity = Integer.parseInt(editMaxCapacity.getText().toString());
+            double price = Double.parseDouble(editPrice.getText().toString());
+
+            Intent previewEvent = new Intent(CreateEvent.this, EventPreview.class);
+
+            previewEvent.putExtra("title", title);
+            previewEvent.putExtra("description", description);
+            previewEvent.putExtra("startDate", startDate);
+            previewEvent.putExtra("endDate", endDate);
+            previewEvent.putExtra("poster", poster);
+            previewEvent.putExtra("waitingListLimit", waitingListLimit);
+            previewEvent.putExtra("dateEvent", dateEvent);
+            previewEvent.putExtra("geoLocation_string", geoLocation_string);
+            previewEvent.putExtra("eventLocation", eventLocation);
+            previewEvent.putExtra("maxCapacity", maxCapacity);
+            previewEvent.putExtra("price", price);
+
+            startActivity(previewEvent);
+        });
+
+
+        //publish the event
         uploadNewEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,10 +143,31 @@ public class CreateEvent extends AppCompatActivity {
                 String description = editDescription.getText().toString();
                 String startDate = editStartDate.getText().toString();
                 String endDate = editEndDate.getText().toString();
+                if (!startDate.isEmpty() && !endDate.isEmpty()) {
+                    try {
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        Date start = format.parse(startDate);
+                        Date end = format.parse(endDate);
+
+                        if (start.after(end)) {
+                            editStartDate.setError("Start date must be before end date");
+                            editStartDate.requestFocus();
+                            return;
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(CreateEvent.this, "Invalid date format", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
                 String poster = editPoster.getText().toString();
                 Integer waitingListLimit = null;
                 if (!editWaitingList.getText().toString().isEmpty()) {
                     waitingListLimit = Integer.parseInt(editWaitingList.getText().toString());
+                }
+                if (waitingListLimit != null && waitingListLimit < 0) {
+                    editWaitingList.setError("Waiting list limit must be a positive integer");
+                    editWaitingList.requestFocus();
+                    return;
                 }
                 //required fields
                 String title = editTitle.getText().toString();
@@ -125,6 +180,7 @@ public class CreateEvent extends AppCompatActivity {
                 if (dateEvent.isEmpty()) {
                     editDateEvent.setError("*Field Required*");
                     editDateEvent.requestFocus();
+                    return;
                 }
 
                 String geoLocation_string = editGeoLocation.getText().toString();
@@ -176,8 +232,6 @@ public class CreateEvent extends AppCompatActivity {
                 //add to firebase
                 FirebaseManager firebase = new FirebaseManager();
                 CollectionReference eventsRef = firebase.getDB().collection("events");
-                firebase.addEvent(saveEvent, eventsRef);
-
 
                 if (QRCodeString != null) {
                     saveEvent.setQRCode(QRCodeString);
