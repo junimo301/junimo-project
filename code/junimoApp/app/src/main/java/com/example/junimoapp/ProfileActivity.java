@@ -1,6 +1,5 @@
 package com.example.junimoapp;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,10 +11,11 @@ import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.utils.DeviceUtils;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
+/**
+ * user stories implemented:
+ *  - US 01.07.01: Entrant wants to be identified by their device so they do not need a username or password.
+ */
 
 public class ProfileActivity extends AppCompatActivity {
 
