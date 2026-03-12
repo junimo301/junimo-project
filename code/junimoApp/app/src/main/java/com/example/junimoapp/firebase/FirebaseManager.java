@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -261,22 +262,26 @@ public class FirebaseManager {
      */
     public ArrayList<User> getUsers(CollectionReference usersRef){
         ArrayList<User> userArrayList= new ArrayList<>();
-        usersRef.addSnapshotListener((value, error)->{
-            if(error != null){
-                Log.e("Firestore",error.toString());
-            }
-            if(value!=null && !value.isEmpty()){
-                userArrayList.clear();
-                for(QueryDocumentSnapshot snapshot : value){
-                    String deviceId = snapshot.getString("deviceId");
-                    String name = snapshot.getString("name");
-                    String email = snapshot.getString("email");
-                    String phone = snapshot.getString("phone");
+        usersRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d("Firestore", document.getId() + " => " + document.getData());
+                        String deviceId = document.getString("deviceId");
+                        String name = document.getString("name");
+                        String email = document.getString("email");
+                        String phone = document.getString("phone");
 
-                    userArrayList.add(new User(deviceId,name,email,phone));
+                        userArrayList.add(new User(deviceId, name, email, phone));
+                    }
+                } else {
+                    Log.d("Firestore", "Error getting documents: ", task.getException());
                 }
             }
         });
+
+        Log.d("firebaseManager",userArrayList.toString());
         return userArrayList;
     }
 

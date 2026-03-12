@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -17,6 +18,8 @@ import com.example.junimoapp.admin.AdminHomeActivity;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.utils.DeviceUtils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 
 import java.util.Collection;
@@ -29,6 +32,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -56,26 +60,37 @@ public class MainActivity extends AppCompatActivity {
 
         Button userButton=findViewById(R.id.user_button);
         userButton.setOnClickListener(v -> {
-            boolean check=false;
             //get device id
             deviceId = DeviceUtils.getDeviceId(this);
-            ArrayList<User> allUsers= firebase.getUsers(usersRef);
-            for(User i : allUsers){
-                if(i.getDeviceId().equals(deviceId)){
-                    check = true;
-                }
-            }
-            if(check){
-                //send to user activity if user exists
-                Intent intent = new Intent(MainActivity.this,UserHomeActivity.class);
-                startActivity(intent);
-            }
-            else {
-                //send to login page if device id is not in users
-                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(intent);
-            }
+            ArrayList<User> allUsers= new ArrayList<>();
+            usersRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d("Firestore", document.getId() + " => " + document.getData());
+                            String docDeviceId = document.getString("deviceId");
+                            String name = document.getString("name");
+                            String email = document.getString("email");
+                            String phone = document.getString("phone");
+                            Log.d("where is it crashing",deviceId); //literally shows the same id, but doesn't pass the equals??
+                            Log.d("where is it crashing",docDeviceId);
 
+                            if(deviceId.equals(docDeviceId)){
+                                //send to user activity if user exists
+                                Intent intent = new Intent(MainActivity.this,UserHomeActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+                        //send to login page if device id is not in users
+                        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                        startActivity(intent);
+                        Log.d("where is it crashing","line 87??");
+                    } else {
+                        Log.d("Firestore", "Error getting documents: ", task.getException());
+                    }
+                }
+            });
         });
 
 
