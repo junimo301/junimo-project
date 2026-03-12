@@ -4,6 +4,12 @@ import android.os.Bundle;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * displays guidelines for a lottery
+ * user stories implemented:
+ *  - US 01.05.05: Entrant wants to know the criteria or guidelines for the lottery selection process.
+ */
+
 public class GuidelinesActivity extends AppCompatActivity {
 
     @Override
