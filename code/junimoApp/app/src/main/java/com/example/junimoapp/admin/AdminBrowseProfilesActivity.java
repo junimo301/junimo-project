@@ -1,7 +1,11 @@
 package com.example.junimoapp.admin;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -16,17 +20,24 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
+import java.util.stream.Collectors;
 
 /**
  * Activity where admins can browse and remove user profiles
  * Implements user story 03.02.01
  */
 public class AdminBrowseProfilesActivity extends AppCompatActivity {
+    //TAG for logging, so logs regarding this activity can be filtered
     private static final String TAG = "AdminBrowseProfiles";
 
+    //UI stuff
     private RecyclerView recyclerView;
     private AdminUserAdapter adapter;
     private List<AdminUserAdapter.UserItem> userList;
+
     private FirebaseFirestore db;
 
     @Override
@@ -47,16 +58,46 @@ public class AdminBrowseProfilesActivity extends AppCompatActivity {
         adapter = new AdminUserAdapter(userList, this::onDeleteUserClicked);
         recyclerView.setAdapter(adapter);
 
+        //set up back button
+        TextView backButton = findViewById(R.id.backToHomeText);
+        backButton.setOnClickListener(v -> {
+            finish();
+        });
+
+        //US 03.02.01: searching for specific profiles
+        EditText searchInput = findViewById(R.id.searchProfilesInput);
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //nothing needed here
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //when text changes, filter adapter's list
+                filterUsers(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //no action needed here
+            }
+        });
+
         //load users from Firestore
         loadUsers();
     }
 
     /**
      * fetch all documents from the Firestore users collection
+     * on success, clears current user list and refreshes it and
+     * the UI
      */
     private void loadUsers() {
         db.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            //clear the list of the old data
             userList.clear();
+            //iterate through documents
             for (DocumentSnapshot doc : queryDocumentSnapshots) {
                 String docId = doc.getId();
                 String name = doc.getString("name");
@@ -64,31 +105,41 @@ public class AdminBrowseProfilesActivity extends AppCompatActivity {
                 //missing profile info handling:
                 if (name == null || name.isEmpty()) name = "(no name entered)";
                 if (email == null || email.isEmpty()) email = "(no email entered)";
+                //add user to list
                 userList.add(new AdminUserAdapter.UserItem(docId, name, email));
             }
             //notify adapter that data has changed
             adapter.notifyDataSetChanged();
         })
                 .addOnFailureListener(e -> {
+                    //log error (debugging purposes)
                     Log.e(TAG, "Failed to load users", e);
+                    //notify user that something failed
                     Toast.makeText(this, "Failed to load users", Toast.LENGTH_SHORT).show();
                 });
     }
 
     /**
-     * show confirmation dialog when the admin clocks delete
+     * show confirmation dialog when the admin clicks delete, so they have to be
+     * sure they want to delete and have a chance to cancel
+     * @param user The UserItem associated w/ the clicked row
      */
     private void onDeleteUserClicked(AdminUserAdapter.UserItem user) {
+        //get user confirmation
         new AlertDialog.Builder(this)
                 .setTitle("Remove Profile")
                 .setMessage("Are you sure you want to remove \"" + user.name + "\"'s profile? (Permanent!)")
+                //delete the user
                 .setPositiveButton("Remove", (dialog, which) -> deleteUserFromFirestore(user))
+                //don't delete (dismiss dialog)
                 .setNegativeButton("Cancel", null)
                 .show();
     }
 
     /**
-     * deletes the user's document from the Firestore users collection
+     * deletes the user's document from the Firestore users collection.
+     * On success, removes them from the list as well and updates UI
+     * @param user the UserItem being deleted
      */
     private void deleteUserFromFirestore(AdminUserAdapter.UserItem user) {
         db.collection("users").document(user.documentId).delete()
@@ -105,5 +156,24 @@ public class AdminBrowseProfilesActivity extends AppCompatActivity {
                     Log.e(TAG, "Error deleting user from database", e);
                     Toast.makeText(this, "Failed to remove profile.", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    /**
+     * (Helper) Filters user list in RecyclerView based on search, checking if the
+     * user's name contains the search
+     * @param query The text to search for in user names
+     */
+    private void filterUsers(String query) {
+        List<AdminUserAdapter.UserItem> filteredList;
+        //empty query, whole list shown
+        if (query.isEmpty()) {
+            filteredList = new ArrayList<>(userList); //use copy of original full list
+        } else {
+            //otherwise, filter original list based on query
+            String lowerCaseQuery = query.toLowerCase();
+            filteredList = userList.stream().filter(user -> user.name.toLowerCase().contains(lowerCaseQuery))
+                    .collect(Collectors.toList());
+        }
+        adapter.filterList(filteredList);
     }
 }

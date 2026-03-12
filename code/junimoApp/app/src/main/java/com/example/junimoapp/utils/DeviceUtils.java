@@ -3,6 +3,9 @@ package com.example.junimoapp.utils;
 import android.content.Context;
 import android.provider.Settings;
 
+/**
+ *retrieves a unique ID for an android device
+ */
 public class DeviceUtils {
 
     public static String getDeviceId(Context context) {
