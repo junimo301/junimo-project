@@ -28,7 +28,7 @@ public class AdminHomeActivity extends AppCompatActivity {
         //initializing the buttons that are in the layout file
         Button browseEventsButton = findViewById(R.id.adminBrowseEventsButton);
         Button browseProfilesButton = findViewById(R.id.adminBrowseProfilesButton);
-        //Button browseImagesButton = findViewById(R.id.adminBrowseImagesButton);
+        Button browseOrganizersButton = findViewById(R.id.adminBrowseOrganizersButton);
 
         //navigation for the event browsing button (click listener)
         browseEventsButton.setOnClickListener(v -> startActivity(new Intent(this, AdminBrowseEventsActivity.class)));
@@ -36,8 +36,8 @@ public class AdminHomeActivity extends AppCompatActivity {
         //navigation for the profile browsing button (click listener)
         browseProfilesButton.setOnClickListener(v -> startActivity(new Intent(this, AdminBrowseProfilesActivity.class)));
 
-        //navigation for the images browsing button (click listener)
-        //browseImagesButton.setOnClickListener(v -> startActivity(new Intent(this, AdminBrowseImagesActivity.class)));
+        //navigation for the organizers browsing button (click listener)
+        browseOrganizersButton.setOnClickListener(v -> startActivity(new Intent(this, AdminBrowseOrganizersActivity.class)));
 
     }
 }
