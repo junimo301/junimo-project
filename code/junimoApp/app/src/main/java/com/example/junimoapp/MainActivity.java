@@ -13,7 +13,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.junimoapp.TestData.UserTestData;
 import com.example.junimoapp.admin.AdminHomeActivity;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.User;
@@ -22,15 +21,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import com.example.junimoapp.models.Event;
-import com.example.junimoapp.Organizer.OrganizerStartScreen;
-import com.example.junimoapp.TestData.EventTestData;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 

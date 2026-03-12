@@ -1,12 +1,16 @@
 package com.example.junimoapp.Organizer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.junimoapp.MainActivity;
+import com.example.junimoapp.OrganizerStartScreen;
 import com.example.junimoapp.R;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
@@ -34,6 +38,7 @@ public class CreateEvent extends AppCompatActivity {
     Button uploadNewEvent;
     private Event createdEvent = null;
     Button QRCodeButton;
+    TextView backButton;
     private String QRCodeString = null;
     private String eventID;
     private String organizerID;
@@ -60,7 +65,7 @@ public class CreateEvent extends AppCompatActivity {
         //button id
         uploadNewEvent = findViewById(R.id.upload_event_button);
         QRCodeButton = findViewById(R.id.QR_code_button);
-
+        backButton=findViewById(R.id.backButton);
 
         eventID = getIntent().getStringExtra("event_ID");
         if (eventID != null) {
@@ -201,6 +206,12 @@ public class CreateEvent extends AppCompatActivity {
                 Log.d("createEvent", logMessage);
             }
         });
+        backButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(CreateEvent.this, OrganizerStartScreen.class);
+                startActivity(intent);            }
+        });
+
     }
 }
 

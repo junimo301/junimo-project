@@ -23,11 +23,11 @@ public class UserHomeActivity extends AppCompatActivity {
         profileButton = findViewById(R.id.profileButton);
         guidelinesButton = findViewById(R.id.guidelinesButton);
 
-        /*
+
         //open events page
         eventsButton.setOnClickListener(v ->
                 startActivity(new Intent(this, EventsActivity.class)));
-         */
+
 
         //open invitations page
         invitationsButton.setOnClickListener(v ->

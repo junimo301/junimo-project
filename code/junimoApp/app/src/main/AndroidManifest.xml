@@ -27,7 +27,7 @@
         <activity android:name=".ProfileActivity" />
 
         <!-- Organizer activities -->
-        <activity android:name=".Organizer.OrganizerStartScreen" />
+        <activity android:name=".OrganizerStartScreen" />
         <activity android:name=".Organizer.CreateEvent" />
 
         <activity android:name=".admin.AdminHomeActivity" />
