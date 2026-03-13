@@ -1,21 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    tools:layout_height="match_parent"
     android:layout_marginBottom="14dp"
-    android:orientation="vertical">
+    android:background="#000000"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Event Lottery"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="#2A2A2A" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="← Back to Home"
+        android:textColor="#E1E1E1"
+        android:textSize="14sp" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="160dp"
         android:background="@drawable/bg_event_tile"
         android:padding="4dp">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher_background" />
 
         <TextView
             android:id="@+id/event_title"
@@ -24,10 +45,11 @@
             android:layout_gravity="start|top"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="Event Name"
+            android:text=""
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Event Name" />
 
         <Button
             android:id="@+id/edit_event_button"
@@ -52,7 +74,8 @@
         android:id="@+id/event_description"
         android:layout_width="1dp"
         android:layout_height="1dp"
+        android:text=""
         android:visibility="gone"
-        android:text="Event description" />
+        tools:text="Event description" />
 
 </LinearLayout>
