@@ -46,11 +46,6 @@ public class UserHomeActivity extends AppCompatActivity {
         invitationsButton = findViewById(R.id.invitationsButton);
         profileButton = findViewById(R.id.profileButton);
         guidelinesButton = findViewById(R.id.guidelinesButton);
-
-        //open events page
-        eventsButton.setOnClickListener(v ->
-                startActivity(new Intent(this, EventsActivity.class)));
-
         eventListView = findViewById(R.id.eventListView);
 
         //open invitations page
