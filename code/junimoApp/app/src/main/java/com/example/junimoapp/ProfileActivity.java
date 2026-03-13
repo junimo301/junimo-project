@@ -19,6 +19,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
  *  - US 01.07.01: Entrant wants to be identified by their device so they do not need a username or password.
  */
 
+/**
+ * creates a profile for a user
+ */
 public class ProfileActivity extends AppCompatActivity {
 
     private TextInputLayout nameInputLayout;
