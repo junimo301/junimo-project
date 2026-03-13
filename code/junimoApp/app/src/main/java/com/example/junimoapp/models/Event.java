@@ -4,6 +4,9 @@ import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 
+/**
+ * Class defining event objects, includes methods to enroll and be removed from waitlists.
+ */
 public class Event {
     private String eventID;
     private String title;

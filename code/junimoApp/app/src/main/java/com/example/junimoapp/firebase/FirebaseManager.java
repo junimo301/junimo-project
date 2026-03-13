@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Class for defining firebase methods
+ * Class for defining firebase methods and loading in the firebase instance
  */
 public class FirebaseManager {
     public FirebaseManager() {}
@@ -125,7 +125,7 @@ public class FirebaseManager {
      * @param newValue
      * the new value to be added
      */
-    public void updateEvent(CollectionReference eventsRef, Event event, String field, ArrayList<String> newValue) {
+    public static void updateEvent(CollectionReference eventsRef, Event event, String field, ArrayList<String> newValue) {
         DocumentReference docRef = eventsRef.document(event.getEventID());
         docRef.update(field, newValue);
     }
@@ -161,36 +161,5 @@ public class FirebaseManager {
         DocumentReference docRef = usersRef.document(user.getDeviceId());
         docRef.update(field,newValue);
     }
-
-//    public ArrayList<Event> getEvents(CollectionReference eventsRef){
-//        ArrayList<Event> eventArrayList = new ArrayList<>();
-//        eventsRef.addSnapshotListener((value,error)-> {
-//            if(error != null){
-//                Log.e("Firestore", error.toString());
-//            }
-//            if(value != null && !value.isEmpty()){
-//                for(QueryDocumentSnapshot snapshot : value){
-//                    //Fields in events
-//                    String title = snapshot.getString("Title");
-//                    String description = snapshot.getString("Description");
-//                    String startDate = snapshot.getString("startDate");
-//                    String endDate = snapshot.getString("endDate");
-//                    String dateEvent = snapshot.getString("dateEvent");
-//                    int maxCapacity = (snapshot.getLong("maxCapacity")).intValue();
-//                    int waitingListLimit = (snapshot.getLong("waitingListLimit")).intValue();
-//                    double price = snapshot.getDouble("price");
-//                    GeoPoint geoLocation = snapshot.getGeoPoint("geoLocation"); //geoPoint is a type apparently? seems helpful??
-//                    String poster = snapshot.getString("poster");
-//                    String eventID = snapshot.getString("eventID");
-//                    String eventLocation = snapshot.getString("eventLocation");
-//
-//                    String organizerID = snapshot.getString("organizerID");
-//
-//                    eventArrayList.add(new Event(title,description,startDate,endDate,dateEvent,maxCapacity,waitingListLimit,price,geoLocation,poster,eventID,eventLocation,organizerID));
-//                }
-//            }
-//        });
-//        return eventArrayList;
-//    }
 
 }
