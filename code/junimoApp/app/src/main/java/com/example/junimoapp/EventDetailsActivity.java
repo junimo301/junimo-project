@@ -1,7 +1,9 @@
 package com.example.junimoapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,12 +22,17 @@ import java.util.HashMap;
  *  - US 01.06.02: Entrant wants to be able to sign up for a waiting list from event details.
  */
 
+/**
+ * provides details for events, such as the eventID, waitlists, and invitations
+ */
+
 public class EventDetailsActivity extends AppCompatActivity {
 
     FirebaseFirestore db;
     String deviceId;
     String eventId;
 
+    TextView backButton;
     Button joinWaitlistButton;
     Button acceptButton;
     Button declineButton;
@@ -41,15 +48,21 @@ public class EventDetailsActivity extends AppCompatActivity {
         //eventId should be passed from previous activity
         eventId = getIntent().getStringExtra("eventId");
 
+        backButton = findViewById(R.id.backToInvitesText);
         joinWaitlistButton = findViewById(R.id.joinWaitlistButton);
         acceptButton = findViewById(R.id.acceptButton);
         declineButton = findViewById(R.id.declineButton);
 
+        backButton.setOnClickListener(v -> back());
         joinWaitlistButton.setOnClickListener(v -> joinWaitlist());
         acceptButton.setOnClickListener(v -> acceptInvite());
         declineButton.setOnClickListener(v -> declineInvite());
     }
 
+    private void back() {
+        Intent intent = new Intent(EventDetailsActivity.this, UserHomeActivity.class);
+        startActivity(intent);
+    }
     private void joinWaitlist() {
 
         db.collection("events")
@@ -98,7 +111,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
 
     //check if registration period is open
-    private boolean registrationPeriod(String startDate, String endDate) {
+    public boolean registrationPeriod(String startDate, String endDate) {
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             Date start = format.parse(startDate);
@@ -112,6 +125,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     }
 
+    //user can accept an invitation, which adds them to the events waitlist
     private void acceptInvite() {
 
         db.collection("events")
@@ -127,6 +141,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                 .delete();
     }
 
+    //user can decline an invitation
     private void declineInvite() {
 
         db.collection("events")

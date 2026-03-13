@@ -25,9 +25,11 @@
         <activity android:name=".UserHomeActivity" />
         <activity android:name=".InvitationsActivity" />
         <activity android:name=".ProfileActivity" />
+        <activity android:name=".GuidelinesActivity"/>
+        <activity android:name=".EventDetailsActivity"/>
 
         <!-- Organizer activities -->
-        <activity android:name=".Organizer.OrganizerStartScreen" />
+        <activity android:name=".OrganizerStartScreen" />
         <activity android:name=".Organizer.CreateEvent" />
         <activity android:name=".Organizer.EventPreview" />
         <activity android:name=".Organizer.Entrants" />
