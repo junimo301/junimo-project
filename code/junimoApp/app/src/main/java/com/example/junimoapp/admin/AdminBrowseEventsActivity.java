@@ -1,7 +1,10 @@
 package com.example.junimoapp.admin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +37,9 @@ public class AdminBrowseEventsActivity extends AppCompatActivity {
 
     // the RecyclerView that displays the list of events
     private RecyclerView recyclerView;
+
+    //back button view
+    private TextView backButton;
 
     // the adapter that connects our eventList data to the RecyclerView rows
     private AdminEventAdapter adapter;
@@ -71,6 +77,13 @@ public class AdminBrowseEventsActivity extends AppCompatActivity {
         adapter = new AdminEventAdapter(eventList, this::onDeleteEventClicked);
         recyclerView.setAdapter(adapter);
 
+        backButton=findViewById(R.id.backToHomeText);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AdminBrowseEventsActivity.this, AdminHomeActivity.class);
+            }
+        });
         // fetch events from Firestore and populate the list
         loadEvents();
     }
