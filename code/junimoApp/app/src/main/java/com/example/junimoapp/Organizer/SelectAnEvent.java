@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.junimoapp.OrganizerStartScreen;
 import com.example.junimoapp.R;
 import com.example.junimoapp.models.Event;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -65,10 +66,10 @@ public class SelectAnEvent extends AppCompatActivity {
 
         }
 
-        /** returns to select an event screen */
+        /** returns to select organizer home screen */
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(Entrants.this, SelectAnEvent.class);
+                Intent intent = new Intent(SelectAnEvent.this, OrganizerStartScreen.class);
                 startActivity(intent);            }
         });
 
