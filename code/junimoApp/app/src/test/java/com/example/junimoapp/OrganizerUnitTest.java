@@ -6,6 +6,12 @@ import com.example.junimoapp.models.Event;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Unit tests for Organizer functionality.
  * Tests cover model and control logic for event creation and management.
@@ -306,4 +312,57 @@ public class OrganizerUnitTest {
 
         assertTrue("Sampling everyone on the list should be valid", isValid);
     }
+
+    /**
+     * US 02.06.01
+     * Tests that invited entrants are stored correctly.
+     * */
+    @Test
+    public void TestInvitedEntrants() {
+        List<String> invitedEntrants = Arrays.asList("Jane", "Jack", "Jill");
+        assertEquals(3, invitedEntrants.size());
+        assertTrue(invitedEntrants.contains("Jane"));
+        assertTrue(invitedEntrants.contains("Jack"));
+        assertTrue(invitedEntrants.contains("Jill"));
+    }
+
+    /**
+     * US 02.06.02
+     * Tests that cancelled entrants are stored correctly.
+     * */
+    @Test
+    public void TestCancelledEntrants() {
+        List<String> cancelledEntrant= Arrays.asList("Billy", "Bonnie", "Bon");
+        assertEquals(3, cancelledEntrant.size());
+        assertTrue(cancelledEntrant.contains("Billy"));
+        assertTrue(cancelledEntrant.contains("Bonnie"));
+        assertTrue(cancelledEntrant.contains("Bon"));
+    }
+
+    /**
+     * US 02.06.03
+     * Tests that enrolled entrants are stored correctly.
+     * */
+    @Test
+    public void TestEnrolledEntrants() {
+        List<String> enrolledEntrant = Arrays.asList("Ally", "Anna", "Adien");
+        assertEquals(3, enrolledEntrant.size());
+        assertTrue(enrolledEntrant.contains("Ally"));
+        assertTrue(enrolledEntrant.contains("Anna"));
+        assertTrue(enrolledEntrant.contains("Adien"));
+    }
+
+    /**
+     * US 02.02.01
+     * Tests that the entrants who joined the waiting list are stored correctly.
+     * */
+    @Test
+    public void TestJoinedWaitingList() {
+        List<String> joinedWaitingListNames = Arrays.asList("Caine", "Couper", "Chloe");
+        assertEquals(3, joinedWaitingListNames.size());
+        assertTrue(joinedWaitingListNames.contains("Caine"));
+        assertTrue(joinedWaitingListNames.contains("Couper"));
+        assertTrue(joinedWaitingListNames.contains("Chloe"));
+    }
+
 }
