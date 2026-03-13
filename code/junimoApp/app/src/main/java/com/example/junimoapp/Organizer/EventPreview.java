@@ -3,6 +3,7 @@ package com.example.junimoapp.Organizer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -13,7 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.junimoapp.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-
+/**
+ * Allows you to see the preview of an event before it is published
+ *   - How it will look to users
+ * Organizer can go back to editing or upload the event back on the create/edit screen
+ * */
 public class EventPreview extends AppCompatActivity {
     /*
      * Allows you to see the preview of an event before it is published
@@ -26,10 +31,15 @@ public class EventPreview extends AppCompatActivity {
      *
      */
     Button backButton;
+    /** Views the event info */
     TextView title, description, startDate, endDate, dateEvent, eventLocation, maxCapacity, waitingList, price, geoLocation, poster;
     private FirebaseFirestore db;
 
-
+    /**
+     * called when activty is first created
+     * displays the event data from CreateEvent as a "preview" before upload
+     * @param savedInstanceState
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -85,10 +95,11 @@ public class EventPreview extends AppCompatActivity {
         //poster.setText(ePoster);
 
 
-        //go back to creating/editing the event
+        /** returns to creating/editing the event */
         backButton.setOnClickListener(view -> {
             finish();
         });
+
 
 
     }
