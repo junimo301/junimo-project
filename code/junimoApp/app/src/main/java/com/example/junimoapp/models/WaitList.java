@@ -13,6 +13,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * Class defining a waitlist as an array of users (instead of ids) and gives the capacity and limit based on the provided event.
+ */
 public class WaitList {
     private ArrayList<User> users;
     private int maxCapacity;

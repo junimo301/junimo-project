@@ -36,6 +36,7 @@ import java.util.HashMap;
 
 /**
  * provides details for events, such as the eventID, waitlists, and invitations
+ * Allows user to join wait list and leave waitlist
  */
 
 public class EventDetailsActivity extends AppCompatActivity {

@@ -23,7 +23,11 @@ import com.google.firebase.firestore.GeoPoint;
 import java.util.ArrayList;
 
 public class UserHomeActivity extends AppCompatActivity {
-
+    /**
+     * Home page for user.
+     * Shows list of events, a button to edit profile, a button to view lottery info and a button to show winning lottery invitations
+     *
+     */
     ListView eventsList;
     Button invitationsButton;
     Button profileButton;

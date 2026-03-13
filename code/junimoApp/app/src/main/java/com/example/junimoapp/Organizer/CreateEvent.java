@@ -25,6 +25,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * Class for the create event page.
+ */
 public class CreateEvent extends AppCompatActivity {
     /*
      * User stories:

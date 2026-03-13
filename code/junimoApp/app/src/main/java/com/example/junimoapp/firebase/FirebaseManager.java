@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Class for defining firebase methods
+ * Class for defining firebase methods and loading in the firebase instance
  */
 public class FirebaseManager {
     public FirebaseManager() {}
