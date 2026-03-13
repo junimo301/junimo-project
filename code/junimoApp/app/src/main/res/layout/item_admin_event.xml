@@ -20,10 +20,6 @@
             android:id="@+id/adminEventTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-<<<<<<< Updated upstream
-            android:text=""
-=======
->>>>>>> Stashed changes
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -34,10 +30,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-<<<<<<< Updated upstream
-            android:text=""
-=======
->>>>>>> Stashed changes
             android:textColor="#D8D8D8"
             android:textSize="13sp"
             tools:text="Event description" />
