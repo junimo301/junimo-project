@@ -1,6 +1,9 @@
 package com.example.junimoapp;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +23,7 @@ import java.util.Map;
 public class InvitationsActivity extends AppCompatActivity {
 
     private InvitationAdapter adapter;
+    private TextView backButton;
     private final List<InvitationItem> invitations = new ArrayList<>();
     private String deviceId;
     private FirebaseFirestore db;
@@ -35,6 +39,14 @@ public class InvitationsActivity extends AppCompatActivity {
         deviceId = DeviceUtils.getDeviceId(this);
         db = FirebaseFirestore.getInstance();
 
+        backButton = findViewById(R.id.backToHomeText);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(InvitationsActivity.this, UserHomeActivity.class);
+                startActivity(intent);
+            }
+        });
         //adapter with listener for accept/decline
         adapter = new InvitationAdapter(invitations, new InvitationAdapter.InvitationListener() {
             @Override

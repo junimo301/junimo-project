@@ -1,5 +1,8 @@
 package com.example.junimoapp.models;
 
+/**
+ * Class to get and set the current user.
+ */
 public class UserSession {
     /*
      * Tracking login
