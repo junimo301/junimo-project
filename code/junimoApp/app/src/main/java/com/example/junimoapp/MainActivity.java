@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.junimoapp.admin.AdminHomeActivity;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.User;
+import com.example.junimoapp.models.UserSession;
 import com.example.junimoapp.utils.DeviceUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -69,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
                             String phone = document.getString("phone");
 
                             if(docDeviceId.equals(deviceId)){
+                                User currentUser= new User(docDeviceId,name,email,phone);
+                                UserSession.setCurrentUser(currentUser);
                                 check=true;
                                 break;
                             }
@@ -101,8 +104,43 @@ public class MainActivity extends AppCompatActivity {
         Button organizerButton = findViewById(R.id.organizer_button);
 
         organizerButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, OrganizerStartScreen.class);
-            startActivity(intent);
+            //get device id
+            deviceId = DeviceUtils.getDeviceId(this);
+            usersRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        boolean check = false;
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d("Firestore", document.getId() + " => " + document.getData());
+                            String docDeviceId = document.getString("deviceId");
+                            String name = document.getString("name");
+                            String email = document.getString("email");
+                            String phone = document.getString("phone");
+
+                            if(docDeviceId.equals(deviceId)){
+                                User currentUser= new User(docDeviceId,name,email,phone);
+                                UserSession.setCurrentUser(currentUser);
+                                check=true;
+                                break;
+                            }
+                        }
+                        if(!check) {
+                            //send to login page if device id is not in users
+                            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                            startActivity(intent);
+                        }
+                        else{
+                            //send to organizer activity if user exists
+                            Intent intent = new Intent(MainActivity.this, OrganizerStartScreen.class);
+                            startActivity(intent);
+
+                        }
+                    } else {
+                        Log.d("Firestore", "Error getting documents: ", task.getException());
+                    }
+                }
+            });
         });
 
         //Admin button
