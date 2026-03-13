@@ -5,27 +5,66 @@ import com.google.firebase.firestore.GeoPoint;
 import java.util.ArrayList;
 
 /**
- * Class defining event objects, includes methods to enroll and be removed from waitlists.
- */
+ * Event specific information
+ *  - details that organizer inputs
+ * */
 public class Event {
+
+    /** the unquie id for the event */
     private String eventID;
     private String title;
     private String description;
+
+    /** the start and end date of the registration period */
     private String startDate;  //registration period, use Date later
     private String endDate;    //registration period, use Date later
+
+    /** the date of the event */
     private String dateEvent;   //date of the event
+
+    /** the max capacity of entrants for the event */
     private int maxCapacity; //event limit
+
+    /** the waiting list limit of entrants for the event */
     private int waitingListLimit;
     private double price;
+
+    /** unique QR code for the event */
     private String QRCode = null; //generate QR code for events
+
+    /** the location of the entrants for the event */
     private GeoPoint geoLocation; //entrants location, use Location later
+
+    /** the location of the event */
     private String eventLocation; //for event location
+
+    /** the poster/image for the event */
     private String poster;  //event images
 
+
+    /** list of the user id who are on the waiting list */
     private ArrayList<String> waitList;
+
+    /** the organizer id */
     private String organizerID;
 
 
+    /**
+     * constructs event with all the details
+     * @param title
+     * @param description
+     * @param startDate
+     * @param endDate
+     * @param dateEvent
+     * @param maxCapacity
+     * @param waitingListLimit
+     * @param price
+     * @param geoLocation
+     * @param eventLocation
+     * @param poster
+     * @param eventID
+     * @param organizerID
+     * */
     public Event(String title, String description, String startDate, String endDate, String dateEvent, int maxCapacity, int waitingListLimit, double price, GeoPoint geoLocation, String poster, String eventID, String eventLocation, String organizerID) {
         this.title = title;
         this.description = description;
