@@ -27,7 +27,7 @@ public class OrganizerStartScreen extends AppCompatActivity {
     //view my events
     private RecyclerView scrollable;
     private ListOfMyEvents myEvents;
-    private List<OrganizerEvent> eventList;
+    private List<Event> eventList;
 
 
     @Override
