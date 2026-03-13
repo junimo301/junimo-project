@@ -19,6 +19,14 @@
             android:text="Create Event"
             android:layout_marginTop="40dp"/>
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/view_entrants_button"
+            android:text="View Entrants"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="20dp"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="0dp"

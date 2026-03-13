@@ -13,7 +13,9 @@ import com.example.junimoapp.utils.DeviceUtils;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InvitationsActivity extends AppCompatActivity {
 
@@ -78,15 +80,23 @@ public class InvitationsActivity extends AppCompatActivity {
     }
 
     private void acceptInvite(String eventId) {
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", deviceId);
+
         db.collection("events").document(eventId)
-                .collection("acceptedUsers").document(deviceId).set(new java.util.HashMap<>());
+                .collection("acceptedUsers").document(deviceId).set(data);
         db.collection("events").document(eventId)
                 .collection("waitlist").document(deviceId).delete();
     }
 
     private void declineInvite(String eventId) {
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", deviceId);
+
         db.collection("events").document(eventId)
-                .collection("declinedUsers").document(deviceId).set(new java.util.HashMap<>());
+                .collection("declinedUsers").document(deviceId).set(data);
         db.collection("events").document(eventId)
                 .collection("waitlist").document(deviceId).delete();
     }
