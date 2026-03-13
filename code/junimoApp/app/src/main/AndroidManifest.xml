@@ -30,6 +30,8 @@
         <activity android:name=".Organizer.OrganizerStartScreen" />
         <activity android:name=".Organizer.CreateEvent" />
         <activity android:name=".Organizer.EventPreview" />
+        <activity android:name=".Organizer.Entrants" />
+        <activity android:name=".Organizer.SelectAnEvent" />
 
         <!--Admin activities -->
         <activity android:name=".admin.AdminHomeActivity" />

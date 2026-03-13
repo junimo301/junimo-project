@@ -33,5 +33,7 @@ public class EventData {
     }
 
 
-
+    public static List<Event> getEvents() {
+        return events;
+    }
 }
