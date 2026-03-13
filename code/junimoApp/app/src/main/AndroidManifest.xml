@@ -26,6 +26,7 @@
         <activity android:name=".InvitationsActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".GuidelinesActivity"/>
+        <activity android:name=".EventDetailsActivity"/>
 
         <!-- Organizer activities -->
         <activity android:name=".OrganizerStartScreen" />
