@@ -1,7 +1,11 @@
 package com.example.junimoapp.admin;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -16,6 +20,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
+import java.util.stream.Collectors;
 
 /**
  * Activity where admins can browse and remove user profiles
@@ -49,6 +57,32 @@ public class AdminBrowseProfilesActivity extends AppCompatActivity {
         //passed a lambda function to handle deleting clicks
         adapter = new AdminUserAdapter(userList, this::onDeleteUserClicked);
         recyclerView.setAdapter(adapter);
+
+        //set up back button
+        TextView backButton = findViewById(R.id.backToHomeText);
+        backButton.setOnClickListener(v -> {
+            finish();
+        });
+
+        //US 03.02.01: searching for specific profiles
+        EditText searchInput = findViewById(R.id.searchProfilesInput);
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //nothing needed here
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //when text changes, filter adapter's list
+                filterUsers(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //no action needed here
+            }
+        });
 
         //load users from Firestore
         loadUsers();
@@ -122,5 +156,24 @@ public class AdminBrowseProfilesActivity extends AppCompatActivity {
                     Log.e(TAG, "Error deleting user from database", e);
                     Toast.makeText(this, "Failed to remove profile.", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    /**
+     * (Helper) Filters user list in RecyclerView based on search, checking if the
+     * user's name contains the search
+     * @param query The text to search for in user names
+     */
+    private void filterUsers(String query) {
+        List<AdminUserAdapter.UserItem> filteredList;
+        //empty query, whole list shown
+        if (query.isEmpty()) {
+            filteredList = new ArrayList<>(userList); //use copy of original full list
+        } else {
+            //otherwise, filter original list based on query
+            String lowerCaseQuery = query.toLowerCase();
+            filteredList = userList.stream().filter(user -> user.name.toLowerCase().contains(lowerCaseQuery))
+                    .collect(Collectors.toList());
+        }
+        adapter.filterList(filteredList);
     }
 }

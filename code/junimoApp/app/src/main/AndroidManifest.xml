@@ -38,6 +38,7 @@
         <activity android:name=".admin.AdminBrowseEventsActivity" />
         <activity android:name=".admin.AdminBrowseProfilesActivity" />
         <activity android:name=".admin.AdminBrowseImagesActivity" />
+        <activity android:name=".admin.AdminBrowseOrganizersActivity" />
 
     </application>
 

@@ -54,7 +54,7 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
         void onDeleteClick(UserItem user);
     }
 
-    private final List<UserItem> userList;
+    private List<UserItem> userList;
     private final OnDeleteClickListener deleteListener;
 
     /**
@@ -136,5 +136,17 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
             //set the click listener for the delete button, calls the interface method
             deleteButton.setOnClickListener(v -> listener.onDeleteClick(user));
         }
+    }
+
+    /**
+     * Updates list of users displayed/refreshes UI, used for filtering
+     * cased on search queries
+     * @param filteredList new list of users to display
+     */
+    public void filterList(List<UserItem> filteredList) {
+        //replaces the list directly. Would be better implementations for sure
+        //but this is good enough
+        this.userList = filteredList;
+        notifyDataSetChanged();
     }
 }
