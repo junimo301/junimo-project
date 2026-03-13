@@ -31,6 +31,7 @@ import java.util.List;
 public class OrganizerStartScreen extends AppCompatActivity {
     //Create and edit event
     Button createEventButton;
+    Button viewEntrantsButton;
     //view my events
     private RecyclerView scrollable;
     private ListOfMyEvents myEvents;
