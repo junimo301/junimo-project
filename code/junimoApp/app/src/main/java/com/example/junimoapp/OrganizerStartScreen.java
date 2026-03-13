@@ -1,4 +1,4 @@
-package com.example.junimoapp.Organizer;
+package com.example.junimoapp;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -10,8 +10,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+<<<<<<< Updated upstream:code/junimoApp/app/src/main/java/com/example/junimoapp/Organizer/OrganizerStartScreen.java
 import com.example.junimoapp.R;
 //import com.example.junimoapp.TestData.EventTestData;
+=======
+import com.example.junimoapp.Organizer.CreateEvent;
+import com.example.junimoapp.Organizer.EventData;
+import com.example.junimoapp.Organizer.ListOfMyEvents;
+import com.example.junimoapp.models.Event;
+>>>>>>> Stashed changes:code/junimoApp/app/src/main/java/com/example/junimoapp/OrganizerStartScreen.java
 
 import java.util.List;
 

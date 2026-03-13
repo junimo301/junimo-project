@@ -7,25 +7,38 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+<<<<<<< Updated upstream
+=======
+import com.example.junimoapp.admin.AdminHomeActivity;
+import com.example.junimoapp.firebase.FirebaseManager;
+import com.example.junimoapp.models.User;
+>>>>>>> Stashed changes
 import com.example.junimoapp.utils.DeviceUtils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+<<<<<<< Updated upstream
 import java.util.HashMap;
 import java.util.Map;
 import com.example.junimoapp.Organizer.OrganizerEvent;
 import com.example.junimoapp.Organizer.OrganizerStartScreen;
 import com.example.junimoapp.TestData.EventTestData;
+=======
+import com.example.junimoapp.models.Event;
+>>>>>>> Stashed changes
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+<<<<<<< Updated upstream
         //get device id
         deviceId = DeviceUtils.getDeviceId(this);
 
@@ -56,6 +70,47 @@ public class MainActivity extends AppCompatActivity {
         Map<String, Object> testUser = new HashMap<>();
         testUser.put("deviceId", deviceId);
         testUser.put("test", "connected");
+=======
+        Button userButton=findViewById(R.id.user_button);
+        userButton.setOnClickListener(v -> {
+            //get device id
+            deviceId = DeviceUtils.getDeviceId(this);
+            ArrayList<User> allUsers= new ArrayList<>();
+            usersRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        boolean check = false;
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d("Firestore", document.getId() + " => " + document.getData());
+                            String docDeviceId = document.getString("deviceId");
+                            String name = document.getString("name");
+                            String email = document.getString("email");
+                            String phone = document.getString("phone");
+
+                            if(docDeviceId.equals(deviceId)){
+                                check=true;
+                                break;
+                            }
+                        }
+                        if(!check) {
+                            //send to login page if device id is not in users
+                            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                            startActivity(intent);
+                        }
+                        else{
+                            //send to user activity if user exists
+                            Intent intent = new Intent(MainActivity.this,UserHomeActivity.class);
+                            startActivity(intent);
+
+                        }
+                    } else {
+                        Log.d("Firestore", "Error getting documents: ", task.getException());
+                    }
+                }
+            });
+        });
+>>>>>>> Stashed changes
 
         //write to firestore
         db.collection("users")

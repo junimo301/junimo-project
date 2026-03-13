@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+<<<<<<< Updated upstream
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -13,6 +14,17 @@ import com.example.junimoapp.R;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
+=======
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.junimoapp.R;
+import com.example.junimoapp.firebase.FirebaseManager;
+import com.example.junimoapp.models.Event;
+import com.example.junimoapp.firebase.FirebaseManager;
+import com.example.junimoapp.models.User;
+import com.example.junimoapp.models.UserSession;
+>>>>>>> Stashed changes
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,6 +47,7 @@ public class CreateEvent extends AppCompatActivity {
     EditText editTitle, editDescription, editStartDate, editEndDate, editDateEvent, editEventLocation, editMaxCapacity, editWaitingList, editPrice, editGeoLocation, editPoster;
     Button uploadNewEvent;
     Button QRCodeButton;
+    TextView backButton;
     private String QRCodeString = null;
     private OrganizerEvent createdEvent = null;
     private String eventID;
@@ -60,6 +73,11 @@ public class CreateEvent extends AppCompatActivity {
         //button id
         uploadNewEvent = findViewById(R.id.upload_event_button);
         QRCodeButton = findViewById(R.id.QR_code_button);
+<<<<<<< Updated upstream
+=======
+        backButton=findViewById(R.id.backButton);
+        previewButton = findViewById(R.id.preview_event_button);
+>>>>>>> Stashed changes
 
 
         eventID = getIntent().getStringExtra("event_ID");
@@ -188,6 +206,14 @@ public class CreateEvent extends AppCompatActivity {
                 Log.d("createEvent", logMessage);
             }
         });
+<<<<<<< Updated upstream
+=======
+        backButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(CreateEvent.this, OrganizerStartScreen.class);
+                startActivity(intent);            }
+        });
+>>>>>>> Stashed changes
 
     }
 }
