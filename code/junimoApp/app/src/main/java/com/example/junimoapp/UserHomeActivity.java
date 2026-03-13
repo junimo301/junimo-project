@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,13 +23,18 @@ import com.google.firebase.firestore.GeoPoint;
 import java.util.ArrayList;
 
 public class UserHomeActivity extends AppCompatActivity {
-
+    /**
+     * Home page for user.
+     * Shows list of events, a button to edit profile, a button to view lottery info and a button to show winning lottery invitations
+     *
+     */
     ListView eventsList;
     Button invitationsButton;
     Button profileButton;
     Button guidelinesButton;
-    private ArrayAdapter<Event> adapter;
+    private ArrayAdapter<String> adapter;
     private ArrayList<Event> eventList;
+    private ArrayList<String> eventListString;
     private FirebaseFirestore db;
     private ListView eventListView;
 
@@ -46,7 +52,6 @@ public class UserHomeActivity extends AppCompatActivity {
                 startActivity(new Intent(this, EventsActivity.class)));
 
         eventListView = findViewById(R.id.eventListView);
-
 
         //open invitations page
         invitationsButton.setOnClickListener(v ->
@@ -67,12 +72,13 @@ public class UserHomeActivity extends AppCompatActivity {
 
         // fetch events from Firestore and populate the list
         db = FirebaseManager.getDB();
+        eventListString= new ArrayList<>();
         eventList= new ArrayList<>();
 
         loadEvents();
 
         //events list
-        adapter= new ArrayAdapter<>(this,R.layout.item_user_event,eventList);
+        adapter= new ArrayAdapter<>(this,R.layout.item_user_event,eventListString);
         eventListView.setAdapter(adapter);
 
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -90,11 +96,13 @@ public class UserHomeActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     // clear any old data before loading fresh results
                     eventList.clear();
+                    eventListString.clear();
 
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         //Fields in events
-                        String title = doc.getString("Title");
-                        String description = doc.getString("Description");
+                        String title = doc.getString("title");
+
+                        String description = doc.getString("description");
                         String startDate = doc.getString("startDate");
                         String endDate = doc.getString("endDate");
                         String dateEvent = doc.getString("dateEvent");
@@ -107,10 +115,11 @@ public class UserHomeActivity extends AppCompatActivity {
                         String eventLocation = doc.getString("eventLocation");
 
                         String organizerID = doc.getString("organizerID");
-
-                        eventList.add(new Event(title, description, startDate, endDate, dateEvent, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation, organizerID));
+                        Event event = new Event(title, description, startDate, endDate, dateEvent, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation, organizerID);
+                        eventList.add(event);
+                        eventListString.add(title);
+                        Log.d("user browse activity",eventListString.toString());
                     }
-                    Log.d("user browse activity",eventList.toString());
                     adapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {

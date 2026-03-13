@@ -1,6 +1,9 @@
 package com.example.junimoapp;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,9 +20,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * user stories implemented:
+ *  - US 01.05.02: Entrant wants to be able to accept an invite when chosen.
+ *  - US 01.05.03: Entrant wants to be able to decline an invitation if they are chosen.
+ */
+
+/**
+ * provides logic for invitations to an event, including accepting/declining an invite
+ */
+
 public class InvitationsActivity extends AppCompatActivity {
 
     private InvitationAdapter adapter;
+    private TextView backButton;
     private final List<InvitationItem> invitations = new ArrayList<>();
     private String deviceId;
     private FirebaseFirestore db;
@@ -35,6 +49,14 @@ public class InvitationsActivity extends AppCompatActivity {
         deviceId = DeviceUtils.getDeviceId(this);
         db = FirebaseFirestore.getInstance();
 
+        backButton = findViewById(R.id.backToHomeText);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(InvitationsActivity.this, UserHomeActivity.class);
+                startActivity(intent);
+            }
+        });
         //adapter with listener for accept/decline
         adapter = new InvitationAdapter(invitations, new InvitationAdapter.InvitationListener() {
             @Override
@@ -79,24 +101,26 @@ public class InvitationsActivity extends AppCompatActivity {
                 });
     }
 
+    //accept invitation
     private void acceptInvite(String eventId) {
-
         Map<String, Object> data = new HashMap<>();
         data.put("name", deviceId);
 
         db.collection("events").document(eventId)
                 .collection("acceptedUsers").document(deviceId).set(data);
+
         db.collection("events").document(eventId)
                 .collection("waitlist").document(deviceId).delete();
     }
 
+    //decline invitation
     private void declineInvite(String eventId) {
-
         Map<String, Object> data = new HashMap<>();
         data.put("name", deviceId);
 
         db.collection("events").document(eventId)
                 .collection("declinedUsers").document(deviceId).set(data);
+
         db.collection("events").document(eventId)
                 .collection("waitlist").document(deviceId).delete();
     }
