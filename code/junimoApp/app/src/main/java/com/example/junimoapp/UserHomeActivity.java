@@ -52,13 +52,12 @@ public class UserHomeActivity extends AppCompatActivity {
         profileButton.setOnClickListener(v ->
                 startActivity(new Intent(this, ProfileActivity.class)));
 
-        /*
-        //open lottery guidelines page
-        guidelinesButton.setOnClickListener(v ->
-                startActivity(new Intent(this, GuidelinesActivity.class)));
-         */
-
-
+        //open guidelines page
+        guidelinesButton.setOnClickListener(v -> {
+            Intent intent = new Intent(UserHomeActivity.this, GuidelinesActivity.class);
+            startActivity(intent);
+        });
+      
         // fetch events from Firestore and populate the list
         db = FirebaseManager.getDB();
         eventList= new ArrayList<>();
@@ -113,5 +112,6 @@ public class UserHomeActivity extends AppCompatActivity {
                     // show a brief message to the admin so they know something went wrong
                     Toast.makeText(this, "Failed to load events", Toast.LENGTH_SHORT).show();
                 });
+
     }
 }
