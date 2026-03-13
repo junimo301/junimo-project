@@ -39,9 +39,9 @@
             android:id="@+id/create_event_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:backgroundTint="#000000"
+            android:backgroundTint="#FFFFFF"
             android:text="+"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             android:textSize="22sp" />
 
         <ImageButton
