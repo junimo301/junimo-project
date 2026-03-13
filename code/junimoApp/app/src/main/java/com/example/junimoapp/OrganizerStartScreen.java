@@ -1,4 +1,4 @@
-package com.example.junimoapp.Organizer;
+package com.example.junimoapp;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +9,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.junimoapp.R;
+import com.example.junimoapp.Organizer.CreateEvent;
+import com.example.junimoapp.Organizer.EventData;
+import com.example.junimoapp.Organizer.ListOfMyEvents;
 import com.example.junimoapp.models.Event;
-import com.example.junimoapp.TestData.EventTestData;
 
 import java.util.List;
 

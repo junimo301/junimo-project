@@ -6,11 +6,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.junimoapp.R;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
+import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
 import com.google.firebase.firestore.CollectionReference;
@@ -36,6 +38,7 @@ public class CreateEvent extends AppCompatActivity {
     Button uploadNewEvent, previewButton;
     private Event createdEvent = null;
     Button QRCodeButton;
+    TextView backButton;
     private String QRCodeString = null;
     private String eventID;
     private String organizerID;
@@ -46,6 +49,7 @@ public class CreateEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
+        //ids created in "dummy" xml file
         //variable ids
         editTitle = findViewById(R.id.edit_title);
         editDescription = findViewById(R.id.edit_description);
@@ -61,6 +65,7 @@ public class CreateEvent extends AppCompatActivity {
         //button id
         uploadNewEvent = findViewById(R.id.upload_event_button);
         QRCodeButton = findViewById(R.id.QR_code_button);
+        backButton=findViewById(R.id.backButton);
         previewButton = findViewById(R.id.preview_event_button);
 
 
@@ -255,6 +260,12 @@ public class CreateEvent extends AppCompatActivity {
                 Log.d("createEvent", logMessage);
             }
         });
+        backButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(CreateEvent.this, OrganizerStartScreen.class);
+                startActivity(intent);            }
+        });
+
     }
 }
 
