@@ -47,18 +47,18 @@
             android:layout_height="50dp"
             android:layout_marginTop="12dp"
             android:backgroundTint="#1F1F1F"
-            android:text="3   Profiles"
+            android:text="Browse/Delete Profiles"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/adminUploadedImagesButton"
+            android:id="@+id/adminBrowseOrganizersButton"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="8dp"
             android:backgroundTint="#1F1F1F"
-            android:text="2   Uploaded Images"
+            android:text="Browse/Remove Organizers"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textStyle="bold" />

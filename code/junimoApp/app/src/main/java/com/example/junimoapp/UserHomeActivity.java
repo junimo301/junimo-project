@@ -41,14 +41,12 @@ public class UserHomeActivity extends AppCompatActivity {
         profileButton = findViewById(R.id.profileButton);
         guidelinesButton = findViewById(R.id.guidelinesButton);
 
-<<<<<<< Updated upstream
         //open events page
         eventsButton.setOnClickListener(v ->
                 startActivity(new Intent(this, EventsActivity.class)));
-=======
+
         eventListView = findViewById(R.id.eventListView);
 
->>>>>>> Stashed changes
 
         //open invitations page
         invitationsButton.setOnClickListener(v ->
@@ -58,11 +56,9 @@ public class UserHomeActivity extends AppCompatActivity {
         profileButton.setOnClickListener(v ->
                 startActivity(new Intent(this, ProfileActivity.class)));
 
-<<<<<<< Updated upstream
         //open lottery guidelines page
         guidelinesButton.setOnClickListener(v ->
                 startActivity(new Intent(this, GuidelinesActivity.class)));
-=======
         //open guidelines page
         guidelinesButton.setOnClickListener(v -> {
             Intent intent = new Intent(UserHomeActivity.this, GuidelinesActivity.class);
@@ -124,6 +120,5 @@ public class UserHomeActivity extends AppCompatActivity {
                     Toast.makeText(this, "Failed to load events", Toast.LENGTH_SHORT).show();
                 });
 
->>>>>>> Stashed changes
     }
 }

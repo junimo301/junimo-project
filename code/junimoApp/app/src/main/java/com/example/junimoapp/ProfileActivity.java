@@ -1,51 +1,76 @@
 package com.example.junimoapp;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.junimoapp.firebase.FirebaseManager;
+import com.example.junimoapp.models.User;
 import com.example.junimoapp.utils.DeviceUtils;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
+/**
+ * user stories implemented:
+ *  - US 01.07.01: Entrant wants to be identified by their device so they do not need a username or password.
+ */
 
+/**
+ * creates a profile for a user
+ */
 public class ProfileActivity extends AppCompatActivity {
 
-    EditText nameInput, emailInput, phoneInput;
-    Button saveBtn;
-
-    FirebaseFirestore db;
-    String deviceId;
+    private TextInputLayout nameInputLayout;
+    private EditText emailInput, phoneInput;
+    private Button saveBtn;
+    private String deviceId;
+    private FirebaseFirestore db;
+    private FirebaseManager firebase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        //initialize firebase and device info
         db = FirebaseManager.getDB();
+        firebase = new FirebaseManager();
         deviceId = DeviceUtils.getDeviceId(this);
 
-        nameInput = findViewById(R.id.nameInput);
+        //initialize views
+        nameInputLayout = findViewById(R.id.nameInput);
         emailInput = findViewById(R.id.emailInput);
         phoneInput = findViewById(R.id.phoneInput);
         saveBtn = findViewById(R.id.saveButton);
 
-        saveBtn.setOnClickListener(v -> saveProfile());
-    }
+        //set save button listener
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-    private void saveProfile() {
+                //get values from TextInputLayout and EditTexts
+                String name = "";
+                if (nameInputLayout.getEditText() != null) {
+                    name = nameInputLayout.getEditText().getText().toString();
+                }
 
-        Map<String, Object> user = new HashMap<>();
-        user.put("name", nameInput.getText().toString());
-        user.put("email", emailInput.getText().toString());
-        user.put("phone", phoneInput.getText().toString());
+                String email = emailInput.getText().toString();
+                String phone = phoneInput.getText().toString();
 
-        db.collection("users")
-                .document(deviceId)
-                .set(user);
+                //create user object
+                User user = new User(deviceId, name, email, phone);
+
+                //save to Firestore
+                CollectionReference usersRef = firebase.getDB().collection("users");
+                firebase.addUser(user, usersRef);
+
+                //give feedback to user
+                saveBtn.setText("saved! :3");
+            }
+        });
     }
 }

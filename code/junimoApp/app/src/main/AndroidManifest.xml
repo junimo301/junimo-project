@@ -25,15 +25,22 @@
         <activity android:name=".UserHomeActivity" />
         <activity android:name=".InvitationsActivity" />
         <activity android:name=".ProfileActivity" />
+        <activity android:name=".GuidelinesActivity"/>
+        <activity android:name=".EventDetailsActivity"/>
 
         <!-- Organizer activities -->
         <activity android:name=".OrganizerStartScreen" />
         <activity android:name=".Organizer.CreateEvent" />
+        <activity android:name=".Organizer.EventPreview" />
+        <activity android:name=".Organizer.Entrants" />
+        <activity android:name=".Organizer.SelectAnEvent" />
 
+        <!--Admin activities -->
         <activity android:name=".admin.AdminHomeActivity" />
         <activity android:name=".admin.AdminBrowseEventsActivity" />
         <activity android:name=".admin.AdminBrowseProfilesActivity" />
         <activity android:name=".admin.AdminBrowseImagesActivity" />
+        <activity android:name=".admin.AdminBrowseOrganizersActivity" />
 
     </application>
 

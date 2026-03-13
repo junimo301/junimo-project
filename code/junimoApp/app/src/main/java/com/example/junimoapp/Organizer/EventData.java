@@ -1,5 +1,7 @@
 package com.example.junimoapp.Organizer;
 
+import com.example.junimoapp.models.Event;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,17 +9,17 @@ public class EventData {
     /*
     * All created events data
     * */
-    private static List<OrganizerEvent> events = new ArrayList<>();
+    private static List<Event> events = new ArrayList<>();
 
-    public static OrganizerEvent searchEventID(String eventID) {
-        for (OrganizerEvent event : events) {
+    public static Event searchEventID(String eventID) {
+        for (Event event : events) {
             if (event.getEventID().equals(eventID)) {
                 return event;
             }
         }
         return null;
     }
-    public static void addOrEditEvent(OrganizerEvent event) {
+    public static void addOrEditEvent(Event event) {
         for (int i = 0; i < events.size(); i++) {
             if (events.get(i).getEventID().equals(event.getEventID())) {
                 events.set( i, event);
@@ -26,10 +28,12 @@ public class EventData {
         }
         events.add(event);
     }
-    public static List<OrganizerEvent> listOfEvents() {
+    public static List<Event> listOfEvents() {
         return new ArrayList<>(events);
     }
 
 
-
+    public static List<Event> getEvents() {
+        return events;
+    }
 }

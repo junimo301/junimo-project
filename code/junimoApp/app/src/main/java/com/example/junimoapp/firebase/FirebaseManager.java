@@ -1,23 +1,36 @@
 package com.example.junimoapp.firebase;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.example.junimoapp.models.Event;
+import com.example.junimoapp.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-<<<<<<< Updated upstream
-=======
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
->>>>>>> Stashed changes
 
+
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+/**
+ * Class for defining firebase methods
+ */
 public class FirebaseManager {
-    private FirebaseManager() {}
+    public FirebaseManager() {}
 
     //get firestore instance
     public static FirebaseFirestore getDB() {
         return FirebaseFirestore.getInstance();
     }
-<<<<<<< Updated upstream
-=======
 
     /**
      * Adds an event to firebase
@@ -181,5 +194,4 @@ public class FirebaseManager {
 //        return eventArrayList;
 //    }
 
->>>>>>> Stashed changes
 }
