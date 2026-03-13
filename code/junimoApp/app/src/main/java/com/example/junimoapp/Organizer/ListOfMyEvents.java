@@ -17,16 +17,36 @@ import com.example.junimoapp.models.Event;
 
 import java.util.List;
 
+/**
+ * Views list of the organizers events
+ * shows event title, descrition and an edit button to edit the event
+ *  - edit buttons opens CreateEvent screen
+ * */
 public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventViewHolder> {
+
+    /** events to display */
     private List<Event> eventList;
+
+    /** constructor
+     * @param eventList
+     */
     public ListOfMyEvents(List<Event> eventList) {
         this.eventList = eventList;
     }
 
+    /**
+     * holds the view of each event item
+     * shows event title, description and an edit button to edit the event
+     * */
     public static class EventViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView description;
         Button editEventButton;
+
+        /**
+         * initializes the view for each event
+         * @param itemView
+         * */
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.event_title);
@@ -35,6 +55,12 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
         }
     }
 
+    /**
+     * creates a new view holder when needed
+     * @param parent
+     * @param viewType
+     * @return new view holder
+     * */
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -42,6 +68,11 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
         return new EventViewHolder(v);
     }
 
+    /**
+     * binds event data to view holder
+     * @param holder
+     * @param position
+     * */
     @Override
     public void onBindViewHolder(@NonNull ListOfMyEvents.EventViewHolder holder, int position) {
         Event event =eventList.get(position);
@@ -55,6 +86,10 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
 
     }
 
+    /**
+     * returns the number of events
+     * @return number of events
+     * */
     @Override
     public int getItemCount() {
         return eventList.size();

@@ -29,13 +29,11 @@ import java.util.HashMap;
 
 /**
  * user stories implemented:
- *  - US 01.05.02: Entrant wants to be able to accept an invite when chosen.
- *  - US 01.05.03: Entrant wants to be able to decline an invitation if they are chosen.
  *  - US 01.06.02: Entrant wants to be able to sign up for a waiting list from event details.
  */
 
 /**
- * provides details for events, such as the eventID, waitlists, and invitations
+ * Provides details for events, such as the eventID, waitlists
  * Allows user to join wait list and leave waitlist
  */
 
@@ -106,7 +104,6 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         backButton.setOnClickListener(v -> back());
         joinWaitlistButton.setOnClickListener(v -> JoinWaitlist(selectedEvent));
-        acceptButton.setOnClickListener(v -> acceptInvite());
         declineButton.setOnClickListener(v -> LeaveWaitlist(selectedEvent));
     }
 
@@ -154,38 +151,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         FirebaseManager.updateEvent(db.collection("events"), event, "waitList", updatedList);
         declineButton.setText("WAITLIST LEFT");
 
-    }
-
-    //user can accept an invitation, which adds them to the events waitlist
-    private void acceptInvite() {
-
-        db.collection("events")
-                .document(eventId)
-                .collection("acceptedUsers")
-                .document(deviceId)
-                .set(new HashMap<>());
-
-        db.collection("events")
-                .document(eventId)
-                .collection("waitlist")
-                .document(deviceId)
-                .delete();
-    }
-
-    //user can decline an invitation
-    private void declineInvite() {
-
-        db.collection("events")
-                .document(eventId)
-                .collection("declinedUsers")
-                .document(deviceId)
-                .set(new HashMap<>());
-
-        db.collection("events")
-                .document(eventId)
-                .collection("waitlist")
-                .document(deviceId)
-                .delete();
     }
 
 }

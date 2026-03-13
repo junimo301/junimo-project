@@ -6,16 +6,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.junimoapp.OrganizerStartScreen;
 import com.example.junimoapp.R;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
+
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -26,7 +30,8 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * Class for the create event page.
+ * Organizer creates and edits events
+ * 
  */
 public class CreateEvent extends AppCompatActivity {
     /*
@@ -38,6 +43,8 @@ public class CreateEvent extends AppCompatActivity {
      * Create Event: title, description, date, location, max capacity, registration period, waiting list, price, geo location, poster
      *
      * */
+    /**Can edit the these fields to add info
+     * the buttons to proccess */
     EditText editTitle, editDescription, editStartDate, editEndDate, editDateEvent, editEventLocation, editMaxCapacity, editWaitingList, editPrice, editGeoLocation, editPoster;
     Button uploadNewEvent, previewButton;
     private Event createdEvent = null;
@@ -47,7 +54,11 @@ public class CreateEvent extends AppCompatActivity {
     private String eventID;
     private String organizerID;
 
-
+    /**
+     * when activity is first created
+     * listeners for QR code button and upload event button
+     * @param savedInstanceState
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +80,7 @@ public class CreateEvent extends AppCompatActivity {
         //button id
         uploadNewEvent = findViewById(R.id.upload_event_button);
         QRCodeButton = findViewById(R.id.QR_code_button);
+
         backButton=findViewById(R.id.backButton);
         previewButton = findViewById(R.id.preview_event_button);
 
@@ -93,7 +105,10 @@ public class CreateEvent extends AppCompatActivity {
             }
         }
 
-        //QR code
+        /**
+         * Generates qr code when creating an event
+         * lets you know if qr code is created or exists already
+         * */
         QRCodeButton.setOnClickListener(view -> {
             if (QRCodeString == null) {
                 String QREventID;
@@ -112,7 +127,9 @@ public class CreateEvent extends AppCompatActivity {
             }
         });
 
-        //preview the event
+        /**
+         * allows you to view a preview of the event before upload in another activity
+         * */
         previewButton.setOnClickListener( view -> {
             String title = editTitle.getText().toString();
             String description = editDescription.getText().toString();
@@ -144,7 +161,11 @@ public class CreateEvent extends AppCompatActivity {
         });
 
 
-        //publish the event
+        /**
+         * Uploads event to firebase
+         * checks that all required fields for the event are filled out
+         * checks that format and input is valid
+         * */
         uploadNewEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -235,10 +256,10 @@ public class CreateEvent extends AppCompatActivity {
                     return;
                 }
 
-                //creates event
+                /** creates event */
                 Event saveEvent = new Event(title, description, startDate, endDate, dateEvent, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation, organizerID);
 
-                //add to firebase
+                /** add to firebase */
                 FirebaseManager firebase = new FirebaseManager();
                 CollectionReference eventsRef = firebase.getDB().collection("events");
 
@@ -264,11 +285,14 @@ public class CreateEvent extends AppCompatActivity {
                 Log.d("createEvent", logMessage);
             }
         });
+
+        /** returns to organizer start screen */
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(CreateEvent.this, OrganizerStartScreen.class);
                 startActivity(intent);            }
         });
+
 
     }
 }

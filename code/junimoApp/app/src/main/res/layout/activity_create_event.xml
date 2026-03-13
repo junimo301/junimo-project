@@ -44,7 +44,7 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="Add"
                 android:src="@android:drawable/ic_input_add"
-                android:tint="#FFFFFF" />
+                app:tint="#FFFFFF" />
 
             <ImageButton
                 android:layout_width="40dp"

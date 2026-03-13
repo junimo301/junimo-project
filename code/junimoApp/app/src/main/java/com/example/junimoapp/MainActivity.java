@@ -13,6 +13,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+
 import com.example.junimoapp.admin.AdminHomeActivity;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.User;
@@ -21,6 +22,12 @@ import com.example.junimoapp.utils.DeviceUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+
+import java.util.HashMap;
+import java.util.Map;
+import com.example.junimoapp.Organizer.OrganizerEvent;
+import com.example.junimoapp.Organizer.OrganizerStartScreen;
+import com.example.junimoapp.TestData.EventTestData;
 
 import com.example.junimoapp.models.Event;
 import com.google.firebase.firestore.CollectionReference;
@@ -52,6 +59,13 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+        //get device id
+        deviceId = DeviceUtils.getDeviceId(this);
+
+        //test user document
+        Map<String, Object> testUser = new HashMap<>();
+        testUser.put("deviceId", deviceId);
+        testUser.put("test", "connected");
         Button userButton=findViewById(R.id.user_button);
         userButton.setOnClickListener(v -> {
             //get device id
@@ -70,8 +84,6 @@ public class MainActivity extends AppCompatActivity {
                             String phone = document.getString("phone");
 
                             if(docDeviceId.equals(deviceId)){
-                                User currentUser= new User(docDeviceId,name,email,phone);
-                                UserSession.setCurrentUser(currentUser);
                                 check=true;
                                 break;
                             }
@@ -93,6 +105,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         });
+
+        //write to firestore
+        db.collection("users")
+                .document(deviceId)
+                .set(testUser)
+                .addOnSuccessListener(unused -> {
+
+                    //open user homepage when firebase succeeds
+                    Intent intent = new Intent(MainActivity.this, UserHomeActivity.class);
+                    startActivity(intent);
+
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
