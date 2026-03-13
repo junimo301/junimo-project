@@ -1,11 +1,15 @@
 package com.example.junimoapp.Organizer;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.junimoapp.OrganizerStartScreen;
 import com.example.junimoapp.R;
 import com.example.junimoapp.models.Event;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -14,6 +18,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entrants names who have joined cancelled, enrolled, or joined the waiting list of an event
+ * Organizer can view this information
+ */
 public class Entrants extends AppCompatActivity {
     /*
     * User stories:
@@ -24,6 +32,7 @@ public class Entrants extends AppCompatActivity {
     *
     */
 
+    /** container for displaying entrants info */
     LinearLayout invitedEntrants;
     LinearLayout cancelledEntrants;
     LinearLayout enrolledEntrants;
@@ -31,7 +40,11 @@ public class Entrants extends AppCompatActivity {
     String eventID;
     FirebaseFirestore db;
     TextView eventName;
+    Button backButton;
 
+    /** loads data, when activity is first created
+     * gets entrants from firestore
+     * @param savedInstanceState*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +56,9 @@ public class Entrants extends AppCompatActivity {
         cancelledEntrants = findViewById(R.id.cancelled_entrants);
         enrolledEntrants = findViewById(R.id.enrolled_entrants);
 
+        backButton = findViewById(R.id.backButton);
+
+
         eventID = getIntent().getStringExtra("event_ID");
 
         Event selectEvent = EventData.searchEventID(eventID);
@@ -50,14 +66,26 @@ public class Entrants extends AppCompatActivity {
             eventName.setText(selectEvent.getTitle());
         }
 
-
+        /** initialize firestore
+         * loads entrants from firestore
+         */
         db = FirebaseFirestore.getInstance();
         loadInvitedEntrants();
         loadCancelledEntrants();
         loadEnrolledEntrants();
 
+        /** returns to select an event screen */
+        backButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(Entrants.this, SelectAnEvent.class);
+                startActivity(intent);            }
+        });
     }
 
+    /**
+     * loads invited entrants from firestore (waiting list)
+     * adds their name to the invited entrants container
+     * */
     private void loadInvitedEntrants() {
         db.collection("events")
                 .document(eventID)
@@ -76,6 +104,10 @@ public class Entrants extends AppCompatActivity {
                 });
     }
 
+    /**
+     * loads cancelled entrants from firestore
+     * adds names to the cancelled entrants container
+     * */
     private void loadCancelledEntrants() {
         db.collection("events")
                 .document(eventID)
@@ -96,6 +128,10 @@ public class Entrants extends AppCompatActivity {
                 });
     }
 
+    /**
+     * loads enrolled entrants from firestore
+     * adds names to the enrolled entrants container
+     * */
     private void loadEnrolledEntrants() {
         db.collection("events")
                 .document(eventID)
@@ -114,5 +150,6 @@ public class Entrants extends AppCompatActivity {
                     }
                 });
     }
+
 
 }
