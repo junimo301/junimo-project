@@ -5,6 +5,9 @@ import com.example.junimoapp.models.User;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * fake user data for testing
+ */
 public class UserTestData {
     public static List<User> getUsers(){
         List<User> users = new ArrayList<>();

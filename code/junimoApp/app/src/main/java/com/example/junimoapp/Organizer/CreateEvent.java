@@ -27,7 +27,8 @@ import java.util.UUID;
 
 /**
  * Organizer creates and edits events
- * */
+ * 
+ */
 public class CreateEvent extends AppCompatActivity {
     /*
      * User stories:
