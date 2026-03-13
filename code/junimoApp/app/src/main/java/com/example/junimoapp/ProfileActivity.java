@@ -1,9 +1,11 @@
 package com.example.junimoapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,6 +28,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private TextInputLayout nameInputLayout;
     private EditText emailInput, phoneInput;
+    private TextView backButton;
     private Button saveBtn;
     private String deviceId;
     private FirebaseFirestore db;
@@ -46,6 +49,15 @@ public class ProfileActivity extends AppCompatActivity {
         emailInput = findViewById(R.id.emailInput);
         phoneInput = findViewById(R.id.phoneInput);
         saveBtn = findViewById(R.id.saveButton);
+        backButton = findViewById(R.id.backToHomeText);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ProfileActivity.this, UserHomeActivity.class);
+                startActivity(intent);
+            }
+        });
 
         //set save button listener
         saveBtn.setOnClickListener(new View.OnClickListener() {
