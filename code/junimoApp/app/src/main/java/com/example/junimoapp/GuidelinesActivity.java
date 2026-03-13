@@ -18,6 +18,7 @@ public class GuidelinesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_guidelines);
 
         TextView guidelinesText = findViewById(R.id.guidelinesText);
+        TextView backButton = findViewById(R.id.guidelinesBackButton);
 
         String guidelines =
                 "Event Lottery Guidelines\n\n" +
@@ -30,5 +31,6 @@ public class GuidelinesActivity extends AppCompatActivity {
                         "7. Winners must accept before the deadline.";
 
         guidelinesText.setText(guidelines);
+        backButton.setOnClickListener(v -> finish());
     }
 }

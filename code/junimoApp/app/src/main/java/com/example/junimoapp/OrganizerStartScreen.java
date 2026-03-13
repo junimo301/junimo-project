@@ -1,5 +1,6 @@
 package com.example.junimoapp;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +9,9 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.junimoapp.R;
+//import com.example.junimoapp.TestData.EventTestData;
 
 import com.example.junimoapp.Organizer.CreateEvent;
 import com.example.junimoapp.Organizer.EventData;
@@ -25,18 +29,8 @@ import java.util.List;
  *  - edit events
  * */
 public class OrganizerStartScreen extends AppCompatActivity {
-    /*
-    * The home screen of an organizer
-    * can create events
-    * edit existing ones
-    * view entrants info of events
-    * view my events
-    */
-
     //Create and edit event
     Button createEventButton;
-    //View Entrant info
-    Button viewEntrantsButton;
     //view my events
     private RecyclerView scrollable;
     private ListOfMyEvents myEvents;

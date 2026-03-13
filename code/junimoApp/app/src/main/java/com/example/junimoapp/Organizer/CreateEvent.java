@@ -6,16 +6,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.junimoapp.OrganizerStartScreen;
 import com.example.junimoapp.R;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
+
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -76,6 +81,7 @@ public class CreateEvent extends AppCompatActivity {
         //button id
         uploadNewEvent = findViewById(R.id.upload_event_button);
         QRCodeButton = findViewById(R.id.QR_code_button);
+
         backButton=findViewById(R.id.backButton);
         previewButton = findViewById(R.id.preview_event_button);
 
@@ -287,6 +293,7 @@ public class CreateEvent extends AppCompatActivity {
                 Intent intent = new Intent(CreateEvent.this, OrganizerStartScreen.class);
                 startActivity(intent);            }
         });
+
 
     }
 }
