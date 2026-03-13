@@ -112,5 +112,6 @@ public class UserHomeActivity extends AppCompatActivity {
                     // show a brief message to the admin so they know something went wrong
                     Toast.makeText(this, "Failed to load events", Toast.LENGTH_SHORT).show();
                 });
+
     }
 }
