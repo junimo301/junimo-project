@@ -1,7 +1,9 @@
 package com.example.junimoapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,6 +32,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     String deviceId;
     String eventId;
 
+    TextView backButton;
     Button joinWaitlistButton;
     Button acceptButton;
     Button declineButton;
@@ -45,15 +48,21 @@ public class EventDetailsActivity extends AppCompatActivity {
         //eventId should be passed from previous activity
         eventId = getIntent().getStringExtra("eventId");
 
+        backButton = findViewById(R.id.backToInvitesText);
         joinWaitlistButton = findViewById(R.id.joinWaitlistButton);
         acceptButton = findViewById(R.id.acceptButton);
         declineButton = findViewById(R.id.declineButton);
 
+        backButton.setOnClickListener(v -> back());
         joinWaitlistButton.setOnClickListener(v -> joinWaitlist());
         acceptButton.setOnClickListener(v -> acceptInvite());
         declineButton.setOnClickListener(v -> declineInvite());
     }
 
+    private void back() {
+        Intent intent = new Intent(EventDetailsActivity.this, UserHomeActivity.class);
+        startActivity(intent);
+    }
     private void joinWaitlist() {
 
         db.collection("events")
