@@ -23,7 +23,7 @@ import java.util.HashMap;
  */
 
 /**
- * provides details for events, such as the eventID, waitlists, and invitations
+ * provides details for events, such as the eventID, waitlists
  */
 
 public class EventDetailsActivity extends AppCompatActivity {
@@ -55,8 +55,6 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         backButton.setOnClickListener(v -> back());
         joinWaitlistButton.setOnClickListener(v -> joinWaitlist());
-        acceptButton.setOnClickListener(v -> acceptInvite());
-        declineButton.setOnClickListener(v -> declineInvite());
     }
 
     private void back() {
@@ -123,38 +121,6 @@ public class EventDetailsActivity extends AppCompatActivity {
             return false;
         }
 
-    }
-
-    //user can accept an invitation, which adds them to the events waitlist
-    private void acceptInvite() {
-
-        db.collection("events")
-                .document(eventId)
-                .collection("acceptedUsers")
-                .document(deviceId)
-                .set(new HashMap<>());
-
-        db.collection("events")
-                .document(eventId)
-                .collection("waitlist")
-                .document(deviceId)
-                .delete();
-    }
-
-    //user can decline an invitation
-    private void declineInvite() {
-
-        db.collection("events")
-                .document(eventId)
-                .collection("declinedUsers")
-                .document(deviceId)
-                .set(new HashMap<>());
-
-        db.collection("events")
-                .document(eventId)
-                .collection("waitlist")
-                .document(deviceId)
-                .delete();
     }
 
 }
