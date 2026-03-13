@@ -29,8 +29,6 @@ import java.util.HashMap;
 
 /**
  * user stories implemented:
- *  - US 01.05.02: Entrant wants to be able to accept an invite when chosen.
- *  - US 01.05.03: Entrant wants to be able to decline an invitation if they are chosen.
  *  - US 01.06.02: Entrant wants to be able to sign up for a waiting list from event details.
  */
 
