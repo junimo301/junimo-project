@@ -33,7 +33,7 @@ import java.util.HashMap;
  */
 
 /**
- * provides details for events, such as the eventID, waitlists
+ * Provides details for events, such as the eventID, waitlists
  * Allows user to join wait list and leave waitlist
  */
 
