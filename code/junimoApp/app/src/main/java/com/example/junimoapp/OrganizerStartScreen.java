@@ -17,8 +17,18 @@ import com.example.junimoapp.models.Event;
 import java.util.List;
 
 public class OrganizerStartScreen extends AppCompatActivity {
+    /*
+    * The home screen of an organizer
+    * can create events
+    * edit existing ones
+    * view entrants info of events
+    * view my events
+    */
+
     //Create and edit event
     Button createEventButton;
+    //View Entrant info
+    Button viewEntrantsButton;
     //view my events
     private RecyclerView scrollable;
     private ListOfMyEvents myEvents;
@@ -39,6 +49,17 @@ public class OrganizerStartScreen extends AppCompatActivity {
                 startActivity(createNewEvent);
             }
         });
+
+        //----------VIEW ENTRANTS-------------------
+        viewEntrantsButton = findViewById(R.id.view_entrants_button);
+        viewEntrantsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent viewEntrants = new Intent(OrganizerStartScreen.this, SelectAnEvent.class);
+                startActivity(viewEntrants);
+            }
+        });
+
 
         //----------VIEW MY EVENTS-------------------
         scrollable = findViewById(R.id.scrollable);

@@ -9,6 +9,8 @@ import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.utils.DeviceUtils;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -16,6 +18,10 @@ import java.util.HashMap;
  *  - US 01.05.02: Entrant wants to be able to accept an invite when chosen.
  *  - US 01.05.03: Entrant wants to be able to decline an invitation if they are chosen.
  *  - US 01.06.02: Entrant wants to be able to sign up for a waiting list from event details.
+ */
+
+/**
+ * provides details for events, such as the eventID, waitlists, and invitations
  */
 
 public class EventDetailsActivity extends AppCompatActivity {
@@ -52,11 +58,65 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         db.collection("events")
                 .document(eventId)
-                .collection("waitlist")
-                .document(deviceId)
-                .set(new HashMap<>());
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (!documentSnapshot.exists()) {
+                        return;
+                    }
+                    String startDate = documentSnapshot.getString("startDate");
+                    String endDate = documentSnapshot.getString("endDate");
+                    Long waitingListLimit = documentSnapshot.getLong("waitingListLimit");
+
+                    //null check
+                    if (startDate == null || endDate == null || waitingListLimit == null) {
+                        return;
+                    }
+                    //close registration period if time is over
+                    if (!registrationPeriod(startDate, endDate)) {
+                        joinWaitlistButton.setEnabled(false);
+                        joinWaitlistButton.setText("Registration period not open");
+                        return;
+                    }
+
+                    db.collection("events")
+                            .document(eventId)
+                            .collection("waitlist")
+                            .get()
+                            .addOnSuccessListener(waitlistSnapshot -> {
+                                int size = waitlistSnapshot.size();
+                                //check if waitlist is full
+                                if (size >= waitingListLimit) {
+                                    joinWaitlistButton.setEnabled(false);
+                                    joinWaitlistButton.setText("Waiting list full");
+                                    return;
+                                }
+
+                                //registration period and waitlist is open
+                                db.collection("events")
+                                        .document(eventId)
+                                        .collection("waitlist")
+                                        .document(deviceId)
+                                        .set(new HashMap<>());
+                            });
+                });
     }
 
+    //check if registration period is open
+    public boolean registrationPeriod(String startDate, String endDate) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date start = format.parse(startDate);
+            Date end = format.parse(endDate);
+            Date now = new Date();
+            return !(now.before(start) || now.after(end));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    //user can accept an invitation, which adds them to the events waitlist
     private void acceptInvite() {
 
         db.collection("events")
@@ -72,6 +132,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                 .delete();
     }
 
+    //user can decline an invitation
     private void declineInvite() {
 
         db.collection("events")
@@ -86,4 +147,5 @@ public class EventDetailsActivity extends AppCompatActivity {
                 .document(deviceId)
                 .delete();
     }
+
 }
