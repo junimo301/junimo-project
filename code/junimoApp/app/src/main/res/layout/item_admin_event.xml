@@ -1,92 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-<<<<<<< Updated upstream
-=======
     xmlns:tools="http://schemas.android.com/tools"
->>>>>>> Stashed changes
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
     android:background="#000000"
     android:orientation="vertical"
-<<<<<<< Updated upstream
-    android:padding="4dp">
-=======
     android:padding="12dp"
     tools:layout_height="match_parent">
->>>>>>> Stashed changes
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-<<<<<<< Updated upstream
-        android:background="@drawable/bg_admin_profile_item"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="14dp">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/adminEventTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Event Title"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/adminEventDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Event description..."
-                android:textColor="#D8D8D8"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/adminEventDeleteButton"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:backgroundTint="#5A5A5A"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:text="Remove"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            android:textSize="11sp" />
-
-    </LinearLayout>
-
-=======
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Event Lottery"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <ImageButton
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="Settings"
-            android:src="@android:drawable/ic_menu_manage"
-            android:tint="#FFFFFF" />
-    </LinearLayout>
+        android:text="Event Lottery"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        android:textStyle="bold" />
 
     <View
         android:layout_width="match_parent"
@@ -94,6 +22,14 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:background="#2A2A2A" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="← Back to Home"
+        android:textColor="#E1E1E1"
+        android:textSize="15sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -113,30 +49,32 @@
                 android:id="@+id/adminEventTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Event Title"
+                android:text=""
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="Event Name" />
 
             <TextView
                 android:id="@+id/adminEventDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Event description"
-                android:textColor="#DADADA"
-                android:textSize="13sp" />
+                android:text=""
+                android:textColor="#D8D8D8"
+                android:textSize="13sp"
+                tools:text="Event description" />
         </LinearLayout>
 
         <Button
             android:id="@+id/adminEventDeleteButton"
             android:layout_width="wrap_content"
-            android:layout_height="34dp"
+            android:layout_height="32dp"
             android:backgroundTint="#5A5A5A"
             android:minHeight="0dp"
             android:minWidth="0dp"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:text="Remove"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
@@ -144,5 +82,4 @@
 
     </LinearLayout>
 
->>>>>>> Stashed changes
 </LinearLayout>
