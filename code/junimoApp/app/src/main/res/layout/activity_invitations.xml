@@ -52,7 +52,7 @@
         android:layout_marginTop="14dp"
         android:text="Congratulations! You've been selected. Accept your invite and secure a spot!"
         android:textColor="#FFFFFF"
-        android:textSize="34sp"
+        android:textSize="14sp"
         android:lineSpacingExtra="2dp"
         android:textStyle="bold" />
 

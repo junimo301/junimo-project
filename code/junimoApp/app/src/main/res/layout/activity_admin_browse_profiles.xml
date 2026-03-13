@@ -117,6 +117,7 @@ of users for displaying the user list-->
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         android:layout_weight="1"
+        android:background="#000000"
         android:clipToPadding="false"
         android:paddingBottom="8dp" />
 
