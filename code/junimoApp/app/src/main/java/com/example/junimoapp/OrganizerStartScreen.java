@@ -104,7 +104,7 @@ public class OrganizerStartScreen extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        eventList= EventData.listOfEvents();
+        loadEvents();
         myEvents = new ListOfMyEvents((eventList));
         scrollable.setAdapter(myEvents);
     }
@@ -137,6 +137,7 @@ public class OrganizerStartScreen extends AppCompatActivity {
                         if(organizerID != null){
                             if(event.getOrganizerID().equals(currentUser.getDeviceId())) {
                                 eventList.add(event);
+                                EventData.addOrEditEvent(event);
                             }
                         }
                         else {

@@ -2,16 +2,21 @@ package com.example.junimoapp.Organizer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.junimoapp.OrganizerStartScreen;
 import com.example.junimoapp.R;
+import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -40,7 +45,7 @@ public class Entrants extends AppCompatActivity {
     String eventID;
     FirebaseFirestore db;
     TextView eventName;
-    Button backButton;
+    TextView backButton;
 
     /** loads data, when activity is first created
      * gets entrants from firestore
@@ -69,8 +74,9 @@ public class Entrants extends AppCompatActivity {
         /** initialize firestore
          * loads entrants from firestore
          */
-        db = FirebaseFirestore.getInstance();
-        loadInvitedEntrants();
+        db = FirebaseManager.getDB();
+        
+        loadInvitedEntrants(selectEvent);
         loadCancelledEntrants();
         loadEnrolledEntrants();
 
@@ -86,22 +92,27 @@ public class Entrants extends AppCompatActivity {
      * loads invited entrants from firestore (waiting list)
      * adds their name to the invited entrants container
      * */
-    private void loadInvitedEntrants() {
-        db.collection("events")
-                .document(eventID)
-                .collection("waitlist")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<String> invitedEntrantNames = new ArrayList<>();
-                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                        String entrantName = document.getString("name");
+    private void loadInvitedEntrants(Event selectedEvent) {
+        ArrayList<String> userIDs = selectedEvent.getWaitList();
+        Log.d("entrants list",userIDs.toString());
+
+        for (String userID : userIDs) {
+            db.collection("users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot doc = task.getResult();
+                        String entrantName = doc.getString("name");
                         if (entrantName != null) {
-                            TextView textView = new TextView(this);
+                            TextView textView = new TextView(Entrants.this);
                             textView.setText(entrantName);
                             invitedEntrants.addView(textView);
+                            Log.d("entrants view added",entrantName);
                         }
                     }
-                });
+                }
+            });
+        }
     }
 
     /**
@@ -114,8 +125,6 @@ public class Entrants extends AppCompatActivity {
                 .collection("declinedUsers")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<String> cancelledEntrantNames = new ArrayList<>();
-
                     for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
                         String entrantName = document.getString("name");
                         if (entrantName != null) {
@@ -138,8 +147,6 @@ public class Entrants extends AppCompatActivity {
                 .collection("acceptedUsers")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<String> enrolledEntrantNames = new ArrayList<>();
-
                     for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
                         String entrantName = document.getString("name");
                         if (entrantName != null) {
