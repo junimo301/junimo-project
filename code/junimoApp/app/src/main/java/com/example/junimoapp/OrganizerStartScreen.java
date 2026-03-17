@@ -21,20 +21,33 @@ import com.example.junimoapp.models.Event;
 
 import java.util.List;
 
+/**
+ * Home screen for organizer
+ *  - create events
+ *  - view entrants
+ *  - view my events
+ *  - edit events
+ * */
 public class OrganizerStartScreen extends AppCompatActivity {
     //Create and edit event
     Button createEventButton;
+    Button viewEntrantsButton;
     //view my events
     private RecyclerView scrollable;
     private ListOfMyEvents myEvents;
     private List<Event> eventList;
 
 
+    /**
+     * when activity is first created
+     * listeners for create event and view entrants buttons
+     * */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer_start_screen);
 
+        /** create events */
         //----------CREATE EVENTS-------------------
         createEventButton = findViewById(R.id.create_event_button);
         createEventButton.setOnClickListener(new View.OnClickListener() {
@@ -45,6 +58,19 @@ public class OrganizerStartScreen extends AppCompatActivity {
             }
         });
 
+        /** View entrants */
+        //----------VIEW ENTRANTS-------------------
+        viewEntrantsButton = findViewById(R.id.view_entrants_button);
+        viewEntrantsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent viewEntrants = new Intent(OrganizerStartScreen.this, SelectAnEvent.class);
+                startActivity(viewEntrants);
+            }
+        });
+
+
+        /** View My Events */
         //----------VIEW MY EVENTS-------------------
         scrollable = findViewById(R.id.scrollable);
         scrollable.setLayoutManager(new LinearLayoutManager(this));
@@ -53,6 +79,11 @@ public class OrganizerStartScreen extends AppCompatActivity {
         scrollable.setAdapter(myEvents);
     }
 
+    /**
+     * runs when activity is resumed
+     *  - coming back from another activity
+     * updates event list
+     * */
     @Override
     protected void onResume() {
         super.onResume();
