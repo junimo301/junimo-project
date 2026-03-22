@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.junimoapp.OrganizerStartScreen;
 import com.example.junimoapp.R;
+import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -46,7 +47,7 @@ public class SelectAnEvent extends AppCompatActivity {
 
         backButton = findViewById(R.id.back_button);
 
-        db = FirebaseFirestore.getInstance();
+        db = FirebaseManager.getDB();
         eventList = findViewById(R.id.event_list);
 
         //buttons

@@ -62,10 +62,6 @@ public class MainActivity extends AppCompatActivity {
         //get device id
         deviceId = DeviceUtils.getDeviceId(this);
 
-        //test user document
-        Map<String, Object> testUser = new HashMap<>();
-        testUser.put("deviceId", deviceId);
-        testUser.put("test", "connected");
         Button userButton = findViewById(R.id.user_button);
         userButton.setOnClickListener(v -> {
             //get device id
