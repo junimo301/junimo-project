@@ -26,6 +26,7 @@ public class WaitList {
         this.maxCapacity = event.getMaxCapacity();
         this.waitListLimit = event.getWaitingListLimit();
         this.eventID = event.getEventID();
+        this.users = new ArrayList<User>();
         populateWaitList(event);
     }
 
@@ -68,25 +69,27 @@ public class WaitList {
         ArrayList<String> deviceIDs=event.getWaitList();
         FirebaseManager firebase= new FirebaseManager();
         CollectionReference usersRef = firebase.getDB().collection("users");
-
+        Log.d("waitlist populating",deviceIDs.toString());
         for(String deviceID : deviceIDs){
-            usersRef.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            Log.d("Firestore", "DocumentSnapshot data: " + document.getData());
-                            User user = new User(deviceID, document.getString("name"),document.getString("email"),document.getString("phone"));
-                            users.add(user);
+            if(deviceID!=null) {
+                usersRef.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                Log.d("Firestore", "DocumentSnapshot data: " + document.getData());
+                                User user = new User(deviceID, document.getString("name"), document.getString("email"), document.getString("phone"));
+                                users.add(user);
+                            } else {
+                                Log.d("Firestore", "No such document");
+                            }
                         } else {
-                            Log.d("Firestore", "No such document");
+                            Log.d("Firestore", "get failed with ", task.getException());
                         }
-                    } else {
-                        Log.d("Firestore", "get failed with ", task.getException());
                     }
-                }
-            });
+                });
+            }
         }
     }
 

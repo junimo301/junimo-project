@@ -1,8 +1,18 @@
 package com.example.junimoapp.models;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.example.junimoapp.firebase.FirebaseManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Event specific information
@@ -10,7 +20,7 @@ import java.util.ArrayList;
  * */
 public class Event {
 
-    /** the unquie id for the event */
+    /** the unique id for the event */
     private String eventID;
     private String title;
     private String description;
@@ -47,6 +57,8 @@ public class Event {
 
     /** the organizer id */
     private String organizerID;
+    FirebaseManager firebase = new FirebaseManager();
+    FirebaseFirestore db = firebase.getDB();
 
 
     /**
@@ -81,6 +93,7 @@ public class Event {
         this.eventID = eventID;
 
         this.waitList = new ArrayList<String>();
+        initializeWaitlist();
         this.organizerID = organizerID;
     }
 
@@ -220,8 +233,10 @@ public class Event {
         }
         else {
             waitList.add(accountId);
+            firebase.updateEvent(db.collection("events"),this,"waitlist",waitList);
             return true;
         }
+
     }
 
     /**
@@ -234,11 +249,36 @@ public class Event {
     public boolean removeFromWaitList(String accountId) {
         if(waitList.contains(accountId)){
             waitList.remove(accountId);
+            firebase.updateEvent(db.collection("events"),this,"waitlist",waitList);
             return true;
         }
         else {
             return false;
         }
+    }
+
+    public void initializeWaitlist() {
+        db.collection("events").document(eventID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        ArrayList<String> data = document.get("waitlist", ArrayList.class);
+                        for (Object item : data.values()) {
+                            if (item != null) {
+                                waitList.add(item.toString());
+                                Log.d("Firestore", "added user to waitlist" + item.toString());
+                            }
+                        }
+                    } else {
+                        Log.d("Firestore", "No such document");
+                    }
+                } else {
+                    Log.d("Firestore", "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
 }
