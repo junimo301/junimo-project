@@ -50,6 +50,7 @@ public class CreateEvent extends AppCompatActivity {
     Button uploadNewEvent, previewButton;
     private Event createdEvent = null;
     Button QRCodeButton;
+    Button cancelButton;
     TextView backButton;
     private String QRCodeString = null;
     private String eventID;
@@ -83,6 +84,7 @@ public class CreateEvent extends AppCompatActivity {
         QRCodeButton = findViewById(R.id.QR_code_button);
 
         backButton=findViewById(R.id.backButton);
+        cancelButton = findViewById(R.id.cancel_button);
         previewButton = findViewById(R.id.preview_event_button);
 
 
@@ -287,13 +289,14 @@ public class CreateEvent extends AppCompatActivity {
             }
         });
 
-        /** returns to organizer start screen */
+        /* returns to organizer start screen
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(CreateEvent.this, OrganizerStartScreen.class);
                 startActivity(intent);            }
-        });
-
+        }); */
+        backButton.setOnClickListener(view -> finish());
+        cancelButton.setOnClickListener(view -> finish());
 
     }
 }
