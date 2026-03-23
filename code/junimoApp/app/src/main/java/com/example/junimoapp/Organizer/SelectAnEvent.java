@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -32,7 +33,7 @@ public class SelectAnEvent extends AppCompatActivity {
     FirebaseFirestore db;
     LinearLayout eventList;
     List<Event> myEvents = EventData.getEvents();
-    Button backButton;
+    TextView backButton;
 
 
     /**
@@ -67,7 +68,7 @@ public class SelectAnEvent extends AppCompatActivity {
 
         }
 
-        /** returns to select organizer home screen */
+        // returns to select organizer home screen
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(SelectAnEvent.this, OrganizerStartScreen.class);
