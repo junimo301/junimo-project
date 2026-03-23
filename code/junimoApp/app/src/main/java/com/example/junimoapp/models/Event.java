@@ -12,6 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -265,10 +266,12 @@ public class Event {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         ArrayList<String> data = document.get("waitlist", ArrayList.class);
-                        for (Object item : data.values()) {
-                            if (item != null) {
-                                waitList.add(item.toString());
-                                Log.d("Firestore", "added user to waitlist" + item.toString());
+                        if(data!=null) {
+                            for (String item : data) {
+                                if (item != null) {
+                                    waitList.add(item);
+                                    Log.d("Firestore", "added user to waitlist" + item);
+                                }
                             }
                         }
                     } else {
