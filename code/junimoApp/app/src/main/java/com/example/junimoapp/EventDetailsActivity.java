@@ -46,6 +46,13 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     TextView eventTitle;
     TextView descriptionText;
+    TextView organizerText;
+    TextView eventDate;
+    TextView eventLocationText;
+    TextView priceText;
+    TextView registrationDetails;
+    TextView capacity;
+    TextView countOnList;
 
     TextView backButton;
     Button joinWaitlistButton;
@@ -88,6 +95,18 @@ public class EventDetailsActivity extends AppCompatActivity {
 
                     eventTitle.setText(selectedEvent.getTitle());
                     descriptionText.setText(selectedEvent.getDescription());
+                    organizerText.setText(selectedEvent.getOrganizerID());
+                    eventDate.setText(selectedEvent.getDateEvent());
+                    eventLocationText.setText(selectedEvent.getEventLocation());
+                    priceText.setText(String.valueOf(selectedEvent.getPrice()));
+                    String registration = selectedEvent.getStartDate()+"\n"+selectedEvent.getEndDate();
+                    registrationDetails.setText(registration);
+                    capacity.setText(String.valueOf(selectedEvent.getMaxCapacity()));
+                    String waitlistText = String.valueOf(selectedEvent.getWaitList().split(",").length);
+                    if(selectedEvent.getMaxCapacity()>0){
+                        waitlistText = waitlistText+"/"+String.valueOf(selectedEvent.getMaxCapacity());
+                    }
+                    countOnList.setText(waitlistText);
                 }
                 else {
                     Log.d("Firestore", "Error getting documents: ", task.getException());
@@ -99,8 +118,16 @@ public class EventDetailsActivity extends AppCompatActivity {
         joinWaitlistButton = findViewById(R.id.joinWaitlistButton);
         acceptButton = findViewById(R.id.acceptButton);
         declineButton = findViewById(R.id.declineButton);
+
         eventTitle = findViewById(R.id.eventTitle);
         descriptionText = findViewById(R.id.descriptionText);
+        organizerText = findViewById(R.id.organizerText);
+        eventDate = findViewById(R.id.eventDate);
+        eventLocationText = findViewById(R.id.eventLocation);
+        priceText = findViewById(R.id.price);
+        registrationDetails = findViewById(R.id.registrationDetails);
+        capacity = findViewById(R.id.capacity);
+        countOnList = findViewById(R.id.countOnList);
 
         backButton.setOnClickListener(v -> back());
         joinWaitlistButton.setOnClickListener(v -> JoinWaitlist(selectedEvent));
@@ -115,11 +142,11 @@ public class EventDetailsActivity extends AppCompatActivity {
         Log.d("button click","waitlist button clicked");
         String startDate= event.getStartDate();
         String endDate = event.getEndDate();
-        ArrayList<String> oldList = event.getWaitList();
-        if(oldList.size()<=event.getMaxCapacity()) {
+        String[] oldList = event.getWaitList().split(",");
+        if(oldList.length<=event.getMaxCapacity()) {
             if (registrationPeriod(startDate, endDate)) {
                 event.enrollInWaitList(deviceId);
-                ArrayList<String> updatedList = event.getWaitList();
+                String updatedList = event.getWaitList();
                 FirebaseManager.updateEvent(db.collection("events"), event, "waitList", updatedList);
                 joinWaitlistButton.setText("ADDED TO WAITLIST");
             }
@@ -133,21 +160,26 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
     //check if registration period is open
     public boolean registrationPeriod(String startDate, String endDate) {
-        try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            Date start = format.parse(startDate);
-            Date end = format.parse(endDate);
-            Date now = new Date();
-            return !(now.before(start) || now.after(end));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        if (startDate != "" && startDate != null) {
+            try {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                Date start = format.parse(startDate);
+                Date end = format.parse(endDate);
+                Date now = new Date();
+                return !(now.before(start) || now.after(end));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        else {
+            return true;
         }
 
     }
     private void LeaveWaitlist(Event event){
         event.removeFromWaitList(deviceId);
-        ArrayList<String> updatedList = event.getWaitList();
+        String updatedList = event.getWaitList();
         FirebaseManager.updateEvent(db.collection("events"), event, "waitList", updatedList);
         declineButton.setText("WAITLIST LEFT");
 

@@ -193,11 +193,11 @@ public class CreateEvent extends AppCompatActivity {
                     }
                 }
                 String poster = editPoster.getText().toString();
-                Integer waitingListLimit = null;
+                Integer waitingListLimit = 0;
                 if (!editWaitingList.getText().toString().isEmpty()) {
                     waitingListLimit = Integer.parseInt(editWaitingList.getText().toString());
                 }
-                if (waitingListLimit != null && waitingListLimit < 0) {
+                if (waitingListLimit < 0) {
                     editWaitingList.setError("Waiting list limit must be a positive integer");
                     editWaitingList.requestFocus();
                     return;
