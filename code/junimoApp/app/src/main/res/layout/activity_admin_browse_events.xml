@@ -16,7 +16,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Event Lottery"
+            android:text="@string/event_lottery"
             android:textColor="#FFFFFF"
             android:textSize="28sp"
             android:textStyle="bold" />
@@ -25,7 +25,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@android:color/transparent"
-            android:contentDescription="Settings"
+            android:contentDescription="@string/settings"
             android:src="@android:drawable/ic_menu_manage"
             android:tint="#FFFFFF" />
     </LinearLayout>
@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
-        android:text="←  Back to Home"
+        android:text="@string/back_to_home"
         android:textColor="#FFFFFF"
         android:textSize="16sp" />
 
