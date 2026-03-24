@@ -46,6 +46,13 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     TextView eventTitle;
     TextView descriptionText;
+    TextView organizerText;
+    TextView eventDate;
+    TextView eventLocationText;
+    TextView priceText;
+    TextView registrationDetails;
+    TextView capacity;
+    TextView countOnList;
 
     TextView backButton;
     Button joinWaitlistButton;
@@ -88,6 +95,18 @@ public class EventDetailsActivity extends AppCompatActivity {
 
                     eventTitle.setText(selectedEvent.getTitle());
                     descriptionText.setText(selectedEvent.getDescription());
+                    organizerText.setText(selectedEvent.getOrganizerID());
+                    eventDate.setText(selectedEvent.getDateEvent());
+                    eventLocationText.setText(selectedEvent.getEventLocation());
+                    priceText.setText(String.valueOf(selectedEvent.getPrice()));
+                    String registration = selectedEvent.getStartDate()+"\n"+selectedEvent.getEndDate();
+                    registrationDetails.setText(registration);
+                    capacity.setText(String.valueOf(selectedEvent.getMaxCapacity()));
+                    String waitlistText = String.valueOf(selectedEvent.getWaitList().split(",").length);
+                    if(selectedEvent.getMaxCapacity()>0){
+                        waitlistText = waitlistText+"/"+String.valueOf(selectedEvent.getMaxCapacity());
+                    }
+                    countOnList.setText(waitlistText);
                 }
                 else {
                     Log.d("Firestore", "Error getting documents: ", task.getException());
@@ -99,8 +118,16 @@ public class EventDetailsActivity extends AppCompatActivity {
         joinWaitlistButton = findViewById(R.id.joinWaitlistButton);
         acceptButton = findViewById(R.id.acceptButton);
         declineButton = findViewById(R.id.declineButton);
+
         eventTitle = findViewById(R.id.eventTitle);
         descriptionText = findViewById(R.id.descriptionText);
+        organizerText = findViewById(R.id.organizerText);
+        eventDate = findViewById(R.id.eventDate);
+        eventLocationText = findViewById(R.id.eventLocation);
+        priceText = findViewById(R.id.price);
+        registrationDetails = findViewById(R.id.registrationDetails);
+        capacity = findViewById(R.id.capacity);
+        countOnList = findViewById(R.id.countOnList);
 
         backButton.setOnClickListener(v -> back());
         joinWaitlistButton.setOnClickListener(v -> JoinWaitlist(selectedEvent));
