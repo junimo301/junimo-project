@@ -4,19 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.junimoapp.OrganizerStartScreen;
 import com.example.junimoapp.R;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
-import com.example.junimoapp.models.WaitList;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -24,7 +21,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Entrants names who have joined cancelled, enrolled, or joined the waiting list of an event
@@ -101,7 +97,7 @@ public class Entrants extends AppCompatActivity {
                                     User user = new User(deviceID, document.getString("name"), document.getString("email"), document.getString("phone"));
                                     users.add(user);
                                     loadInvitedEntrants(users, selectEvent);
-                                    loadCancelledEntrants();
+                                    loadCancelledEntrants(users,selectEvent);
                                     loadEnrolledEntrants(users);
 
                                 } else {
@@ -155,22 +151,24 @@ public class Entrants extends AppCompatActivity {
      * adds names to the cancelled entrants container
      *
      */
-    private void loadCancelledEntrants() {
-//        db.collection("events")
-//                .document(eventID)
-//                .collection("declinedUsers")
-//                .get()
-//                .addOnSuccessListener(queryDocumentSnapshots -> {
-//                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-//                        String entrantName = document.getString("name");
-//                        if (entrantName != null) {
-//                            TextView textView = new TextView(this);
-//                            textView.setText(entrantName);
-//                            cancelledEntrants.addView(textView);
-//                        }
-//                    }
-//
-//                });
+    private void loadCancelledEntrants(ArrayList<User> usersArray, Event selectedEvent) {
+        boolean noneCancelled = true;
+        if(usersArray.size()>=1) {
+            for (User user : usersArray) {
+                if (user.isInvited(selectedEvent)) {
+                    String name = user.getName();
+                    TextView textView = new TextView(Entrants.this);
+                    textView.setText(name);
+                    cancelledEntrants.addView(textView);
+                    noneCancelled=false;
+                }
+            }
+        }
+        if(noneCancelled) {
+            TextView textView = new TextView(Entrants.this);
+            textView.setText("No users have been cancelled");
+            cancelledEntrants.addView(textView);
+        }
     }
 
     /**
