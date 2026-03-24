@@ -19,6 +19,7 @@ import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.WaitList;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -77,16 +78,43 @@ public class Entrants extends AppCompatActivity {
         if (selectEvent != null) {
             eventName.setText(selectEvent.getTitle());
         }
-        selectEvent.initializeWaitlist();
 
         /** initialize firestore
          * loads entrants from firestore
          */
         db = FirebaseManager.getDB();
 
-        loadInvitedEntrants(selectEvent);
-        loadCancelledEntrants();
-        loadEnrolledEntrants(selectEvent);
+        ArrayList<User> users = new ArrayList<User>();
+        String[] deviceIDs = selectEvent.getWaitList().split(",");
+        if (deviceIDs.length>=1) {
+            CollectionReference usersRef = db.collection("users");
+            for (String deviceID : deviceIDs) {
+                if (deviceID != null && deviceID != "") {
+                    Log.d("waitlist populating", deviceID);
+                    usersRef.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    Log.d("Firestore", "DocumentSnapshot data: " + document.getData());
+                                    User user = new User(deviceID, document.getString("name"), document.getString("email"), document.getString("phone"));
+                                    users.add(user);
+                                    loadInvitedEntrants(users, selectEvent);
+                                    loadCancelledEntrants();
+                                    loadEnrolledEntrants(users);
+
+                                } else {
+                                    Log.d("Firestore", "No such document");
+                                }
+                            } else {
+                                Log.d("Firestore", "get failed with ", task.getException());
+                            }
+                        }
+                    });
+                }
+            }
+        }
 
         /** returns to select an event screen */
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -102,39 +130,24 @@ public class Entrants extends AppCompatActivity {
      * adds their name to the invited entrants container
      *
      */
-    private void loadInvitedEntrants(Event selectedEvent) {
-        WaitList waitlist = new WaitList(selectedEvent);
-        waitlist.populateWaitList(selectedEvent);
-
-        ArrayList<User> usersArray = waitlist.getUsers();
-        for (User user : usersArray) {
-            if (user.isInvited(selectedEvent)) {
-                String name = user.getName();
-                TextView textView = new TextView(Entrants.this);
-                textView.setText(name);
-                invitedEntrants.addView(textView);
+    private void loadInvitedEntrants(ArrayList<User> usersArray, Event selectedEvent) {
+        boolean noneInvited = true;
+        if(usersArray.size()>=1) {
+            for (User user : usersArray) {
+                if (user.isInvited(selectedEvent)) {
+                    String name = user.getName();
+                    TextView textView = new TextView(Entrants.this);
+                    textView.setText(name);
+                    invitedEntrants.addView(textView);
+                    noneInvited=false;
+                }
             }
         }
-//        ArrayList<String> userIDs = selectedEvent.getWaitList();
-//        Log.d("entrants list",userIDs.toString());
-//
-//        for (String userID : userIDs) {
-//            db.collection("users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                @Override
-//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                    if (task.isSuccessful()) {
-//                        DocumentSnapshot doc = task.getResult();
-//                        String entrantName = doc.getString("name");
-//                        if (entrantName != null) {
-//                            TextView textView = new TextView(Entrants.this);
-//                            textView.setText(entrantName);
-//                            invitedEntrants.addView(textView);
-//                            Log.d("entrants view added",entrantName);
-//                        }
-//                    }
-//                }
-//            });
-//        }
+        if(noneInvited) {
+            TextView textView = new TextView(Entrants.this);
+            textView.setText("No users have been invited");
+            invitedEntrants.addView(textView);
+        }
     }
 
     /**
@@ -165,32 +178,22 @@ public class Entrants extends AppCompatActivity {
      * adds names to the enrolled entrants container
      *
      */
-    private void loadEnrolledEntrants(Event selectedEvent) {
-        WaitList waitlist = new WaitList(selectedEvent);
-        waitlist.populateWaitList(selectedEvent);
-        ArrayList<User> usersArray = waitlist.getUsers();
+    private void loadEnrolledEntrants(ArrayList<User> usersArray) {
         Log.d("entrants view added",usersArray.toString());
-        for (User user : usersArray) {
-            String name = user.getName();
-            TextView textView = new TextView(Entrants.this);
-            textView.setText(name);
-            enrolledEntrants.addView(textView);
-            Log.d("entrants view added",name);
+        if(usersArray.size()>=1) {
+            for (User user : usersArray) {
+                String name = user.getName();
+                TextView textView = new TextView(Entrants.this);
+                textView.setText(name);
+                enrolledEntrants.addView(textView);
+                Log.d("entrants view added", name);
+            }
         }
-//        db.collection("events")
-//                .document(eventID)
-//                .collection("acceptedUsers")
-//                .get()
-//                .addOnSuccessListener(queryDocumentSnapshots -> {
-//                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-//                        String entrantName = document.getString("name");
-//                        if (entrantName != null) {
-//                            TextView textView = new TextView(this);
-//                            textView.setText(entrantName);
-//                            enrolledEntrants.addView(textView);
-//                        }
-//                    }
-//                });
+        else {
+            TextView textView = new TextView(Entrants.this);
+            textView.setText("No users have enrolled in the waitlist");
+            enrolledEntrants.addView(textView);
+        }
     }
 
 

@@ -54,7 +54,7 @@ public class Event {
 
 
     /** list of the user id who are on the waiting list */
-    private ArrayList<String> waitList;
+    private String waitList;
 
     /** the organizer id */
     private String organizerID;
@@ -93,17 +93,17 @@ public class Event {
         this.poster = poster;
         this.eventID = eventID;
 
-        this.waitList = new ArrayList<String>();
+        this.waitList = "";
         initializeWaitlist();
         this.organizerID = organizerID;
     }
 
     //setters and getters
-    public ArrayList<String> getWaitList() {
+    public String getWaitList() {
         return waitList;
     }
 
-    public void setWaitList(ArrayList<String> waitList) {
+    public void setWaitList(String waitList) {
         this.waitList = waitList;
     }
 
@@ -233,7 +233,7 @@ public class Event {
             return false;
         }
         else {
-            waitList.add(accountId);
+            waitList= waitList + (accountId)+",";
             firebase.updateEvent(db.collection("events"),this,"waitlist",waitList);
             return true;
         }
@@ -249,7 +249,7 @@ public class Event {
      */
     public boolean removeFromWaitList(String accountId) {
         if(waitList.contains(accountId)){
-            waitList.remove(accountId);
+            waitList=waitList.replace(accountId+",","");
             firebase.updateEvent(db.collection("events"),this,"waitlist",waitList);
             return true;
         }
@@ -265,12 +265,12 @@ public class Event {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        ArrayList<String> data = document.get("waitlist", ArrayList.class);
+                        String data = document.getString("waitlist");
                         if(data!=null) {
-                            for (String item : data) {
+                            for (String item : data.split(",")) {
                                 if (item != null) {
-                                    waitList.add(item);
-                                    Log.d("Firestore", "added user to waitlist" + item);
+                                    waitList= waitList + (item) + ",";
+                                    Log.d("Firestore", "added user to waitlist " + item);
                                 }
                             }
                         }

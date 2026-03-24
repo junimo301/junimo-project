@@ -21,13 +21,19 @@ public class WaitList {
     private int maxCapacity;
     private int waitListLimit;
     private String eventID;
+    private boolean complete;
 
     public WaitList(Event event) {
         this.maxCapacity = event.getMaxCapacity();
         this.waitListLimit = event.getWaitingListLimit();
         this.eventID = event.getEventID();
         this.users = new ArrayList<User>();
+        this.complete=false;
         populateWaitList(event);
+    }
+
+    public boolean getComplete() {
+        return complete;
     }
 
     public ArrayList<User> getUsers() {
@@ -64,31 +70,34 @@ public class WaitList {
      * @param event
      * the event associated with the waitlist
      */
-    public void populateWaitList(Event event){
+    public void populateWaitList(Event event) {
         users.clear();
-        ArrayList<String> deviceIDs=event.getWaitList();
-        FirebaseManager firebase= new FirebaseManager();
-        CollectionReference usersRef = firebase.getDB().collection("users");
-        Log.d("waitlist populating",deviceIDs.toString());
-        for(String deviceID : deviceIDs){
-            if(deviceID!=null) {
-                usersRef.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                Log.d("Firestore", "DocumentSnapshot data: " + document.getData());
-                                User user = new User(deviceID, document.getString("name"), document.getString("email"), document.getString("phone"));
-                                users.add(user);
+        String[] deviceIDs = event.getWaitList().split(",");
+        if (deviceIDs.length>=1) {
+            FirebaseManager firebase = new FirebaseManager();
+            CollectionReference usersRef = firebase.getDB().collection("users");
+            for (String deviceID : deviceIDs) {
+                if (deviceID != null && deviceID != "") {
+                    Log.d("waitlist populating", deviceID);
+                    usersRef.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    Log.d("Firestore", "DocumentSnapshot data: " + document.getData());
+                                    User user = new User(deviceID, document.getString("name"), document.getString("email"), document.getString("phone"));
+                                    users.add(user);
+                                    complete=true;
+                                } else {
+                                    Log.d("Firestore", "No such document");
+                                }
                             } else {
-                                Log.d("Firestore", "No such document");
+                                Log.d("Firestore", "get failed with ", task.getException());
                             }
-                        } else {
-                            Log.d("Firestore", "get failed with ", task.getException());
                         }
-                    }
-                });
+                    });
+                }
             }
         }
     }

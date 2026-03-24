@@ -81,7 +81,7 @@ public class FirebaseManager {
      * @param newValue
      * the new value to be added
      */
-    public void updateEvent(CollectionReference eventsRef, Event event, String field, String newValue) {
+    public static void updateEvent(CollectionReference eventsRef, Event event, String field, String newValue) {
         DocumentReference docRef = eventsRef.document(event.getEventID());
         docRef.update(field, newValue);
     }

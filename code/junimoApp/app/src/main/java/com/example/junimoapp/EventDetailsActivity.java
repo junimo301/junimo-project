@@ -115,11 +115,11 @@ public class EventDetailsActivity extends AppCompatActivity {
         Log.d("button click","waitlist button clicked");
         String startDate= event.getStartDate();
         String endDate = event.getEndDate();
-        ArrayList<String> oldList = event.getWaitList();
-        if(oldList.size()<=event.getMaxCapacity()) {
+        String[] oldList = event.getWaitList().split(",");
+        if(oldList.length<=event.getMaxCapacity()) {
             if (registrationPeriod(startDate, endDate)) {
                 event.enrollInWaitList(deviceId);
-                ArrayList<String> updatedList = event.getWaitList();
+                String updatedList = event.getWaitList();
                 FirebaseManager.updateEvent(db.collection("events"), event, "waitList", updatedList);
                 joinWaitlistButton.setText("ADDED TO WAITLIST");
             }
@@ -133,21 +133,26 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
     //check if registration period is open
     public boolean registrationPeriod(String startDate, String endDate) {
-        try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            Date start = format.parse(startDate);
-            Date end = format.parse(endDate);
-            Date now = new Date();
-            return !(now.before(start) || now.after(end));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        if (startDate != "" && startDate != null) {
+            try {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                Date start = format.parse(startDate);
+                Date end = format.parse(endDate);
+                Date now = new Date();
+                return !(now.before(start) || now.after(end));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        else {
+            return true;
         }
 
     }
     private void LeaveWaitlist(Event event){
         event.removeFromWaitList(deviceId);
-        ArrayList<String> updatedList = event.getWaitList();
+        String updatedList = event.getWaitList();
         FirebaseManager.updateEvent(db.collection("events"), event, "waitList", updatedList);
         declineButton.setText("WAITLIST LEFT");
 

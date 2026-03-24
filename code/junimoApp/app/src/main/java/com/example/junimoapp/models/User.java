@@ -27,6 +27,9 @@ public class User {
         this.phone = phone;
         this.organizer = true; //starts as true, or maybe should change to true when an event is created?
         this.admin = false; //set as true only if device id matches ours
+        this.organizedEvents = new ArrayList<Event>();
+        this.invitedEvents = new ArrayList<Event>();
+        this.waitListedEvents = new ArrayList<Event>();
     }
     public String getDeviceId() {
         return deviceId;
