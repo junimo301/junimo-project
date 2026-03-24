@@ -18,6 +18,7 @@ public class User {
     private boolean admin;
     private ArrayList<Event> organizedEvents;
     private ArrayList<Event> waitListedEvents;
+    private ArrayList<Event> invitedEvents;
 
     public User(String deviceId, String name, String email, String phone) {
         this.deviceId = deviceId;
@@ -26,6 +27,9 @@ public class User {
         this.phone = phone;
         this.organizer = true; //starts as true, or maybe should change to true when an event is created?
         this.admin = false; //set as true only if device id matches ours
+        this.organizedEvents = new ArrayList<Event>();
+        this.invitedEvents = new ArrayList<Event>();
+        this.waitListedEvents = new ArrayList<Event>();
     }
     public String getDeviceId() {
         return deviceId;
@@ -66,6 +70,15 @@ public class User {
         this.admin = admin;
     }
 
+    public void inviteUser(Event event){
+        invitedEvents.add(event);
+    }
+    public boolean isInvited(Event event){
+        return invitedEvents.contains(event);
+    }
+    public void cancelUser(Event event) {
+        invitedEvents.remove(event);
+    }
     public void addOrganizedEvent(Event event){
         organizedEvents.add(event); //not sure when to call this...
     }

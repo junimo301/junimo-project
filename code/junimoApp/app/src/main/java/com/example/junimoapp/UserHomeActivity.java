@@ -46,11 +46,6 @@ public class UserHomeActivity extends AppCompatActivity {
         invitationsButton = findViewById(R.id.invitationsButton);
         profileButton = findViewById(R.id.profileButton);
         guidelinesButton = findViewById(R.id.guidelinesButton);
-
-        //open events page
-        eventsButton.setOnClickListener(v ->
-                startActivity(new Intent(this, EventsActivity.class)));
-
         eventListView = findViewById(R.id.eventListView);
 
         //open invitations page
@@ -64,7 +59,7 @@ public class UserHomeActivity extends AppCompatActivity {
         //open lottery guidelines page
         guidelinesButton.setOnClickListener(v ->
                 startActivity(new Intent(this, GuidelinesActivity.class)));
-        //open guidelines page
+        //open guidelines page -- why do we have two clicklisteners for guidelines?? -kasper
         guidelinesButton.setOnClickListener(v -> {
             Intent intent = new Intent(UserHomeActivity.this, GuidelinesActivity.class);
             startActivity(intent);

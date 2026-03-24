@@ -1,8 +1,19 @@
 package com.example.junimoapp.models;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.example.junimoapp.firebase.FirebaseManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Event specific information
@@ -10,7 +21,7 @@ import java.util.ArrayList;
  * */
 public class Event {
 
-    /** the unquie id for the event */
+    /** the unique id for the event */
     private String eventID;
     private String title;
     private String description;
@@ -43,10 +54,12 @@ public class Event {
 
 
     /** list of the user id who are on the waiting list */
-    private ArrayList<String> waitList;
+    private String waitList;
 
     /** the organizer id */
     private String organizerID;
+    FirebaseManager firebase = new FirebaseManager();
+    FirebaseFirestore db = firebase.getDB();
 
 
     /**
@@ -80,16 +93,17 @@ public class Event {
         this.poster = poster;
         this.eventID = eventID;
 
-        this.waitList = new ArrayList<String>();
+        this.waitList = "";
+        initializeWaitlist();
         this.organizerID = organizerID;
     }
 
     //setters and getters
-    public ArrayList<String> getWaitList() {
+    public String getWaitList() {
         return waitList;
     }
 
-    public void setWaitList(ArrayList<String> waitList) {
+    public void setWaitList(String waitList) {
         this.waitList = waitList;
     }
 
@@ -219,9 +233,11 @@ public class Event {
             return false;
         }
         else {
-            waitList.add(accountId);
+            waitList= waitList + (accountId)+",";
+            firebase.updateEvent(db.collection("events"),this,"waitlist",waitList);
             return true;
         }
+
     }
 
     /**
@@ -233,12 +249,39 @@ public class Event {
      */
     public boolean removeFromWaitList(String accountId) {
         if(waitList.contains(accountId)){
-            waitList.remove(accountId);
+            waitList=waitList.replace(accountId+",","");
+            firebase.updateEvent(db.collection("events"),this,"waitlist",waitList);
             return true;
         }
         else {
             return false;
         }
+    }
+
+    public void initializeWaitlist() {
+        db.collection("events").document(eventID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String data = document.getString("waitlist");
+                        if(data!=null) {
+                            for (String item : data.split(",")) {
+                                if (item != null) {
+                                    waitList= waitList + (item) + ",";
+                                    Log.d("Firestore", "added user to waitlist " + item);
+                                }
+                            }
+                        }
+                    } else {
+                        Log.d("Firestore", "No such document");
+                    }
+                } else {
+                    Log.d("Firestore", "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
 }
