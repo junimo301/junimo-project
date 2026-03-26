@@ -68,6 +68,20 @@ public class FirebaseManager {
         docRef.set(user);
     }
 
+    public void deleteUser(User user, CollectionReference usersRef) {
+        for(Event event : user.getWaitListedEvents()){
+            user.leaveEventWaitList(event);
+        }
+        for(Event event : user.getOrganizedEvents()){
+            deleteEvent(event, getDB().collection("events"));
+        }
+        for(Event event : user.getInvitedEvents()){
+            user.cancelUser(event);
+        }
+        DocumentReference docRef = usersRef.document(user.getDeviceId());
+        docRef.delete();
+    }
+
     //updates to various different event fields (newValue type changes)
 
     /**

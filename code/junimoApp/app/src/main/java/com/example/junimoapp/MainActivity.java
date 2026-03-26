@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
                             String phone = document.getString("phone");
 
                             if (docDeviceId.equals(deviceId)) {
+                                User currentUser = new User(docDeviceId, name, email, phone);
+                                UserSession.setCurrentUser(currentUser);
                                 check = true;
                                 break;
                             }
@@ -87,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
                         if (!check) {
                             //send to login page if device id is not in users
                             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                            intent.putExtra("new",true);
                             startActivity(intent);
                         } else {
                             //send to user activity if user exists
@@ -135,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                         if (!check) {
                             //send to login page if device id is not in users
                             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                            intent.putExtra("new",true);
                             startActivity(intent);
                         } else {
                             //send to organizer activity if user exists

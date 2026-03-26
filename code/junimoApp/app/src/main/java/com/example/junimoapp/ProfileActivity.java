@@ -2,6 +2,7 @@ package com.example.junimoapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.User;
+import com.example.junimoapp.models.UserSession;
 import com.example.junimoapp.utils.DeviceUtils;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.CollectionReference;
@@ -26,10 +28,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
  */
 public class ProfileActivity extends AppCompatActivity {
 
-    private TextInputLayout nameInputLayout;
+    private EditText nameInputLayout;
     private EditText emailInput, phoneInput;
     private TextView backButton;
     private Button saveBtn;
+    private Button deleteBtn;
     private String deviceId;
     private FirebaseFirestore db;
     private FirebaseManager firebase;
@@ -38,6 +41,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        boolean newUser = getIntent().getBooleanExtra("new",true);
 
         //initialize firebase and device info
         db = FirebaseManager.getDB();
@@ -50,6 +54,16 @@ public class ProfileActivity extends AppCompatActivity {
         phoneInput = findViewById(R.id.phoneInput);
         saveBtn = findViewById(R.id.saveButton);
         backButton = findViewById(R.id.backToHomeText);
+        deleteBtn = findViewById(R.id.deleteButton);
+
+        if(!newUser){
+            User user = UserSession.getCurrentUser();
+            nameInputLayout.setText(user.getName());
+            Log.d("profile activity",user.getName());
+            emailInput.setText(user.getEmail());
+            phoneInput.setText(user.getPhone());
+        }
+
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,12 +78,9 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //get values from TextInputLayout and EditTexts
-                String name = "";
-                if (nameInputLayout.getEditText() != null) {
-                    name = nameInputLayout.getEditText().getText().toString();
-                }
+                //get values from EditTexts
 
+                String name = nameInputLayout.getText().toString();
                 String email = emailInput.getText().toString();
                 String phone = phoneInput.getText().toString();
 
@@ -82,6 +93,19 @@ public class ProfileActivity extends AppCompatActivity {
 
                 //give feedback to user
                 saveBtn.setText("saved! :3");
+                UserSession.setCurrentUser(user);
+            }
+        });
+        deleteBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if(!newUser){
+                    User user = UserSession.getCurrentUser();
+                    CollectionReference usersRef=firebase.getDB().collection("users");
+                    firebase.deleteUser(user, usersRef);
+                    Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }

@@ -70,6 +70,18 @@ public class User {
         this.admin = admin;
     }
 
+    public ArrayList<Event> getOrganizedEvents() {
+        return organizedEvents;
+    }
+
+    public ArrayList<Event> getWaitListedEvents() {
+        return waitListedEvents;
+    }
+
+    public ArrayList<Event> getInvitedEvents() {
+        return invitedEvents;
+    }
+
     public void inviteUser(Event event){
         invitedEvents.add(event);
     }
@@ -98,6 +110,12 @@ public class User {
         boolean check=event.enrollInWaitList(deviceId);
         if(check){
             waitListedEvents.add(event);
+        }
+    }
+    public void leaveEventWaitList(Event event){
+        boolean check=event.removeFromWaitList(deviceId);
+        if(check){
+            waitListedEvents.remove(event);
         }
     }
 
