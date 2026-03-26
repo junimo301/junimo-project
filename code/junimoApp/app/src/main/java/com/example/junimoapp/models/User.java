@@ -25,12 +25,12 @@ public class User {
     private String phone;
     private boolean organizer;
     private boolean admin;
-    private ArrayList<Event> organizedEvents;
-    private ArrayList<Event> waitListedEvents;
-    private ArrayList<Event> invitedEvents;
-    private String organizedEventsString;
-    private String waitlistedEventsString;
-    private String invitedEventsString;
+    private String organizedEvents;
+    private String waitlistedEvents;
+    private String invitedEvents;
+    private ArrayList<Event> organizedEventsList;
+    private ArrayList<Event> waitlistedEventsList;
+    private ArrayList<Event> invitedEventsList;
 
     FirebaseManager firebase = new FirebaseManager();
     FirebaseFirestore db = firebase.getDB();
@@ -42,11 +42,10 @@ public class User {
         this.phone = phone;
         this.organizer = true; //starts as true, or maybe should change to true when an event is created?
         this.admin = false; //set as true only if device id matches ours
-        this.organizedEventsString = organized;
-        this.invitedEventsString = invited;
-        this.waitlistedEventsString = waitlisted;
+        this.organizedEvents = organized;
+        this.invitedEvents = invited;
+        this.waitlistedEvents = waitlisted;
 
-        initializeEvents();
     }
     public String getDeviceId() {
         return deviceId;
@@ -87,35 +86,60 @@ public class User {
         this.admin = admin;
     }
 
-    public ArrayList<Event> getOrganizedEvents() {
-        return organizedEvents;
+    public void setOrganizedEvents(String organizedEvents) {
+        this.organizedEvents = organizedEvents;
     }
 
-    public ArrayList<Event> getWaitListedEvents() {
-        return waitListedEvents;
+    public String getWaitlistedEvents() {
+        return waitlistedEvents;
     }
 
-    public ArrayList<Event> getInvitedEvents() {
+    public void setWaitlistedEvents(String waitlistedEvents) {
+        this.waitlistedEvents = waitlistedEvents;
+    }
+
+    public String getInvitedEvents(){
         return invitedEvents;
+    }
+    public void setInvitedEvents(String invitedEvents) {
+        this.invitedEvents = invitedEvents;
+    }
+
+    public ArrayList<Event> getOrganizedEventsList() {
+        return organizedEventsList;
+    }
+
+    public ArrayList<Event> getWaitlistedEventsList() {
+        return waitlistedEventsList;
+    }
+
+    public ArrayList<Event> getInvitedEventsList() {
+        return invitedEventsList;
     }
 
     public void inviteUser(Event event){
-        invitedEventsString= invitedEventsString + (event.getEventID())+",";
-        firebase.updateUser(db.collection("users"),this,"invitedEvents",invitedEventsString);
-        invitedEvents.add(event);
+        invitedEvents= invitedEvents + (event.getEventID())+",";
+        firebase.updateUser(db.collection("users"),this,"invitedEvents",invitedEvents);
+        invitedEventsList.add(event);
     }
     public boolean isInvited(Event event){
-        return invitedEvents.contains(event);
+        return invitedEventsList.contains(event);
     }
     public void cancelUser(Event event) {
-        invitedEvents.remove(event);
+        invitedEventsList.remove(event);
     }
     public void addOrganizedEvent(Event event){
-        organizedEvents.add(event);
+        organizedEvents= organizedEvents + (event.getEventID())+",";
+        firebase.updateUser(db.collection("users"),this,"organizedEvents",organizedEvents);
+        organizedEventsList.add(event);
     }
 
     public void removeOrganizedEvent(Event event){
-        organizedEvents.remove(event);
+        if(organizedEvents.contains(event.getEventID())) {
+            organizedEvents = organizedEvents.replace(event.getEventID()+",","");
+            firebase.updateUser(db.collection("users"), this, "organizedEvents", organizedEvents);
+        }
+        organizedEventsList.remove(event);
     }
 
     /**
@@ -128,13 +152,17 @@ public class User {
     public void joinEventWaitList(Event event){
         boolean check=event.enrollInWaitList(deviceId);
         if(check){
-            waitListedEvents.add(event);
+            waitlistedEvents= waitlistedEvents + (event.getEventID())+",";
+            firebase.updateUser(db.collection("users"),this,"waitlistedEvents",waitlistedEvents);
+            waitlistedEventsList.add(event);
         }
     }
     public void leaveEventWaitList(Event event){
         boolean check=event.removeFromWaitList(deviceId);
         if(check){
-            waitListedEvents.remove(event);
+            waitlistedEvents = waitlistedEvents.replace(event.getEventID()+",","");
+            firebase.updateUser(db.collection("users"), this, "waitlistedEvents", waitlistedEvents);
+            waitlistedEventsList.remove(event);
         }
     }
 
@@ -145,16 +173,17 @@ public class User {
         organizer = false;
         //get rid of all their events from firestore
         CollectionReference eventsRef = db.collection("events");
-        for(Event event : organizedEvents){
+        for(Event event : organizedEventsList){
             firebase.deleteEvent(event,eventsRef);
         }
-        organizedEvents.clear();
+        firebase.updateUser(db.collection("users"), this, "organizedEvents", "");
+        organizedEventsList.clear();
     }
 
     public void initializeEvents(){
-        this.organizedEvents = new ArrayList<Event>();
-        this.invitedEvents = new ArrayList<Event>();
-        this.waitListedEvents = new ArrayList<Event>();
+        this.organizedEventsList = new ArrayList<Event>();
+        this.invitedEventsList = new ArrayList<Event>();
+        this.waitlistedEventsList = new ArrayList<Event>();
         CollectionReference usersRef = db.collection("users");
         usersRef.document(deviceId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -163,15 +192,30 @@ public class User {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d("Firestore", "DocumentSnapshot data: " + document.getData());
-                        organizedEventsString=document.getString("organizedEvents");
-                        invitedEventsString=document.getString("invitedEvents");
-                        waitlistedEventsString=document.getString("waitlistedEvents");
-                        String[] organized = organizedEventsString.split(",");
-                        String[] invited = invitedEventsString.split(",");
-                        String[] waitlisted = waitlistedEventsString.split(",");
-                        readStringList(organized,organizedEvents);
-                        readStringList(invited,invitedEvents);
-                        readStringList(waitlisted,waitListedEvents);
+                        organizedEvents=document.getString("organizedEvents");
+                        invitedEvents=document.getString("invitedEvents");
+                        waitlistedEvents=document.getString("waitlistedEvents");
+                        if (organizedEvents!= null && !organizedEvents.equals("")) {
+                            String[] organized = organizedEvents.split(",");
+                            readStringList(organized, organizedEventsList);
+                        }
+                        else{
+                            firebase.updateUser(usersRef, User.this, "organizedEvents","");
+                        }
+                        if(invitedEvents!=null && !invitedEvents.equals("")){
+                            String[] invited = invitedEvents.split(",");
+                            readStringList(invited, invitedEventsList);
+                        }
+                        else{
+                            firebase.updateUser(usersRef, User.this, "invitedEvents","");
+                        }
+                        if(waitlistedEvents!=null && !waitlistedEvents.equals("")){
+                            String[] waitlisted = waitlistedEvents.split(",");
+                            readStringList(waitlisted, waitlistedEventsList);
+                        }
+                        else{
+                            firebase.updateUser(usersRef, User.this, "waitlistedEvents","");
+                        }
 
                     } else {
                         Log.d("Firestore", "No such document");

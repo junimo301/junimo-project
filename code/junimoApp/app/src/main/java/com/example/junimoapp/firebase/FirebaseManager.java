@@ -66,16 +66,18 @@ public class FirebaseManager {
     public void addUser(User user, CollectionReference usersRef) {
         DocumentReference docRef = usersRef.document(user.getDeviceId());
         docRef.set(user);
+        user.initializeEvents();
+
     }
 
     public void deleteUser(User user, CollectionReference usersRef) {
-        for(Event event : user.getWaitListedEvents()){
+        for(Event event : user.getWaitlistedEventsList()){
             user.leaveEventWaitList(event);
         }
-        for(Event event : user.getOrganizedEvents()){
+        for(Event event : user.getOrganizedEventsList()){
             deleteEvent(event, getDB().collection("events"));
         }
-        for(Event event : user.getInvitedEvents()){
+        for(Event event : user.getInvitedEventsList()){
             user.cancelUser(event);
         }
         DocumentReference docRef = usersRef.document(user.getDeviceId());

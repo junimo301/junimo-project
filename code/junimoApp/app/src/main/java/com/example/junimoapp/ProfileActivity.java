@@ -87,6 +87,10 @@ public class ProfileActivity extends AppCompatActivity {
                 String email = emailInput.getText().toString();
                 String phone = phoneInput.getText().toString();
 
+                user.setName(name);
+                user.setEmail(email);
+                user.setPhone(phone);
+
                 //create user object
                 //save to Firestore
                 CollectionReference usersRef = firebase.getDB().collection("users");
@@ -94,14 +98,15 @@ public class ProfileActivity extends AppCompatActivity {
                     firebase.updateUser(usersRef, user, "name", name);
                     firebase.updateUser(usersRef, user, "email", email);
                     firebase.updateUser(usersRef, user, "phone", phone);
+                    user.initializeEvents();
                 }
                 else {
+                    user.setInvitedEvents("");
+                    user.setOrganizedEvents("");
+                    user.setWaitlistedEvents("");
                     firebase.addUser(user,usersRef);
                 }
 
-                user.setName(name);
-                user.setEmail(email);
-                user.setPhone(phone);
                 //give feedback to user
                 saveBtn.setText("saved! :3");
                 UserSession.setCurrentUser(user);
