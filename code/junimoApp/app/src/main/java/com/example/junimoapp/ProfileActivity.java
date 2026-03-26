@@ -36,7 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
     private String deviceId;
     private FirebaseFirestore db;
     private FirebaseManager firebase;
-
+    private User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,11 +57,14 @@ public class ProfileActivity extends AppCompatActivity {
         deleteBtn = findViewById(R.id.deleteButton);
 
         if(!newUser){
-            User user = UserSession.getCurrentUser();
+            user = UserSession.getCurrentUser();
             nameInputLayout.setText(user.getName());
             Log.d("profile activity",user.getName());
             emailInput.setText(user.getEmail());
             phoneInput.setText(user.getPhone());
+        }
+        else{
+            user = new User(deviceId, "", "", "","","","");
         }
 
 
@@ -85,12 +88,20 @@ public class ProfileActivity extends AppCompatActivity {
                 String phone = phoneInput.getText().toString();
 
                 //create user object
-                User user = new User(deviceId, name, email, phone);
-
                 //save to Firestore
                 CollectionReference usersRef = firebase.getDB().collection("users");
-                firebase.addUser(user, usersRef);
+                if (!newUser) {
+                    firebase.updateUser(usersRef, user, "name", name);
+                    firebase.updateUser(usersRef, user, "email", email);
+                    firebase.updateUser(usersRef, user, "phone", phone);
+                }
+                else {
+                    firebase.addUser(user,usersRef);
+                }
 
+                user.setName(name);
+                user.setEmail(email);
+                user.setPhone(phone);
                 //give feedback to user
                 saveBtn.setText("saved! :3");
                 UserSession.setCurrentUser(user);

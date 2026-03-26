@@ -78,9 +78,12 @@ public class MainActivity extends AppCompatActivity {
                             String name = document.getString("name");
                             String email = document.getString("email");
                             String phone = document.getString("phone");
+                            String organizedEvents = document.getString("organizedEvents");
+                            String invitedEvents = document.getString("invitedEvents");
+                            String enrolledEvents = document.getString("enrolledEvents");
 
                             if (docDeviceId.equals(deviceId)) {
-                                User currentUser = new User(docDeviceId, name, email, phone);
+                                User currentUser = new User(docDeviceId, name, email, phone,organizedEvents,invitedEvents,enrolledEvents);
                                 UserSession.setCurrentUser(currentUser);
                                 check = true;
                                 break;
@@ -127,9 +130,12 @@ public class MainActivity extends AppCompatActivity {
                             String name = document.getString("name");
                             String email = document.getString("email");
                             String phone = document.getString("phone");
+                            String organizedEvents = document.getString("organizedEvents");
+                            String invitedEvents = document.getString("invitedEvents");
+                            String enrolledEvents = document.getString("enrolledEvents");
 
                             if (docDeviceId.equals(deviceId)) {
-                                User currentUser = new User(docDeviceId, name, email, phone);
+                                User currentUser = new User(docDeviceId, name, email, phone,organizedEvents,invitedEvents,enrolledEvents);
                                 UserSession.setCurrentUser(currentUser);
                                 check = true;
                                 break;

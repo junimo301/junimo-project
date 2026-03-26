@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -47,6 +48,7 @@ public class Entrants extends AppCompatActivity {
     FirebaseFirestore db;
     TextView eventName;
     TextView backButton;
+    Button lotteryButton;
 
     /**
      * loads data, when activity is first created
@@ -66,7 +68,7 @@ public class Entrants extends AppCompatActivity {
         enrolledEntrants = findViewById(R.id.enrolled_entrants);
 
         backButton = findViewById(R.id.backButton);
-
+        lotteryButton = findViewById(R.id.startLotteryButton);
 
         eventID = getIntent().getStringExtra("event_ID");
 
@@ -94,7 +96,7 @@ public class Entrants extends AppCompatActivity {
                                 DocumentSnapshot document = task.getResult();
                                 if (document.exists()) {
                                     Log.d("Firestore", "DocumentSnapshot data: " + document.getData());
-                                    User user = new User(deviceID, document.getString("name"), document.getString("email"), document.getString("phone"));
+                                    User user = new User(deviceID, document.getString("name"), document.getString("email"), document.getString("phone"),document.getString("organizedEvents"),document.getString("invitedEvents"),document.getString("waitlistedEvents"));
                                     users.add(user);
                                     loadInvitedEntrants(users, selectEvent);
                                     loadCancelledEntrants(users,selectEvent);
@@ -111,6 +113,30 @@ public class Entrants extends AppCompatActivity {
                 }
             }
         }
+
+        lotteryButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                Log.d("lottery button","button was pressed");
+                int max=selectEvent.getMaxCapacity();
+                if(users.size()>max) {
+                    int i =0;
+                    while (i < max) {
+                        int index = (int) (Math.random() * (max + 1));
+                        User selected = users.get(index);
+                        if (!selected.isInvited(selectEvent)) {
+                            selected.inviteUser(selectEvent);
+                            i += 1;
+                        }
+                    }
+                }
+                else {
+                    for(User user : users){
+                        user.inviteUser(selectEvent);
+                        Log.d("lottery button","user was invited");
+                    }
+                }
+            }
+        });
 
         /** returns to select an event screen */
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -130,6 +156,7 @@ public class Entrants extends AppCompatActivity {
         boolean noneInvited = true;
         if(usersArray.size()>=1) {
             for (User user : usersArray) {
+                Log.d("invited entrants",user.getName() + user.isInvited(selectedEvent));
                 if (user.isInvited(selectedEvent)) {
                     String name = user.getName();
                     TextView textView = new TextView(Entrants.this);

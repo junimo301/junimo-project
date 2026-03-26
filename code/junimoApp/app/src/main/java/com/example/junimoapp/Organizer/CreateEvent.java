@@ -265,6 +265,7 @@ public class CreateEvent extends AppCompatActivity {
                 /** add to firebase */
                 FirebaseManager firebase = new FirebaseManager();
                 CollectionReference eventsRef = firebase.getDB().collection("events");
+                currentUser.addOrganizedEvent(saveEvent);
 
                 if (QRCodeString != null) {
                     saveEvent.setQRCode(QRCodeString);
