@@ -3,8 +3,9 @@ package com.example.junimoapp;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotEnabled;
@@ -12,10 +13,15 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import android.content.Intent;
+
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.junimoapp.Organizer.CreateEvent;
+import com.example.junimoapp.Organizer.PrivateInviteActivity;
 import com.example.junimoapp.models.Event;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -24,18 +30,22 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * Instrumented tests for private event creation.
- * More stories will be added to this file as we go.
+ * Instrumented UI tests for private event creation and invitations.
  *
- * Stories covered in this file so far:
+ * Stories covered in this file:
  *   - US 02.01.02: Organizer creates a private event (no public listing, no QR code)
+ *   - US 02.01.03: Organizer invites specific entrants to a private event
+ *                  by searching via name, phone number and/or email
  */
 @RunWith(AndroidJUnit4.class)
-public class PrivateEventUnitTest {
+public class PrivateEventTest {
 
     @Rule
     public ActivityScenarioRule<CreateEvent> activityRule =
             new ActivityScenarioRule<>(CreateEvent.class);
+
+    // ── US 02.01.02 ───────────────────────────────────────────────────────
+
     /**
      * US 02.01.02
      * The private checkbox should be unchecked by default so that
@@ -55,16 +65,13 @@ public class PrivateEventUnitTest {
      */
     @Test
     public void checkingPrivate_disablesQRButton() {
-        // Confirm QR button starts enabled for a public event
         onView(withId(R.id.QR_code_button))
                 .perform(scrollTo())
                 .check(matches(isEnabled()));
 
-        // Check the private checkbox
         onView(withId(R.id.check_private_event))
                 .perform(scrollTo(), click());
 
-        // QR button must now be disabled
         onView(withId(R.id.QR_code_button))
                 .check(matches(isNotEnabled()));
     }
@@ -76,13 +83,11 @@ public class PrivateEventUnitTest {
      */
     @Test
     public void uncheckingPrivate_reEnablesQRButton() {
-        // Check then immediately uncheck
         onView(withId(R.id.check_private_event))
-                .perform(scrollTo(), click()); // check
+                .perform(scrollTo(), click());
         onView(withId(R.id.check_private_event))
-                .perform(click()); // uncheck
+                .perform(click());
 
-        // QR button should be enabled again
         onView(withId(R.id.QR_code_button))
                 .check(matches(isEnabled()));
     }
@@ -92,25 +97,14 @@ public class PrivateEventUnitTest {
      * Unit test for the Event model — verifies that:
      *   1. isPrivate defaults to false (events are public by default)
      *   2. setPrivate(true) correctly flips the flag to true
-     * Note: setPrivate() also writes to Firestore, which is acceptable in
-     * an instrumented test running against the real device/emulator.
      */
     @Test
     public void eventModel_isPrivateDefaultsFalse_thenCanBeSetTrue() {
         Event event = new Event(
-                "Test Event",   // title
-                "",             // description
-                "",             // startDate
-                "",             // endDate
-                "2025-01-01",   // dateEvent
-                10,             // maxCapacity
-                5,              // waitingListLimit
-                0.0,            // price
-                new GeoPoint(0, 0), // geoLocation
-                "",             // poster
-                "test-id-123",  // eventID
-                "Test Location", // eventLocation
-                "organizer-abc" // organizerID
+                "Test Event", "", "", "", "2025-01-01",
+                10, 5, 0.0,
+                new GeoPoint(0, 0), "", "test-id-123",
+                "Test Location", "organizer-abc"
         );
 
         assertFalse("New events should default to public (isPrivate = false)",
@@ -125,18 +119,103 @@ public class PrivateEventUnitTest {
     /**
      * US 02.01.02
      * Tapping the QR Generate button while the private checkbox is checked
-     * must NOT generate a QR code — the button should remain disabled and
-     * the action should be blocked at the click listener level.
+     * must not generate a QR code — the button should remain disabled.
      */
     @Test
-    public void clickingQRWhilePrivate_doesNothing() {
-        // Check private first
+    public void clickingQRWhilePrivate_buttonRemainsDisabled() {
         onView(withId(R.id.check_private_event))
                 .perform(scrollTo(), click());
 
-        // The QR button is disabled so Espresso will throw if we try to click it —
-        // we just confirm it is still disabled (not enabled after any side effect)
         onView(withId(R.id.QR_code_button))
                 .check(matches(isNotEnabled()));
     }
+
+    // ── US 02.01.03 ───────────────────────────────────────────────────────
+
+    /**
+     * US 02.01.03
+     * PrivateInviteActivity should open and display the search field
+     * when launched with valid event extras.
+     */
+    @Test
+    public void privateInviteActivity_launchesAndShowsSearchField() {
+        Intent intent = new Intent(
+                ApplicationProvider.getApplicationContext(),
+                PrivateInviteActivity.class
+        );
+        intent.putExtra("eventId", "test-event-id");
+        intent.putExtra("eventTitle", "Test Private Event");
+
+        try (ActivityScenario<PrivateInviteActivity> scenario =
+                     ActivityScenario.launch(intent)) {
+            onView(withId(R.id.search_field))
+                    .check(matches(isDisplayed()));
+        }
+    }
+
+    /**
+     * US 02.01.03
+     * The results recycler should be visible when the invite screen opens,
+     * ready to display results once the organizer starts typing.
+     */
+    @Test
+    public void privateInviteActivity_resultsRecyclerIsVisible() {
+        Intent intent = new Intent(
+                ApplicationProvider.getApplicationContext(),
+                PrivateInviteActivity.class
+        );
+        intent.putExtra("eventId", "test-event-id");
+        intent.putExtra("eventTitle", "Test Private Event");
+
+        try (ActivityScenario<PrivateInviteActivity> scenario =
+                     ActivityScenario.launch(intent)) {
+            onView(withId(R.id.results_recycler))
+                    .check(matches(isDisplayed()));
+        }
+    }
+
+    /**
+     * US 02.01.03
+     * The back button should be visible so the organizer can return
+     * without inviting anyone.
+     */
+    @Test
+    public void privateInviteActivity_backButtonIsVisible() {
+        Intent intent = new Intent(
+                ApplicationProvider.getApplicationContext(),
+                PrivateInviteActivity.class
+        );
+        intent.putExtra("eventId", "test-event-id");
+        intent.putExtra("eventTitle", "Test Private Event");
+
+        try (ActivityScenario<PrivateInviteActivity> scenario =
+                     ActivityScenario.launch(intent)) {
+            onView(withId(R.id.back_button_private))
+                    .check(matches(isDisplayed()));
+        }
+    }
+
+    /**
+     * US 02.01.03
+     * Typing in the search field should not crash the app.
+     * Smoke test confirming the TextWatcher is wired up correctly.
+     */
+    @Test
+    public void privateInviteActivity_typingInSearchDoesNotCrash() {
+        Intent intent = new Intent(
+                ApplicationProvider.getApplicationContext(),
+                PrivateInviteActivity.class
+        );
+        intent.putExtra("eventId", "test-event-id");
+        intent.putExtra("eventTitle", "Test Private Event");
+
+        try (ActivityScenario<PrivateInviteActivity> scenario =
+                     ActivityScenario.launch(intent)) {
+            onView(withId(R.id.search_field))
+                    .perform(typeText("John"));
+            onView(withId(R.id.search_field))
+                    .check(matches(isDisplayed()));
+        }
+    }
 }
+

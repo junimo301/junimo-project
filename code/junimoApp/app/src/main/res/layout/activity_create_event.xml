@@ -304,6 +304,34 @@
                 android:textColor="#FFFFFF"
                 android:textColorHint="#AFAFAF" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#8C8C8C" />
+
+            <!-- ============================================================
+                 US 02.01.02
+                 Private Event checkbox.
+                 When checked:
+                   - the QR Generate button above is disabled
+                   - isPrivate is saved as true in Firestore
+                   - this event will NOT show in the public event listing
+                 ============================================================ -->
+            <CheckBox
+                android:id="@+id/check_private_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Private Event (invite-only, no QR code)"
+                android:textColor="#E6E6E6"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:background="#8C8C8C" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
