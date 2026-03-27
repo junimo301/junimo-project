@@ -178,7 +178,6 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     }
     private void LeaveWaitlist(Event event,User user){
-        event.removeFromWaitList(deviceId);
         user.leaveEventWaitList(event);
         String updatedList = event.getWaitList();
         FirebaseManager.updateEvent(db.collection("events"), event, "waitList", updatedList);

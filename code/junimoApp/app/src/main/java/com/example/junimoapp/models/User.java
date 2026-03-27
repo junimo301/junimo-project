@@ -120,9 +120,11 @@ public class User {
     }
 
     public void inviteUser(Event event){
-        invitedEvents= invitedEvents + (event.getEventID())+",";
-        firebase.updateUser(db.collection("users"),this,"invitedEvents",invitedEvents);
-        invitedEventsList.add(event);
+        if(!invitedEvents.contains(event.getEventID())) {
+            invitedEvents = invitedEvents + (event.getEventID()) + ",";
+            firebase.updateUser(db.collection("users"), this, "invitedEvents", invitedEvents);
+            invitedEventsList.add(event);
+        }
     }
     public boolean isInvited(String eventID){
         return invitedEvents.contains(eventID);
