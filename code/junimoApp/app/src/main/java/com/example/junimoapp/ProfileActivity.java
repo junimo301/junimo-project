@@ -42,6 +42,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         boolean newUser = getIntent().getBooleanExtra("new",true);
+        boolean organizer = getIntent().getBooleanExtra("organizer",false);
 
         //initialize firebase and device info
         db = FirebaseManager.getDB();
@@ -71,8 +72,14 @@ public class ProfileActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ProfileActivity.this, UserHomeActivity.class);
-                startActivity(intent);
+                if(organizer) {
+                    Intent intent = new Intent(ProfileActivity.this, OrganizerStartScreen.class);
+                    startActivity(intent);
+                }
+                else {
+                    Intent intent = new Intent(ProfileActivity.this, UserHomeActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 

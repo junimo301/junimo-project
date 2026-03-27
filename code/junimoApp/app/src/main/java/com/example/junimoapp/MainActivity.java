@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                             if (docDeviceId.equals(deviceId)) {
                                 User currentUser = new User(docDeviceId, name, email, phone,organizedEvents,invitedEvents,enrolledEvents);
                                 UserSession.setCurrentUser(currentUser);
+                                currentUser.initializeEvents();
                                 check = true;
                                 break;
                             }
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                             //send to login page if device id is not in users
                             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                             intent.putExtra("new",true);
+                            intent.putExtra("organizer",false);
                             startActivity(intent);
                         } else {
                             //send to user activity if user exists
@@ -137,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
                             if (docDeviceId.equals(deviceId)) {
                                 User currentUser = new User(docDeviceId, name, email, phone,organizedEvents,invitedEvents,enrolledEvents);
                                 UserSession.setCurrentUser(currentUser);
+                                currentUser.initializeEvents();
                                 check = true;
                                 break;
                             }
@@ -145,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
                             //send to login page if device id is not in users
                             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                             intent.putExtra("new",true);
+                            intent.putExtra("organizer",true);
                             startActivity(intent);
                         } else {
                             //send to organizer activity if user exists

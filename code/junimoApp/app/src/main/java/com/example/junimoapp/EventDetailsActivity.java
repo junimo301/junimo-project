@@ -145,7 +145,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         String[] oldList = event.getWaitList().split(",");
         if(oldList.length<=event.getMaxCapacity()) {
             if (registrationPeriod(startDate, endDate)) {
-                event.enrollInWaitList(deviceId);
                 user.joinEventWaitList(event);
                 String updatedList = event.getWaitList();
                 FirebaseManager.updateEvent(db.collection("events"), event, "waitList", updatedList);

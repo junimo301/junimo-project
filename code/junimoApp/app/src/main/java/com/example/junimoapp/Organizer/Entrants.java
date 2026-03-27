@@ -98,8 +98,8 @@ public class Entrants extends AppCompatActivity {
                                     Log.d("Firestore", "DocumentSnapshot data: " + document.getData());
                                     User user = new User(deviceID, document.getString("name"), document.getString("email"), document.getString("phone"),document.getString("organizedEvents"),document.getString("invitedEvents"),document.getString("waitlistedEvents"));
                                     users.add(user);
-                                    loadInvitedEntrants(users, selectEvent);
-                                    loadCancelledEntrants(users,selectEvent);
+                                    loadInvitedEntrants(users, eventID);
+                                    loadCancelledEntrants(users,eventID);
                                     loadEnrolledEntrants(users);
 
                                 } else {
@@ -123,7 +123,8 @@ public class Entrants extends AppCompatActivity {
                     while (i < max) {
                         int index = (int) (Math.random() * (max + 1));
                         User selected = users.get(index);
-                        if (!selected.isInvited(selectEvent)) {
+                        selected.initializeEvents();
+                        if (!selected.isInvited(eventID)) {
                             selected.inviteUser(selectEvent);
                             i += 1;
                         }
@@ -131,6 +132,7 @@ public class Entrants extends AppCompatActivity {
                 }
                 else {
                     for(User user : users){
+                        user.initializeEvents();
                         user.inviteUser(selectEvent);
                         Log.d("lottery button","user was invited");
                     }
@@ -152,12 +154,12 @@ public class Entrants extends AppCompatActivity {
      * adds their name to the invited entrants container
      *
      */
-    private void loadInvitedEntrants(ArrayList<User> usersArray, Event selectedEvent) {
+    private void loadInvitedEntrants(ArrayList<User> usersArray, String eventID) {
         boolean noneInvited = true;
-        if(usersArray.size()>=1) {
+        if(!usersArray.isEmpty()) {
             for (User user : usersArray) {
-                Log.d("invited entrants",user.getName() + user.isInvited(selectedEvent));
-                if (user.isInvited(selectedEvent)) {
+                Log.d("invited entrants",user.getName() + user.isInvited(eventID));
+                if (user.isInvited(eventID)) {
                     String name = user.getName();
                     TextView textView = new TextView(Entrants.this);
                     textView.setText(name);
@@ -178,11 +180,11 @@ public class Entrants extends AppCompatActivity {
      * adds names to the cancelled entrants container
      *
      */
-    private void loadCancelledEntrants(ArrayList<User> usersArray, Event selectedEvent) {
+    private void loadCancelledEntrants(ArrayList<User> usersArray, String eventID) {
         boolean noneCancelled = true;
-        if(usersArray.size()>=1) {
+        if(!usersArray.isEmpty()) {
             for (User user : usersArray) {
-                if (user.isInvited(selectedEvent)) {
+                if (user.isCancelled(eventID)) {
                     String name = user.getName();
                     TextView textView = new TextView(Entrants.this);
                     textView.setText(name);
@@ -205,7 +207,7 @@ public class Entrants extends AppCompatActivity {
      */
     private void loadEnrolledEntrants(ArrayList<User> usersArray) {
         Log.d("entrants view added",usersArray.toString());
-        if(usersArray.size()>=1) {
+        if(!usersArray.isEmpty()) {
             for (User user : usersArray) {
                 String name = user.getName();
                 TextView textView = new TextView(Entrants.this);

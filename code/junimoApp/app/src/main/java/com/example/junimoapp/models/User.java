@@ -28,6 +28,7 @@ public class User {
     private String organizedEvents;
     private String waitlistedEvents;
     private String invitedEvents;
+    private String cancelledEvents;
     private ArrayList<Event> organizedEventsList;
     private ArrayList<Event> waitlistedEventsList;
     private ArrayList<Event> invitedEventsList;
@@ -45,6 +46,7 @@ public class User {
         this.organizedEvents = organized;
         this.invitedEvents = invited;
         this.waitlistedEvents = waitlisted;
+        this.cancelledEvents = "";
 
     }
     public String getDeviceId() {
@@ -122,11 +124,20 @@ public class User {
         firebase.updateUser(db.collection("users"),this,"invitedEvents",invitedEvents);
         invitedEventsList.add(event);
     }
-    public boolean isInvited(Event event){
-        return invitedEventsList.contains(event);
+    public boolean isInvited(String eventID){
+        return invitedEvents.contains(eventID);
     }
     public void cancelUser(Event event) {
+        if(invitedEvents.contains(event.getEventID())) {
+            invitedEvents = invitedEvents.replace(event.getEventID()+",","");
+            firebase.updateUser(db.collection("users"), this, "invitedEvents", invitedEvents);
+        }
         invitedEventsList.remove(event);
+        leaveEventWaitList(event);
+        cancelledEvents = cancelledEvents+event.getEventID()+",";
+    }
+    public boolean isCancelled(String eventID){
+        return cancelledEvents.contains(eventID);
     }
     public void addOrganizedEvent(Event event){
         organizedEvents= organizedEvents + (event.getEventID())+",";
@@ -192,6 +203,7 @@ public class User {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d("Firestore", "DocumentSnapshot data: " + document.getData());
+                        cancelledEvents=document.getString("cancelledEvents");
                         organizedEvents=document.getString("organizedEvents");
                         invitedEvents=document.getString("invitedEvents");
                         waitlistedEvents=document.getString("waitlistedEvents");
