@@ -9,16 +9,19 @@ import java.util.Map;
  * Utility class for sending in-app notifications to entrants via Firestore.
  *
  * User stories implemented here:
- *  - US 01.04.01: Entrant receives a notification when invited from a waiting list
- *  - US 01.04.02: Entrant receives a notification when not chosen in the lottery
- *  - US 01.04.03: Entrant can opt out of receiving notifications
+ *  - US 01.04.01: Notify entrant when selected by lottery
+ *  - US 01.04.02: Notify entrant when NOT selected by lottery
+ *  - US 01.04.03: Respect the user's opt-out preference before sending
+ *  - US 01.05.06: Notify entrant when invited to a private event waitlist
  *
  * How it works:
- *  - Notifications are stored in Firestore at: users/{userId}/notifications/{autoId}
- *  - Each notification document has: message, eventId, type, read, timestamp
- *  - Before writing, we check the user's notificationsEnabled flag (US 01.04.03)
- *    so opted-out users never receive any notifications
- *  - The NotificationsActivity reads these documents and displays them to the user
+ *  - Notifications stored at: users/{userId}/notifications/{autoId}
+ *  - Each document has: message, eventId, type, read, timestamp
+ *  - Before writing, we read notificationsEnabled from the user's Firestore doc.
+ *    This is a boolean field added to User and saved by User.setNotificationsEnabled()
+ *    via FirebaseManager.updateUser(). If false, nothing is written.
+ *  - We use a Map for the notification document because it is a lightweight
+ *    subcollection record — it has no corresponding model class in the app.
  */
 public class NotificationHelper {
 
@@ -27,7 +30,7 @@ public class NotificationHelper {
     // ─────────────────────────────────────────────────────────────────────
     // US 01.04.01
     // Call this after the lottery runs and a user has been selected.
-    // Sends a notification telling the entrant they received an invite.
+    // Called from Entrants.java inside the lottery button click listener.
     // ─────────────────────────────────────────────────────────────────────
     public static void notifyInvited(String userId, String eventId, String eventTitle) {
         sendIfEnabled(userId, eventId, "invited",
@@ -37,7 +40,7 @@ public class NotificationHelper {
     // ─────────────────────────────────────────────────────────────────────
     // US 01.04.02
     // Call this after the lottery runs and a user was NOT selected.
-    // Sends a notification telling the entrant they were not chosen.
+    // Called from Entrants.java inside the lottery button click listener.
     // ─────────────────────────────────────────────────────────────────────
     public static void notifyNotChosen(String userId, String eventId, String eventTitle) {
         sendIfEnabled(userId, eventId, "not_chosen",
@@ -47,7 +50,7 @@ public class NotificationHelper {
     // ─────────────────────────────────────────────────────────────────────
     // US 01.05.06
     // Call this when an organizer invites a user to a private event waitlist.
-    // Sends a notification telling the entrant about the private invite.
+    // Called from PrivateInviteActivity.inviteUser().
     // ─────────────────────────────────────────────────────────────────────
     public static void notifyPrivateInvite(String userId, String eventId, String eventTitle) {
         sendIfEnabled(userId, eventId, "private_invite",
@@ -56,10 +59,12 @@ public class NotificationHelper {
 
     // ─────────────────────────────────────────────────────────────────────
     // US 01.04.03
-    // Checks the user's notificationsEnabled field in Firestore before
-    // writing any notification. If the user has opted out (notificationsEnabled
-    // is false), we return immediately and nothing is written.
+    // Reads notificationsEnabled from the target user's Firestore document.
+    // This is called with the TARGET user's ID (not the current user),
+    // so we cannot use UserSession here — a Firestore read is necessary.
     // If the field is missing we default to true (notifications on).
+    // The notification document uses a Map because it is a subcollection
+    // record with no corresponding model class.
     // ─────────────────────────────────────────────────────────────────────
     private static void sendIfEnabled(String userId, String eventId,
                                       String type, String message) {
@@ -67,19 +72,18 @@ public class NotificationHelper {
                 .addOnSuccessListener(snapshot -> {
                     if (!snapshot.exists()) return;
 
-                    // US 01.04.03 — respect the opt-out preference
+                    // US 01.04.03 — check opt-out preference
                     Boolean enabled = snapshot.getBoolean("notificationsEnabled");
-                    if (enabled != null && !enabled) return; // user opted out, do nothing
+                    if (enabled != null && !enabled) return; // user opted out
 
-                    // Build the notification document
+                    // Write notification document to subcollection
                     Map<String, Object> notif = new HashMap<>();
                     notif.put("message", message);
                     notif.put("eventId", eventId);
-                    notif.put("type", type);       // "invited", "not_chosen", "private_invite"
-                    notif.put("read", false);       // marked true when user views it
+                    notif.put("type", type);
+                    notif.put("read", false);
                     notif.put("timestamp", System.currentTimeMillis());
 
-                    // Write to the user's notifications subcollection
                     db.collection("users").document(userId)
                             .collection("notifications")
                             .add(notif);
