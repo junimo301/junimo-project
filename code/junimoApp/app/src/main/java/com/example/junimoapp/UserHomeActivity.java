@@ -53,8 +53,11 @@ public class UserHomeActivity extends AppCompatActivity {
                 startActivity(new Intent(this, InvitationsActivity.class)));
 
         //open profile page
-        profileButton.setOnClickListener(v ->
-                startActivity(new Intent(this, ProfileActivity.class)));
+        profileButton.setOnClickListener(v -> {
+                    Intent intent = new Intent(this, ProfileActivity.class);
+                    intent.putExtra("new", false);
+                    startActivity(intent);
+                });
 
         //open lottery guidelines page
         guidelinesButton.setOnClickListener(v ->

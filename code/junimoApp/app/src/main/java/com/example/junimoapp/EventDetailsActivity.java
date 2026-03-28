@@ -65,8 +65,8 @@ public class EventDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.indivdual_invite_page);
 
         db = FirebaseManager.getDB();
-        deviceId = DeviceUtils.getDeviceId(this);
-
+        User user = UserSession.getCurrentUser();
+        deviceId = user.getDeviceId();
         //eventId should be passed from previous activity
         eventId = getIntent().getStringExtra("eventId");
 
@@ -130,22 +130,22 @@ public class EventDetailsActivity extends AppCompatActivity {
         countOnList = findViewById(R.id.countOnList);
 
         backButton.setOnClickListener(v -> back());
-        joinWaitlistButton.setOnClickListener(v -> JoinWaitlist(selectedEvent));
-        declineButton.setOnClickListener(v -> LeaveWaitlist(selectedEvent));
+        joinWaitlistButton.setOnClickListener(v -> JoinWaitlist(selectedEvent,user));
+        declineButton.setOnClickListener(v -> LeaveWaitlist(selectedEvent,user));
     }
 
     private void back() {
         Intent intent = new Intent(EventDetailsActivity.this, UserHomeActivity.class);
         startActivity(intent);
     }
-    private void JoinWaitlist(Event event){
+    private void JoinWaitlist(Event event, User user){
         Log.d("button click","waitlist button clicked");
         String startDate= event.getStartDate();
         String endDate = event.getEndDate();
         String[] oldList = event.getWaitList().split(",");
         if(oldList.length<=event.getMaxCapacity()) {
             if (registrationPeriod(startDate, endDate)) {
-                event.enrollInWaitList(deviceId);
+                user.joinEventWaitList(event);
                 String updatedList = event.getWaitList();
                 FirebaseManager.updateEvent(db.collection("events"), event, "waitList", updatedList);
                 joinWaitlistButton.setText("ADDED TO WAITLIST");
@@ -177,8 +177,8 @@ public class EventDetailsActivity extends AppCompatActivity {
         }
 
     }
-    private void LeaveWaitlist(Event event){
-        event.removeFromWaitList(deviceId);
+    private void LeaveWaitlist(Event event,User user){
+        user.leaveEventWaitList(event);
         String updatedList = event.getWaitList();
         FirebaseManager.updateEvent(db.collection("events"), event, "waitList", updatedList);
         declineButton.setText("WAITLIST LEFT");
