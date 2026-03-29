@@ -78,8 +78,14 @@ public class MainActivity extends AppCompatActivity {
                             String name = document.getString("name");
                             String email = document.getString("email");
                             String phone = document.getString("phone");
+                            String organizedEvents = document.getString("organizedEvents");
+                            String invitedEvents = document.getString("invitedEvents");
+                            String enrolledEvents = document.getString("enrolledEvents");
 
                             if (docDeviceId.equals(deviceId)) {
+                                User currentUser = new User(docDeviceId, name, email, phone,organizedEvents,invitedEvents,enrolledEvents);
+                                UserSession.setCurrentUser(currentUser);
+                                currentUser.initializeEvents();
                                 check = true;
                                 break;
                             }
@@ -87,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
                         if (!check) {
                             //send to login page if device id is not in users
                             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                            intent.putExtra("new",true);
+                            intent.putExtra("organizer",false);
                             startActivity(intent);
                         } else {
                             //send to user activity if user exists
@@ -124,10 +132,14 @@ public class MainActivity extends AppCompatActivity {
                             String name = document.getString("name");
                             String email = document.getString("email");
                             String phone = document.getString("phone");
+                            String organizedEvents = document.getString("organizedEvents");
+                            String invitedEvents = document.getString("invitedEvents");
+                            String enrolledEvents = document.getString("enrolledEvents");
 
                             if (docDeviceId.equals(deviceId)) {
-                                User currentUser = new User(docDeviceId, name, email, phone);
+                                User currentUser = new User(docDeviceId, name, email, phone,organizedEvents,invitedEvents,enrolledEvents);
                                 UserSession.setCurrentUser(currentUser);
+                                currentUser.initializeEvents();
                                 check = true;
                                 break;
                             }
@@ -135,6 +147,8 @@ public class MainActivity extends AppCompatActivity {
                         if (!check) {
                             //send to login page if device id is not in users
                             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                            intent.putExtra("new",true);
+                            intent.putExtra("organizer",true);
                             startActivity(intent);
                         } else {
                             //send to organizer activity if user exists

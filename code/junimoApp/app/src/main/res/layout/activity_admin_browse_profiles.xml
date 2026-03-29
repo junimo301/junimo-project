@@ -26,7 +26,7 @@ of users for displaying the user list-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Event Lottery"
+                android:text="@string/event_lottery"
                 android:textColor="#FFFFFF"
                 android:textSize="28sp"
                 android:textStyle="bold" />
@@ -34,7 +34,7 @@ of users for displaying the user list-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Admin"
+                android:text="@string/admin"
                 android:textColor="#D2D2D2"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -44,7 +44,7 @@ of users for displaying the user list-->
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@android:color/transparent"
-            android:contentDescription="Settings"
+            android:contentDescription="@string/settings"
             android:src="@android:drawable/ic_menu_manage"
             app:tint="#FFFFFF" />
     </LinearLayout>
@@ -60,7 +60,7 @@ of users for displaying the user list-->
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
-        android:text="\u2190 Back to Home"
+        android:text="@string/back_to_home"
         android:textColor="#FFFFFF"
         android:textSize="18sp" />
 
@@ -68,7 +68,7 @@ of users for displaying the user list-->
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Search Profiles"
+        android:text="@string/search_profiles"
         android:textColor="#FFFFFF"
         android:textSize="18sp" />
 
@@ -92,7 +92,7 @@ of users for displaying the user list-->
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:contentDescription="Search"
+            android:contentDescription="@string/search"
             android:src="@android:drawable/ic_menu_search"
             app:tint="#D9D9D9" />
 
@@ -107,7 +107,7 @@ of users for displaying the user list-->
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
-        android:text="Organize : Alphabetical Order \u2191"
+        android:text="@string/organize_alphabetical_order_u2191"
         android:textColor="#D9D9D9"
         android:textSize="15sp" />
 

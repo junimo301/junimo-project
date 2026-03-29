@@ -35,8 +35,8 @@ public class UserUnitTest {
                 "Rec Centre",          // eventLocation
                 "organizer-device-id"  // organizerID
         );
-        ArrayList<String> testList=event.getWaitList();
-        testList.add(deviceId);
+        String testList=event.getWaitList();
+        testList = testList + (deviceId) + ",";
 
         event.enrollInWaitList(deviceId);
 
@@ -62,14 +62,14 @@ public class UserUnitTest {
                 "Rec Centre",          // eventLocation
                 "organizer-device-id"  // organizerID
         );
-        ArrayList<String> testList=event.getWaitList();
-        testList.add(deviceId);
+        String testList=event.getWaitList();
+        testList = testList + (deviceId) + ",";
 
         event.enrollInWaitList(deviceId);
         assertEquals(event.getWaitList(),testList);
 
         event.removeFromWaitList(deviceId);
-        testList.remove(deviceId);
+        testList.replace(deviceId+",","");
 
         assertEquals(event.getWaitList(),testList);
     }

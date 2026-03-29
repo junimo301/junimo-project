@@ -40,13 +40,15 @@
             android:layout_marginTop="18dp"
             android:background="#D9D9D9" />
 
-        <TextView
+        <EditText
+            android:id="@+id/nameInput"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
-            android:text="Elise K."
+            android:hint="Your Name"
             android:textColor="#FFFFFF"
+            android:textColorHint="#D6D6D6"
             android:textSize="52sp"
             android:textStyle="bold" />
 
@@ -95,27 +97,17 @@
                 android:textColorHint="#D6D6D6"
                 android:textSize="18sp" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/nameInput"
-                android:layout_width="1dp"
-                android:layout_height="1dp"
-                android:visibility="gone">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Name" />
-            </com.google.android.material.textfield.TextInputLayout>
-
         </LinearLayout>
 
         <Button
             android:id="@+id/saveButton"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginTop="16dp"
+            android:layout_height="34dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="4dp"
             android:backgroundTint="#EAEAEA"
             android:text="SAVE CHANGES"
+            android:textSize="12dp"
             android:textAllCaps="false"
             android:textColor="#000000"
             android:textStyle="bold" />
@@ -123,12 +115,25 @@
         <Button
             android:id="@+id/changeRolesButton"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="14dp"
+            android:layout_height="34dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:backgroundTint="#EAEAEA"
             android:text="CHANGE ROLES"
             android:textAllCaps="false"
+            android:textSize="12dp"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:backgroundTint="#EAEAEA"
+            android:text="DELETE ACCOUNT"
+            android:textAllCaps="false"
+            android:textSize="12dp"
             android:textColor="#000000"
             android:textStyle="bold" />
 
