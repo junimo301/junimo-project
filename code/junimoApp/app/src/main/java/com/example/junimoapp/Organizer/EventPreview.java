@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import com.bumptech.glide.Glide;
 import com.example.junimoapp.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -50,41 +51,40 @@ public class EventPreview extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         //event details
-        title = findViewById(R.id.preview_title);
-        description = findViewById(R.id.preview_description);
-        startDate = findViewById(R.id.preview_start_date);
-        endDate = findViewById(R.id.preview_end_date);
-        dateEvent = findViewById(R.id.preview_date);
+        title         = findViewById(R.id.preview_title);
+        description   = findViewById(R.id.preview_description);
+        startDate     = findViewById(R.id.preview_start_date);
+        endDate       = findViewById(R.id.preview_end_date);
+        dateEvent     = findViewById(R.id.preview_date);
         eventLocation = findViewById(R.id.preview_event_location);
-        maxCapacity = findViewById(R.id.preview_max_capacity);
-        waitingList = findViewById(R.id.preview_waiting_list);
-        price = findViewById(R.id.preview_price);
-        geoLocation = findViewById(R.id.preview_geo_location);
-
-        //event poster
-        eventPoster = findViewById(R.id.event_poster);
-
-        //button id
-        backButton = findViewById(R.id.back_button);
-
+        maxCapacity   = findViewById(R.id.preview_max_capacity);
+        waitingList   = findViewById(R.id.preview_waiting_list);
+        price         = findViewById(R.id.preview_price);
+        geoLocation   = findViewById(R.id.preview_geo_location);
+        eventPoster   = findViewById(R.id.event_poster);
+        backButton    = findViewById(R.id.back_button);
 
         //get data from CreateEvent
         Intent createEventData = getIntent();
         //e = event
-        String eTitle = createEventData.getStringExtra("title");
-        String eDescription = createEventData.getStringExtra("description");
-        String eStartDate = createEventData.getStringExtra("startDate");
-        String eEndDate = createEventData.getStringExtra("endDate");
-        String eDateEvent = createEventData.getStringExtra("dateEvent");
+        String eTitle         = createEventData.getStringExtra("title");
+        String eDescription   = createEventData.getStringExtra("description");
+        String eStartDate     = createEventData.getStringExtra("startDate");
+        String eEndDate       = createEventData.getStringExtra("endDate");
+        String eDateEvent     = createEventData.getStringExtra("dateEvent");
         String eEventLocation = createEventData.getStringExtra("eventLocation");
-        int eMaxCapacity = createEventData.getIntExtra("maxCapacity", 0);
-        String eWaitingList = createEventData.getStringExtra("waitingListLimit");
-        double ePrice = createEventData.getDoubleExtra("price",0);
-        String eGeoLocation = createEventData.getStringExtra("geoLocation_string");
-        String ePoster = createEventData.getStringExtra("poster");
+        int eMaxCapacity      = createEventData.getIntExtra("maxCapacity", 0);
+        String eWaitingList   = createEventData.getStringExtra("waitingListLimit");
+        double ePrice         = createEventData.getDoubleExtra("price",0);
+        String eGeoLocation   = createEventData.getStringExtra("geoLocation_string");
+        String ePoster        = createEventData.getStringExtra("poster");
+        String ePosterURI     = createEventData.getStringExtra("posterURI");
+
         if (ePoster != null) {
-            Uri posterUri = Uri.parse(ePoster);
-            eventPoster.setImageURI(posterUri); }
+            Glide.with(this).load(ePoster).into(eventPoster);
+        } else if (ePosterURI != null) {
+            Glide.with(this).load(Uri.parse(ePosterURI)).into(eventPoster);
+        }
 
         //display
         title.setText(eTitle);

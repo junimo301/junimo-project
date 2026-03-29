@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -76,9 +77,14 @@ public class CreateEvent extends AppCompatActivity {
             pickImage = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
         if (uri != null) {
             imageUri = uri;
-            Glide.with(this)
-                    .load(uri)
-                    .into(eventPoster);
+
+            //get the file name for button
+            String imageFile = uri.getLastPathSegment();
+            if (imageFile != null && imageFile.contains("/")) {
+                imageFile = imageFile.substring(imageFile.lastIndexOf("/") +1);
+            }
+            pickImageButton.setText(imageFile);
+            eventPoster.setVisibility(View.GONE);
         }
     });
 
@@ -199,16 +205,16 @@ public class CreateEvent extends AppCompatActivity {
          * Allows a preview of the event before uploading
          */
         previewButton.setOnClickListener(view -> {
-            String title = editTitle.getText().toString();
-            String description = editDescription.getText().toString();
-            String startDate = editStartDate.getText().toString();
-            String endDate = editEndDate.getText().toString();
-            String waitingListLimit = editWaitingList.getText().toString();
-            String dateEvent = editDateEvent.getText().toString();
+            String title              = editTitle.getText().toString();
+            String description        = editDescription.getText().toString();
+            String startDate          = editStartDate.getText().toString();
+            String endDate            = editEndDate.getText().toString();
+            String waitingListLimit   = editWaitingList.getText().toString();
+            String dateEvent          = editDateEvent.getText().toString();
             String geoLocation_string = editGeoLocation.getText().toString();
-            String eventLocation = editEventLocation.getText().toString();
-            int maxCapacity = Integer.parseInt(editMaxCapacity.getText().toString());
-            double price = Double.parseDouble(editPrice.getText().toString());
+            String eventLocation      = editEventLocation.getText().toString();
+            int maxCapacity           = Integer.parseInt(editMaxCapacity.getText().toString());
+            double price              = Double.parseDouble(editPrice.getText().toString());
 
             Intent previewEvent = new Intent(CreateEvent.this, EventPreview.class);
             previewEvent.putExtra("title", title);
@@ -221,8 +227,10 @@ public class CreateEvent extends AppCompatActivity {
             previewEvent.putExtra("eventLocation", eventLocation);
             previewEvent.putExtra("maxCapacity", maxCapacity);
             previewEvent.putExtra("price", price);
-            if (createdEvent != null) {
+            if (createdEvent != null && createdEvent.getPoster() != null) {
                 previewEvent.putExtra("poster", createdEvent.getPoster());
+            } else if (imageUri != null) {
+                previewEvent.putExtra("posterURI", imageUri.toString());
             }
             startActivity(previewEvent);
         });
