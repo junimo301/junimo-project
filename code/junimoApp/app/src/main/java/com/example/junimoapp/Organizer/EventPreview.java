@@ -2,9 +2,11 @@ package com.example.junimoapp.Organizer;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -32,7 +34,8 @@ public class EventPreview extends AppCompatActivity {
      */
     Button backButton;
     /** Views the event info */
-    TextView title, description, startDate, endDate, dateEvent, eventLocation, maxCapacity, waitingList, price, geoLocation, poster;
+    TextView title, description, startDate, endDate, dateEvent, eventLocation, maxCapacity, waitingList, price, geoLocation;
+    private ImageView eventPoster;
     private FirebaseFirestore db;
 
     /**
@@ -42,14 +45,11 @@ public class EventPreview extends AppCompatActivity {
      * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_preview);
         db = FirebaseFirestore.getInstance();
 
-
-        //
+        //event details
         title = findViewById(R.id.preview_title);
         description = findViewById(R.id.preview_description);
         startDate = findViewById(R.id.preview_start_date);
@@ -60,7 +60,10 @@ public class EventPreview extends AppCompatActivity {
         waitingList = findViewById(R.id.preview_waiting_list);
         price = findViewById(R.id.preview_price);
         geoLocation = findViewById(R.id.preview_geo_location);
-        //poster = findViewById(R.id.preview_poster);
+
+        //event poster
+        eventPoster = findViewById(R.id.event_poster);
+
         //button id
         backButton = findViewById(R.id.back_button);
 
@@ -78,8 +81,10 @@ public class EventPreview extends AppCompatActivity {
         String eWaitingList = createEventData.getStringExtra("waitingListLimit");
         double ePrice = createEventData.getDoubleExtra("price",0);
         String eGeoLocation = createEventData.getStringExtra("geoLocation_string");
-        //String ePoster = createEventData.getStringExtra("poster");
-
+        String ePoster = createEventData.getStringExtra("poster");
+        if (ePoster != null) {
+            Uri posterUri = Uri.parse(ePoster);
+            eventPoster.setImageURI(posterUri); }
 
         //display
         title.setText(eTitle);
@@ -99,14 +104,5 @@ public class EventPreview extends AppCompatActivity {
         backButton.setOnClickListener(view -> {
             finish();
         });
-
-
-
     }
-
-
-
-
-
-
 }

@@ -35,8 +35,15 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="160dp"
-        android:background="@drawable/bg_event_tile"
         android:padding="4dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/background_poster"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_event_tile"
+            android:alpha="0.37"/>
 
         <TextView
             android:id="@+id/event_title"

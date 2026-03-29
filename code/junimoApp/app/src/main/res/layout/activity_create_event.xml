@@ -56,6 +56,7 @@
                 app:tint="#FFFFFF" />
         </LinearLayout>
 
+        <!-- PAGE DETAILS -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -88,6 +89,7 @@
             android:orientation="vertical"
             android:padding="14dp">
 
+            <!-- EVENT DETAILS -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -270,6 +272,7 @@
                 android:layout_height="1dp"
                 android:background="#8C8C8C" />
 
+            <!-- QR CODE -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -288,6 +291,7 @@
                 android:textAllCaps="false"
                 android:textColor="#000000" />
 
+            <!-- GEO LOCATION -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -304,6 +308,7 @@
                 android:textColor="#FFFFFF"
                 android:textColorHint="#AFAFAF" />
 
+            <!-- POSTER -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -311,15 +316,23 @@
                 android:text="Poster"
                 android:textColor="#E6E6E6"
                 android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/edit_poster"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:background="@android:color/transparent"
-                android:hint="Insert Image"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#AFAFAF" />
+            <Button
+                android:id="@+id/pick_image_button"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#D9D9D9"
+                android:text="Upload"
+                android:textAllCaps="false"
+                android:textColor="#000000" />
+            <ImageView
+                android:id="@+id/event_poster"
+                android:layout_height="50dp"
+                android:layout_width="100dp"
+                android:layout_marginTop="5dp"
+                android:background="#CCCCCC"
+                android:scaleType="centerCrop"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -330,6 +343,7 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
+        <!-- BUTTONS -->
         <Button
             android:id="@+id/preview_event_button"
             android:layout_width="match_parent"

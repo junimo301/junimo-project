@@ -49,7 +49,6 @@ public class OrganizerStartScreen extends AppCompatActivity {
     private FirebaseFirestore db;
 
 
-
     /**
      * when activity is first created
      * listeners for create event and view entrants buttons

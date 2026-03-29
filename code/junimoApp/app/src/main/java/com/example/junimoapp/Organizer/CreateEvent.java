@@ -1,6 +1,7 @@
 package com.example.junimoapp.Organizer;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,20 +11,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.junimoapp.OrganizerStartScreen;
 import com.example.junimoapp.R;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
-import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
-import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.GeoPoint;
+import com.example.junimoapp.firebase.FirebaseManager;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.SimpleDateFormat;
@@ -46,15 +52,27 @@ public class CreateEvent extends AppCompatActivity {
      * */
     /**Can edit the these fields to add info
      * the buttons to proccess */
-    EditText editTitle, editDescription, editStartDate, editEndDate, editDateEvent, editEventLocation, editMaxCapacity, editWaitingList, editPrice, editGeoLocation, editPoster;
-    Button uploadNewEvent, previewButton;
-    private Event createdEvent = null;
-    Button QRCodeButton;
-    Button cancelButton;
+    EditText editTitle, editDescription, editStartDate, editEndDate, editDateEvent, editEventLocation, editMaxCapacity, editWaitingList, editPrice, editGeoLocation;
+    Button uploadNewEvent, previewButton, QRCodeButton, cancelButton;
     TextView backButton;
+
+    private Event createdEvent = null;
     private String QRCodeString = null;
     private String eventID;
     private String organizerID;
+
+    //Event poster
+    private ImageView eventPoster;
+    private Uri imageUri;
+    private Button pickImageButton;
+
+    //pick an image
+    private final ActivityResultLauncher<String> pickImage = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+        if (uri != null) {
+            imageUri = uri;
+            eventPoster.setImageURI(uri);
+        }
+    });
 
     /**
      * when activity is first created
@@ -66,7 +84,6 @@ public class CreateEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
-        //ids created in "dummy" xml file
         //variable ids
         editTitle = findViewById(R.id.edit_title);
         editDescription = findViewById(R.id.edit_description);
@@ -78,15 +95,17 @@ public class CreateEvent extends AppCompatActivity {
         editWaitingList = findViewById(R.id.edit_waiting_list);
         editPrice = findViewById(R.id.edit_price);
         editGeoLocation = findViewById(R.id.edit_geo_location);
-        editPoster = findViewById(R.id.edit_poster);
+
         //button id
         uploadNewEvent = findViewById(R.id.upload_event_button);
         QRCodeButton = findViewById(R.id.QR_code_button);
-
         backButton=findViewById(R.id.backButton);
         cancelButton = findViewById(R.id.cancel_button);
         previewButton = findViewById(R.id.preview_event_button);
+        pickImageButton = findViewById(R.id.pick_image_button);
 
+        //event poster
+        eventPoster = findViewById(R.id.event_poster);
 
         eventID = getIntent().getStringExtra("event_ID");
         if (eventID != null) {
@@ -104,9 +123,22 @@ public class CreateEvent extends AppCompatActivity {
                 editPrice.setText(String.valueOf(createdEvent.getPrice()));
                 editGeoLocation.setText(createdEvent.getGeoLocation().toString());
                 editEventLocation.setText(createdEvent.getEventLocation());
-                editPoster.setText(createdEvent.getPoster());
+
+                if (createdEvent.getPoster() != null && !createdEvent.getPoster().isEmpty()) {
+                    Glide.with(this).load(createdEvent.getPoster())
+                            .into(eventPoster);
+                }
+
             }
         }
+
+
+        /**
+         * Upload an event poster
+         * */
+        pickImageButton.setOnClickListener(view -> {
+            pickImage.launch("image/*");
+        });
 
         /**
          * Generates qr code when creating an event
@@ -138,7 +170,6 @@ public class CreateEvent extends AppCompatActivity {
             String description = editDescription.getText().toString();
             String startDate = editStartDate.getText().toString();
             String endDate = editEndDate.getText().toString();
-            String poster = editPoster.getText().toString();
             String waitingListLimit = editWaitingList.getText().toString();
             String dateEvent = editDateEvent.getText().toString();
             String geoLocation_string = editGeoLocation.getText().toString();
@@ -152,13 +183,15 @@ public class CreateEvent extends AppCompatActivity {
             previewEvent.putExtra("description", description);
             previewEvent.putExtra("startDate", startDate);
             previewEvent.putExtra("endDate", endDate);
-            previewEvent.putExtra("poster", poster);
             previewEvent.putExtra("waitingListLimit", waitingListLimit);
             previewEvent.putExtra("dateEvent", dateEvent);
             previewEvent.putExtra("geoLocation_string", geoLocation_string);
             previewEvent.putExtra("eventLocation", eventLocation);
             previewEvent.putExtra("maxCapacity", maxCapacity);
             previewEvent.putExtra("price", price);
+            if (createdEvent != null) {
+                previewEvent.putExtra("poster", createdEvent.getPoster());
+            }
 
             startActivity(previewEvent);
         });
@@ -172,10 +205,18 @@ public class CreateEvent extends AppCompatActivity {
         uploadNewEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //must upload event poster
+                if (imageUri == null) {
+                    Toast.makeText(CreateEvent.this, "No image selected", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 //optional fields
                 String description = editDescription.getText().toString();
                 String startDate = editStartDate.getText().toString();
                 String endDate = editEndDate.getText().toString();
+
+                //required date format
                 if (!startDate.isEmpty() && !endDate.isEmpty()) {
                     try {
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -192,10 +233,12 @@ public class CreateEvent extends AppCompatActivity {
                         return;
                     }
                 }
-                String poster = editPoster.getText().toString();
-                Integer waitingListLimit = null;
+
+                Integer waitingListLimit;
                 if (!editWaitingList.getText().toString().isEmpty()) {
                     waitingListLimit = Integer.parseInt(editWaitingList.getText().toString());
+                } else {
+                    waitingListLimit = null;
                 }
                 if (waitingListLimit != null && waitingListLimit < 0) {
                     editWaitingList.setError("Waiting list limit must be a positive integer");
@@ -204,7 +247,7 @@ public class CreateEvent extends AppCompatActivity {
                 }
                 //required fields
                 String title = editTitle.getText().toString();
-                if (title.isEmpty()) {
+                if (title.isEmpty() ) {
                     editTitle.setError("*Field Required*");
                     editTitle.requestFocus();
                     return;
@@ -259,34 +302,49 @@ public class CreateEvent extends AppCompatActivity {
                     return;
                 }
 
-                /** creates event */
-                Event saveEvent = new Event(title, description, startDate, endDate, dateEvent, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation, organizerID);
+                //Upload image before creating event
+                StorageReference storageRef = FirebaseStorage.getInstance()
+                        .getReference("event_poster/" + eventID + ".jpg");
 
-                /** add to firebase */
-                FirebaseManager firebase = new FirebaseManager();
-                CollectionReference eventsRef = firebase.getDB().collection("events");
+                storageRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        String poster = uri.toString();
 
-                if (QRCodeString != null) {
-                    saveEvent.setQRCode(QRCodeString);
-                }
+                        // creates event
+                        Event saveEvent = new Event(title, description, startDate, endDate, dateEvent, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation, organizerID);
 
-                firebase.addEvent(saveEvent,eventsRef);
+                        if (QRCodeString != null) {
+                            saveEvent.setQRCode(QRCodeString);
+                        }
 
-                //EventData.addOrEditEvent(saveEvent);
-                Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();
-                finish();
+                        //add to firebase
+                        FirebaseManager firebase = new FirebaseManager();
+                        CollectionReference eventsRef = firebase.getDB().collection("events");
+                        firebase.addEvent(saveEvent,eventsRef);
+
+                        //EventData.addOrEditEvent(saveEvent);
+                        Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();
+                        finish();
 
 
-                //TEST
-                String logMessage;
-                if (createdEvent != null) {
-                    logMessage = "Event updated: " + saveEvent.getTitle();
-                } else {
-                    logMessage = "event created: " + saveEvent.getTitle();
-                }
+                        //TEST
+                        String logMessage;
+                        if (createdEvent != null) {
+                            logMessage = "Event updated: " + saveEvent.getTitle();
+                        } else {
+                            logMessage = "event created: " + saveEvent.getTitle();
+                        }
+                        Log.d("createEvent", logMessage);
 
-                Log.d("createEvent", logMessage);
+
+                    }).addOnFailureListener(error -> {
+                        Toast.makeText(CreateEvent.this, "Error uploading image", Toast.LENGTH_SHORT).show();
+                        Log.e("createEvent", "Error uploading image", error);
+                    });
+
+                });
             }
+
         });
 
         /* returns to organizer start screen

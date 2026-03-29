@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * */
 public class Event {
 
-    /** the unquie id for the event */
+    /** the unique id for the event */
     private String eventID;
     private String title;
     private String description;
@@ -38,7 +38,7 @@ public class Event {
     /** the location of the event */
     private String eventLocation; //for event location
 
-    /** the poster/image for the event */
+    /** the poster/image for the event saved as a url */
     private String poster;  //event images
 
 
