@@ -15,6 +15,7 @@ import com.example.junimoapp.R;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
+import com.example.junimoapp.utils.NotificationHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -24,22 +25,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 /**
- * Entrants names who have joined cancelled, enrolled, or joined the waiting list of an event
- * Organizer can view this information
+ * Entrants names who have joined, cancelled, enrolled, or joined the waiting list of an event.
+ * Organizer can view this information and run the lottery.
+ *
+ * User stories:
+ *  - US 02.06.01: View list of all chosen entrants who are invited to apply
+ *  - US 02.06.02: See a list of all cancelled entrants
+ *  - US 02.06.03: See a final list of entrants who enrolled for the event
+ *  - US 02.02.01: View the list of entrants who joined the waiting list
+ *  - US 01.04.01: Notify entrant when they are selected by the lottery (added here)
+ *  - US 01.04.02: Notify entrant when they are NOT selected by the lottery (added here)
  */
 public class Entrants extends AppCompatActivity {
-    /*
-     * User stories:
-     * US 02.06.01 As an organizer I want to view a list of all chosen entrants who are invited to apply.
-     * US 02.06.02 As an organizer I want to see a list of all the cancelled entrants.
-     * US 02.06.03 As an organizer I want to see a final list of entrants who enrolled for the event.
-     * US 02.02.01 As an organizer I want to view the list of entrants who joined my event waiting list
-     *
-     */
 
-    /**
-     * container for displaying entrants info
-     */
     LinearLayout invitedEntrants;
     LinearLayout cancelledEntrants;
     LinearLayout enrolledEntrants;
@@ -50,25 +48,17 @@ public class Entrants extends AppCompatActivity {
     TextView backButton;
     Button lotteryButton;
 
-    /**
-     * loads data, when activity is first created
-     * gets entrants from firestore
-     *
-     * @param savedInstanceState
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entrants);
 
-        eventName = findViewById(R.id.event_name);
-
-        invitedEntrants = findViewById(R.id.invited_entrants);
+        eventName         = findViewById(R.id.event_name);
+        invitedEntrants   = findViewById(R.id.invited_entrants);
         cancelledEntrants = findViewById(R.id.cancelled_entrants);
-        enrolledEntrants = findViewById(R.id.enrolled_entrants);
-
-        backButton = findViewById(R.id.backButton);
-        lotteryButton = findViewById(R.id.startLotteryButton);
+        enrolledEntrants  = findViewById(R.id.enrolled_entrants);
+        backButton        = findViewById(R.id.backButton);
+        lotteryButton     = findViewById(R.id.startLotteryButton);
 
         eventID = getIntent().getStringExtra("event_ID");
 
@@ -77,70 +67,119 @@ public class Entrants extends AppCompatActivity {
             eventName.setText(selectEvent.getTitle());
         }
 
-        /** initialize firestore
-         * loads entrants from firestore
-         */
         db = FirebaseManager.getDB();
 
         ArrayList<User> users = new ArrayList<User>();
         String[] deviceIDs = selectEvent.getWaitList().split(",");
-        if (deviceIDs.length>=1) {
+
+        if (deviceIDs.length >= 1) {
             CollectionReference usersRef = db.collection("users");
             for (String deviceID : deviceIDs) {
-                if (deviceID != null && deviceID != "") {
+                if (deviceID != null && !deviceID.equals("")) {
                     Log.d("waitlist populating", deviceID);
-                    usersRef.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                if (document.exists()) {
-                                    Log.d("Firestore", "DocumentSnapshot data: " + document.getData());
-                                    User user = new User(deviceID, document.getString("name"), document.getString("email"), document.getString("phone"),document.getString("organizedEvents"),document.getString("invitedEvents"),document.getString("waitlistedEvents"));
-                                    users.add(user);
-                                    loadInvitedEntrants(users, eventID);
-                                    loadCancelledEntrants(users,eventID);
-                                    loadEnrolledEntrants(users);
-
-                                } else {
-                                    Log.d("Firestore", "No such document");
+                    usersRef.document(deviceID).get()
+                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document.exists()) {
+                                            User user = new User(
+                                                    deviceID,
+                                                    document.getString("name"),
+                                                    document.getString("email"),
+                                                    document.getString("phone"),
+                                                    document.getString("organizedEvents"),
+                                                    document.getString("invitedEvents"),
+                                                    document.getString("waitlistedEvents")
+                                            );
+                                            users.add(user);
+                                            loadInvitedEntrants(users, eventID);
+                                            loadCancelledEntrants(users, eventID);
+                                            loadEnrolledEntrants(users);
+                                        } else {
+                                            Log.d("Firestore", "No such document");
+                                        }
+                                    } else {
+                                        Log.d("Firestore", "get failed with ", task.getException());
+                                    }
                                 }
-                            } else {
-                                Log.d("Firestore", "get failed with ", task.getException());
-                            }
-                        }
-                    });
+                            });
                 }
             }
         }
 
-        lotteryButton.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                Log.d("lottery button","button was pressed");
-                int max=selectEvent.getMaxCapacity();
-                if(users.size()>max) {
-                    int i =0;
+        lotteryButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.d("lottery button", "button was pressed");
+                int max = selectEvent.getMaxCapacity();
+
+                if (users.size() > max) {
+                    // More entrants than capacity — randomly select up to max
+                    ArrayList<User> selectedUsers = new ArrayList<>();
+                    int i = 0;
                     while (i < max) {
-                        int index = (int) (Math.random() * (max + 1));
+                        int index = (int) (Math.random() * (users.size()));
                         User selected = users.get(index);
                         selected.initializeEvents();
                         if (!selected.isInvited(eventID)) {
                             selected.inviteUser(selectEvent);
+
+                            // ─────────────────────────────────────────────
+                            // US 01.04.01
+                            // Notify this user they were selected by the lottery.
+                            // NotificationHelper checks their opt-out preference
+                            // (US 01.04.03) before writing anything.
+                            // ─────────────────────────────────────────────
+                            NotificationHelper.notifyInvited(
+                                    selected.getDeviceId(),
+                                    eventID,
+                                    selectEvent.getTitle()
+                            );
+
+                            selectedUsers.add(selected);
                             i += 1;
                         }
                     }
-                }
-                else {
-                    for(User user : users){
+
+                    // ─────────────────────────────────────────────────────
+                    // US 01.04.02
+                    // Notify users who were NOT selected by the lottery.
+                    // Anyone in the waitlist who was not added to selectedUsers
+                    // receives a "not chosen" notification.
+                    // ─────────────────────────────────────────────────────
+                    for (User user : users) {
+                        if (!selectedUsers.contains(user)) {
+                            NotificationHelper.notifyNotChosen(
+                                    user.getDeviceId(),
+                                    eventID,
+                                    selectEvent.getTitle()
+                            );
+                        }
+                    }
+
+                } else {
+                    // Fewer entrants than capacity — invite everyone
+                    for (User user : users) {
                         user.initializeEvents();
                         user.inviteUser(selectEvent);
-                        Log.d("lottery button","user was invited");
+                        Log.d("lottery button", "user was invited");
+
+                        // ─────────────────────────────────────────────────
+                        // US 01.04.01
+                        // Everyone gets invited so everyone gets the invited
+                        // notification. Opt-out is still respected.
+                        // ─────────────────────────────────────────────────
+                        NotificationHelper.notifyInvited(
+                                user.getDeviceId(),
+                                eventID,
+                                selectEvent.getTitle()
+                        );
                     }
                 }
             }
         });
 
-        /** returns to select an event screen */
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(Entrants.this, SelectAnEvent.class);
@@ -150,25 +189,22 @@ public class Entrants extends AppCompatActivity {
     }
 
     /**
-     * loads invited entrants from firestore (waitlist)
-     * adds their name to the invited entrants container
-     *
+     * Loads invited entrants — users whose invitedEvents contains this eventID
      */
     private void loadInvitedEntrants(ArrayList<User> usersArray, String eventID) {
         boolean noneInvited = true;
-        if(!usersArray.isEmpty()) {
+        if (!usersArray.isEmpty()) {
             for (User user : usersArray) {
-                Log.d("invited entrants",user.getName() + user.isInvited(eventID));
+                Log.d("invited entrants", user.getName() + user.isInvited(eventID));
                 if (user.isInvited(eventID)) {
-                    String name = user.getName();
                     TextView textView = new TextView(Entrants.this);
-                    textView.setText(name);
+                    textView.setText(user.getName());
                     invitedEntrants.addView(textView);
-                    noneInvited=false;
+                    noneInvited = false;
                 }
             }
         }
-        if(noneInvited) {
+        if (noneInvited) {
             TextView textView = new TextView(Entrants.this);
             textView.setText("No users have been invited");
             invitedEntrants.addView(textView);
@@ -176,24 +212,21 @@ public class Entrants extends AppCompatActivity {
     }
 
     /**
-     * loads cancelled entrants from firestore
-     * adds names to the cancelled entrants container
-     *
+     * Loads cancelled entrants
      */
     private void loadCancelledEntrants(ArrayList<User> usersArray, String eventID) {
         boolean noneCancelled = true;
-        if(!usersArray.isEmpty()) {
+        if (!usersArray.isEmpty()) {
             for (User user : usersArray) {
                 if (user.isCancelled(eventID)) {
-                    String name = user.getName();
                     TextView textView = new TextView(Entrants.this);
-                    textView.setText(name);
+                    textView.setText(user.getName());
                     cancelledEntrants.addView(textView);
-                    noneCancelled=false;
+                    noneCancelled = false;
                 }
             }
         }
-        if(noneCancelled) {
+        if (noneCancelled) {
             TextView textView = new TextView(Entrants.this);
             textView.setText("No users have been cancelled");
             cancelledEntrants.addView(textView);
@@ -201,27 +234,21 @@ public class Entrants extends AppCompatActivity {
     }
 
     /**
-     * loads enrolled entrants from firestore
-     * adds names to the enrolled entrants container
-     *
+     * Loads enrolled entrants
      */
     private void loadEnrolledEntrants(ArrayList<User> usersArray) {
-        Log.d("entrants view added",usersArray.toString());
-        if(!usersArray.isEmpty()) {
+        Log.d("entrants view added", usersArray.toString());
+        if (!usersArray.isEmpty()) {
             for (User user : usersArray) {
-                String name = user.getName();
                 TextView textView = new TextView(Entrants.this);
-                textView.setText(name);
+                textView.setText(user.getName());
                 enrolledEntrants.addView(textView);
-                Log.d("entrants view added", name);
+                Log.d("entrants view added", user.getName());
             }
-        }
-        else {
+        } else {
             TextView textView = new TextView(Entrants.this);
             textView.setText("No users have enrolled in the waitlist");
             enrolledEntrants.addView(textView);
         }
     }
-
-
 }
