@@ -3,7 +3,10 @@ package com.example.junimoapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -59,6 +62,13 @@ public class EventDetailsActivity extends AppCompatActivity {
     Button acceptButton;
     Button declineButton;
 
+    EditText commentInput;
+    Button postCommentButton;
+    ListView commentsListView;
+
+    ArrayAdapter<String> commentsAdapter;
+    ArrayList<String> commentsList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +117,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                         waitlistText = waitlistText+"/"+String.valueOf(selectedEvent.getMaxCapacity());
                     }
                     countOnList.setText(waitlistText);
+                    loadComments();
                 }
                 else {
                     Log.d("Firestore", "Error getting documents: ", task.getException());
@@ -132,6 +143,33 @@ public class EventDetailsActivity extends AppCompatActivity {
         backButton.setOnClickListener(v -> back());
         joinWaitlistButton.setOnClickListener(v -> JoinWaitlist(selectedEvent,user));
         declineButton.setOnClickListener(v -> LeaveWaitlist(selectedEvent,user));
+
+        commentInput = findViewById(R.id.commentInput);
+        postCommentButton = findViewById(R.id.postCommentButton);
+        commentsListView = findViewById(R.id.commentsListView);
+
+        commentsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, commentsList);
+        commentsListView.setAdapter(commentsAdapter);
+
+        postCommentButton.setOnClickListener(v -> {
+            String text = commentInput.getText().toString().trim();
+
+            if (!text.isEmpty()) {
+                HashMap<String, Object> comment = new HashMap<>();
+                comment.put("text", text);
+                comment.put("userId", deviceId);
+                comment.put("timestamp", new Date());
+
+                db.collection("events")
+                        .document(eventId)
+                        .collection("comments")
+                        .add(comment)
+                        .addOnSuccessListener(docRef -> {
+                            commentInput.setText("");
+                            loadComments(); //refresh comments
+                        });
+            }
+        });
     }
 
     private void back() {
@@ -183,6 +221,25 @@ public class EventDetailsActivity extends AppCompatActivity {
         FirebaseManager.updateEvent(db.collection("events"), event, "waitList", updatedList);
         declineButton.setText("WAITLIST LEFT");
 
+    }
+
+    //loads comments on an event
+    private void loadComments() {
+        db.collection("events")
+                .document(eventId)
+                .collection("comments")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        commentsList.clear();
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            String text = doc.getString("text");
+                            String user = doc.getString("userId");
+                            commentsList.add(user + ": " + text);
+                        }
+                        commentsAdapter.notifyDataSetChanged();
+                    }
+                });
     }
 
 }
