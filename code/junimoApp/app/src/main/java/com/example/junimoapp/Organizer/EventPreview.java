@@ -80,10 +80,21 @@ public class EventPreview extends AppCompatActivity {
         String ePoster        = createEventData.getStringExtra("poster");
         String ePosterURI     = createEventData.getStringExtra("posterURI");
 
-        if (ePoster != null) {
-            Glide.with(this).load(ePoster).into(eventPoster);
+        if (ePoster != null && !ePoster.isEmpty()) {
+            Glide.with(this).load(ePoster)
+                    .placeholder(R.drawable.bg_event_tile)
+                    .error(R.drawable.bg_event_tile)
+                    .into(eventPoster);
         } else if (ePosterURI != null) {
-            Glide.with(this).load(Uri.parse(ePosterURI)).into(eventPoster);
+            Glide.with(this).load(Uri.parse(ePosterURI))
+                    .placeholder(R.drawable.bg_event_tile)
+                    .error(R.drawable.bg_event_tile)
+                    .into(eventPoster);
+        } else {
+            Glide.with(this).load((String)null)
+                    .placeholder(R.drawable.bg_event_tile)
+                    .error(R.drawable.bg_event_tile)
+                    .into(eventPoster);
         }
 
         //display

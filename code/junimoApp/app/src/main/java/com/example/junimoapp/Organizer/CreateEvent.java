@@ -85,8 +85,9 @@ public class CreateEvent extends AppCompatActivity {
             }
             pickImageButton.setText(imageFile);
 
-            eventPoster.setVisibility(View.VISIBLE);
-            eventPoster.setImageURI(uri);
+            Glide.with(this).load(uri)
+                    .placeholder(R.drawable.bg_event_tile)
+                    .into(eventPoster);
         }
     });
 
@@ -118,7 +119,10 @@ public class CreateEvent extends AppCompatActivity {
         previewButton = findViewById(R.id.preview_event_button);
         pickImageButton = findViewById(R.id.pick_image_button);
         eventPoster = findViewById(R.id.event_poster);
-        eventPoster.setImageResource(R.drawable.bg_event_tile);
+        Glide.with(this).load((String)null)
+                .placeholder(R.drawable.bg_event_tile)
+                .into(eventPoster);
+
 
         // ─────────────────────────────────────────────────────────────────
         // US 02.01.02
@@ -155,6 +159,8 @@ public class CreateEvent extends AppCompatActivity {
 
                 if (createdEvent.getPoster() != null && !createdEvent.getPoster().isEmpty()) {
                     Glide.with(this).load(createdEvent.getPoster())
+                            .placeholder(R.drawable.bg_event_tile)
+                            .error(R.drawable.bg_event_tile)
                             .into(eventPoster);
                 }
 
@@ -165,7 +171,6 @@ public class CreateEvent extends AppCompatActivity {
                 checkPrivate.setChecked(createdEvent.isPrivate());
             }
         }
-
 
         /**
          * Upload an event poster
@@ -230,7 +235,7 @@ public class CreateEvent extends AppCompatActivity {
             previewEvent.putExtra("eventLocation", eventLocation);
             previewEvent.putExtra("maxCapacity", maxCapacity);
             previewEvent.putExtra("price", price);
-            if (createdEvent != null && createdEvent.getPoster() != null) {
+            if (createdEvent != null && createdEvent.getPoster() != null && !createdEvent.getPoster().isEmpty()) {
                 previewEvent.putExtra("poster", createdEvent.getPoster());
             } else if (imageUri != null) {
                 previewEvent.putExtra("posterURI", imageUri.toString());
@@ -302,7 +307,7 @@ public class CreateEvent extends AppCompatActivity {
         }
 
         String geoLocation_string = editGeoLocation.getText().toString();
-        GeoPoint geoLocation = new GeoPoint(00000, 00000);
+        GeoPoint geoLocation = null;
         if (geoLocation_string.equals("")) {
             editGeoLocation.setError("*Field Required*");
             editGeoLocation.requestFocus();
@@ -347,50 +352,89 @@ public class CreateEvent extends AppCompatActivity {
         }
 
         //Upload image before creating event
-        StorageReference storageRef = FirebaseStorage.getInstance()
-                .getReference("event_poster/" + eventID + ".jpg");
+        if (imageUri != null) {
+            StorageReference storageRef = FirebaseStorage.getInstance()
+                    .getReference("event_poster/" + eventID + ".jpg");
 
-        storageRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
-            storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                String poster = uri.toString();
+            storageRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+                storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    String poster = uri.toString();
 
-                // Build the event object
-                Event saveEvent = new Event(
-                        title, description, startDate, endDate, dateEvent,
-                        maxCapacity, finalWaitingListLimit, price, geoLocation,
-                        poster, eventID, eventLocation, organizerID);
+                    // Build the event object
+                    Event saveEvent = new Event(
+                            title, description, startDate, endDate, dateEvent,
+                            maxCapacity, finalWaitingListLimit, price, geoLocation,
+                            poster, eventID, eventLocation, organizerID);
 
-                // ─────────────────────────────────────────────────────────
-                // US 02.01.02
-                // Read the private checkbox and apply to the event.
-                // If private: clear any QR string so it is never saved.
-                // If public:  attach the QR code if one was generated.
-                // ─────────────────────────────────────────────────────────
-                boolean isPrivate = checkPrivate.isChecked();
-                saveEvent.setPrivate(isPrivate);
+                    // ─────────────────────────────────────────────────────────
+                    // US 02.01.02
+                    // Read the private checkbox and apply to the event.
+                    // If private: clear any QR string so it is never saved.
+                    // If public:  attach the QR code if one was generated.
+                    // ─────────────────────────────────────────────────────────
+                    boolean isPrivate = checkPrivate.isChecked();
+                    saveEvent.setPrivate(isPrivate);
 
-                if (isPrivate) {
-                    // Private events must not store a QR code
-                    QRCodeString = null;
-                } else if (QRCodeString != null) {
-                    saveEvent.setQRCode(QRCodeString);
-                }
+                    if (isPrivate) {
+                        // Private events must not store a QR code
+                        QRCodeString = null;
+                    } else if (QRCodeString != null) {
+                        saveEvent.setQRCode(QRCodeString);
+                    }
 
-                // Upload to Firebase
-                FirebaseManager firebase = new FirebaseManager();
-                CollectionReference eventsRef = firebase.getDB().collection("events");
-                firebase.addEvent(saveEvent, eventsRef);
+                    // Upload to Firebase
+                    FirebaseManager firebase = new FirebaseManager();
+                    CollectionReference eventsRef = firebase.getDB().collection("events");
+                    firebase.addEvent(saveEvent, eventsRef);
 
-                Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();
 
-                String logMessage = (createdEvent != null)
-                        ? "Event updated: " + saveEvent.getTitle()
-                        : "Event created: " + saveEvent.getTitle();
-                Log.d("createEvent", logMessage);
+                    String logMessage = (createdEvent != null)
+                            ? "Event updated: " + saveEvent.getTitle()
+                            : "Event created: " + saveEvent.getTitle();
+                    Log.d("createEvent", logMessage);
 
-                finish();
+                    finish();
                 });
-        });
+            });
+        } else {  //If an image isn't uploaded, use the default image
+            String poster = "";
+
+            // Build the event object
+            Event saveEvent = new Event(
+                    title, description, startDate, endDate, dateEvent,
+                    maxCapacity, finalWaitingListLimit, price, geoLocation,
+                    poster, eventID, eventLocation, organizerID);
+
+            // ─────────────────────────────────────────────────────────
+            // US 02.01.02
+            // Read the private checkbox and apply to the event.
+            // If private: clear any QR string so it is never saved.
+            // If public:  attach the QR code if one was generated.
+            // ─────────────────────────────────────────────────────────
+            boolean isPrivate = checkPrivate.isChecked();
+            saveEvent.setPrivate(isPrivate);
+
+            if (isPrivate) {
+                // Private events must not store a QR code
+                QRCodeString = null;
+            } else if (QRCodeString != null) {
+                saveEvent.setQRCode(QRCodeString);
+            }
+
+            // Upload to Firebase
+            FirebaseManager firebase = new FirebaseManager();
+            CollectionReference eventsRef = firebase.getDB().collection("events");
+            firebase.addEvent(saveEvent, eventsRef);
+
+            Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();
+
+            String logMessage = (createdEvent != null)
+                    ? "Event updated: " + saveEvent.getTitle()
+                    : "Event created: " + saveEvent.getTitle();
+            Log.d("createEvent", logMessage);
+
+            finish();
+        }
     }
 }
-
