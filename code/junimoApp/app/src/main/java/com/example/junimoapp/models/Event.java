@@ -49,14 +49,8 @@ public class Event {
     /** the location of the event */
     private String eventLocation;
 
-<<<<<<< HEAD
     /** the poster/image for the event saved as a url */
     private String poster;  //event images
-
-=======
-    /** the poster/image for the event */
-    private String poster;
->>>>>>> origin/main
 
     /** list of the user id who are on the waiting list */
     private String waitList;

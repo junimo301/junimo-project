@@ -84,7 +84,9 @@ public class CreateEvent extends AppCompatActivity {
                 imageFile = imageFile.substring(imageFile.lastIndexOf("/") +1);
             }
             pickImageButton.setText(imageFile);
-            eventPoster.setVisibility(View.GONE);
+
+            eventPoster.setVisibility(View.VISIBLE);
+            eventPoster.setImageURI(uri);
         }
     });
 
@@ -116,6 +118,7 @@ public class CreateEvent extends AppCompatActivity {
         previewButton = findViewById(R.id.preview_event_button);
         pickImageButton = findViewById(R.id.pick_image_button);
         eventPoster = findViewById(R.id.event_poster);
+        eventPoster.setImageResource(R.drawable.bg_event_tile);
 
         // ─────────────────────────────────────────────────────────────────
         // US 02.01.02
@@ -246,12 +249,6 @@ public class CreateEvent extends AppCompatActivity {
      * US 02.01.02: saves isPrivate flag and skips QR code for private events.
      */
     private void uploadNewEvent() {
-        //must upload event poster
-        if (imageUri == null) {
-            Toast.makeText(CreateEvent.this, "No image selected", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         //optional fields
         String description = editDescription.getText().toString();
         String startDate   = editStartDate.getText().toString();
