@@ -50,6 +50,16 @@
             android:textColor="#FFFFFF"
             android:textSize="36sp"
             android:textStyle="bold" />
+        <Button
+            android:id="@+id/startLotteryButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#EAEAEA"
+            android:text="Start Lottery"
+            android:textAllCaps="false"
+            android:textColor="#000000"
+            android:textStyle="bold" />
 
         <View
             android:layout_width="220dp"
