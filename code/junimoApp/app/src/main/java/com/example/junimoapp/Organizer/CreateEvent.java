@@ -155,7 +155,8 @@ public class CreateEvent extends AppCompatActivity {
                 editMaxCapacity.setText(String.valueOf(createdEvent.getMaxCapacity()));
                 editWaitingList.setText(String.valueOf(createdEvent.getWaitingListLimit()));
                 editPrice.setText(String.valueOf(createdEvent.getPrice()));
-                editGeoLocation.setText(createdEvent.getGeoLocation().toString());
+                editGeoLocation.setText(String.valueOf(createdEvent.getGeoLocation()));
+
                 editEventLocation.setText(createdEvent.getEventLocation());
 
                 if (createdEvent.getPoster() != null && !createdEvent.getPoster().isEmpty()) {
@@ -309,11 +310,13 @@ public class CreateEvent extends AppCompatActivity {
 
         String geoLocation_string = editGeoLocation.getText().toString();
         GeoPoint geoLocation = new GeoPoint(0, 0);
+        /*  //Uncommented since its not implemented yet
         if (geoLocation_string.equals("")) {
             editGeoLocation.setError("*Field Required*");
             editGeoLocation.requestFocus();
             return;
         }
+         */
 
         String eventLocation = editEventLocation.getText().toString();
         if (eventLocation.equals("")) {
@@ -412,7 +415,7 @@ public class CreateEvent extends AppCompatActivity {
                 });
 
         } else {  //If an image isn't uploaded, use the default image
-            String poster = "";
+            String poster = (createdEvent != null) ? createdEvent.getPoster() : "";
 
             Event saveEvent = new Event(
                     title, description, startDate, endDate, dateEvent,
