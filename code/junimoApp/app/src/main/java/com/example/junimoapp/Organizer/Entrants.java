@@ -58,7 +58,7 @@ public class Entrants extends AppCompatActivity {
         cancelledEntrants = findViewById(R.id.cancelled_entrants);
         enrolledEntrants  = findViewById(R.id.enrolled_entrants);
         backButton        = findViewById(R.id.backButton);
-        //lotteryButton     = findViewById(R.id.startLotteryButton);
+        lotteryButton     = findViewById(R.id.startLotteryButton);
 
         eventID = getIntent().getStringExtra("event_ID");
 
