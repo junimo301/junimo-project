@@ -15,25 +15,29 @@ public class UserTestData {
                 "id001",
                 "Anica",
                 "ahorsema@ualberta.ca",
-                "780 555 5555"
+                "780 555 5555",
+                "","",""
         ));
         users.add(new User(
                 "id002",
                 "Ayema",
                 "forgot@ualberta.ca",
-                "780 555 5555"
+                "780 555 5555",
+                "","",""
         ));
         users.add(new User(
                 "id003",
                 "Farzana",
                 "forgot@ualberta.ca",
-                "780 555 5555"
+                "780 555 5555",
+                "","",""
         ));
         users.add(new User(
                 "id004",
                 "Treya",
                 "forgot@ualberta.ca",
-                "780 555 5555"
+                "780 555 5555",
+                "","",""
         ));
 
     return users;

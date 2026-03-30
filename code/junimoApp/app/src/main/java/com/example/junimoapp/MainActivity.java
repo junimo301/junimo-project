@@ -25,8 +25,8 @@ import com.google.firebase.FirebaseApp;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.example.junimoapp.Organizer.OrganizerEvent;
-import com.example.junimoapp.Organizer.OrganizerStartScreen;
+import com.example.junimoapp.models.Event;
+import com.example.junimoapp.OrganizerStartScreen;
 import com.example.junimoapp.TestData.EventTestData;
 
 import com.example.junimoapp.models.Event;
@@ -62,15 +62,11 @@ public class MainActivity extends AppCompatActivity {
         //get device id
         deviceId = DeviceUtils.getDeviceId(this);
 
-        //test user document
-        Map<String, Object> testUser = new HashMap<>();
-        testUser.put("deviceId", deviceId);
-        testUser.put("test", "connected");
-        Button userButton=findViewById(R.id.user_button);
+        Button userButton = findViewById(R.id.user_button);
         userButton.setOnClickListener(v -> {
             //get device id
             deviceId = DeviceUtils.getDeviceId(this);
-            ArrayList<User> allUsers= new ArrayList<>();
+            ArrayList<User> allUsers = new ArrayList<>();
             usersRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -82,20 +78,27 @@ public class MainActivity extends AppCompatActivity {
                             String name = document.getString("name");
                             String email = document.getString("email");
                             String phone = document.getString("phone");
+                            String organizedEvents = document.getString("organizedEvents");
+                            String invitedEvents = document.getString("invitedEvents");
+                            String enrolledEvents = document.getString("enrolledEvents");
 
-                            if(docDeviceId.equals(deviceId)){
-                                check=true;
+                            if (docDeviceId.equals(deviceId)) {
+                                User currentUser = new User(docDeviceId, name, email, phone,organizedEvents,invitedEvents,enrolledEvents);
+                                UserSession.setCurrentUser(currentUser);
+                                currentUser.initializeEvents();
+                                check = true;
                                 break;
                             }
                         }
-                        if(!check) {
+                        if (!check) {
                             //send to login page if device id is not in users
                             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                            intent.putExtra("new",true);
+                            intent.putExtra("organizer",false);
                             startActivity(intent);
-                        }
-                        else{
+                        } else {
                             //send to user activity if user exists
-                            Intent intent = new Intent(MainActivity.this,UserHomeActivity.class);
+                            Intent intent = new Intent(MainActivity.this, UserHomeActivity.class);
                             startActivity(intent);
 
                         }
@@ -105,17 +108,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         });
-
-        //write to firestore
-        db.collection("users")
-                .document(deviceId)
-                .set(testUser)
-                .addOnSuccessListener(unused -> {
-
-                    //open user homepage when firebase succeeds
-                    Intent intent = new Intent(MainActivity.this, UserHomeActivity.class);
-                    startActivity(intent);
-
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -140,20 +132,25 @@ public class MainActivity extends AppCompatActivity {
                             String name = document.getString("name");
                             String email = document.getString("email");
                             String phone = document.getString("phone");
+                            String organizedEvents = document.getString("organizedEvents");
+                            String invitedEvents = document.getString("invitedEvents");
+                            String enrolledEvents = document.getString("enrolledEvents");
 
-                            if(docDeviceId.equals(deviceId)){
-                                User currentUser= new User(docDeviceId,name,email,phone);
+                            if (docDeviceId.equals(deviceId)) {
+                                User currentUser = new User(docDeviceId, name, email, phone,organizedEvents,invitedEvents,enrolledEvents);
                                 UserSession.setCurrentUser(currentUser);
-                                check=true;
+                                currentUser.initializeEvents();
+                                check = true;
                                 break;
                             }
                         }
-                        if(!check) {
+                        if (!check) {
                             //send to login page if device id is not in users
                             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                            intent.putExtra("new",true);
+                            intent.putExtra("organizer",true);
                             startActivity(intent);
-                        }
-                        else{
+                        } else {
                             //send to organizer activity if user exists
                             Intent intent = new Intent(MainActivity.this, OrganizerStartScreen.class);
                             startActivity(intent);
@@ -165,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         });
+
 
         //Admin button
         Button adminButton = findViewById(R.id.admin_button);

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    activity_user_home.xml
+    Updated for:
+      US 01.04.03 — notification opt-out switch
+      US 01.04.01 / 01.04.02 / 01.05.06 — notifications button to view messages
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -60,6 +66,52 @@
         android:textAllCaps="false"
         android:textColor="#000000"
         android:textStyle="bold" />
+
+    <!--
+        US 01.04.01 / 01.04.02 / 01.05.06
+        Button to open the notifications screen where the user
+        can see all their invite and lottery result notifications.
+    -->
+    <Button
+        android:id="@+id/notificationsButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#EAEAEA"
+        android:text="Notifications"
+        android:textAllCaps="false"
+        android:textColor="#000000"
+        android:textStyle="bold" />
+
+    <!--
+        US 01.04.03
+        Switch that lets the entrant opt out of receiving notifications.
+        When off: notificationsEnabled is set to false in Firestore
+        and NotificationHelper will skip writing any new notifications.
+        When on: notifications are enabled (default state).
+    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Receive notifications"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+        <Switch
+            android:id="@+id/notifSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true" />
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"

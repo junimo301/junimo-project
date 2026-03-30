@@ -27,6 +27,8 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".GuidelinesActivity"/>
         <activity android:name=".EventDetailsActivity"/>
+        <!-- US 01.04.01/02/03 — shows entrant notifications -->
+        <activity android:name=".NotificationsActivity" />
 
         <!-- Organizer activities -->
         <activity android:name=".OrganizerStartScreen" />

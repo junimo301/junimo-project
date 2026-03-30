@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.junimoapp.OrganizerStartScreen;
 import com.example.junimoapp.R;
+import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -31,7 +33,7 @@ public class SelectAnEvent extends AppCompatActivity {
     FirebaseFirestore db;
     LinearLayout eventList;
     List<Event> myEvents = EventData.getEvents();
-    Button backButton;
+    TextView backButton;
 
 
     /**
@@ -46,7 +48,7 @@ public class SelectAnEvent extends AppCompatActivity {
 
         backButton = findViewById(R.id.back_button);
 
-        db = FirebaseFirestore.getInstance();
+        db = FirebaseManager.getDB();
         eventList = findViewById(R.id.event_list);
 
         //buttons
@@ -66,7 +68,7 @@ public class SelectAnEvent extends AppCompatActivity {
 
         }
 
-        /** returns to select organizer home screen */
+        // returns to select organizer home screen
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(SelectAnEvent.this, OrganizerStartScreen.class);

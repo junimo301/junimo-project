@@ -41,7 +41,7 @@ public class InvitationsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_invitations);
+        setContentView(R.layout.invite_page);
 
         RecyclerView recyclerView = findViewById(R.id.invitationsRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

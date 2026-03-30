@@ -1,25 +1,13 @@
 package com.example.junimoapp.firebase;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Class for defining firebase methods and loading in the firebase instance
@@ -27,17 +15,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class FirebaseManager {
     public FirebaseManager() {}
 
-    //get firestore instance
+    /** Get firestore instance */
     public static FirebaseFirestore getDB() {
         return FirebaseFirestore.getInstance();
     }
 
     /**
      * Adds an event to firebase
-     * @param event
-     * the event to be added
-     * @param eventsRef
-     * a reference to the events collection
+     * @param event the event to be added
+     * @param eventsRef a reference to the events collection
      */
     public void addEvent(Event event, CollectionReference eventsRef) {
         DocumentReference docRef = eventsRef.document(event.getEventID());
@@ -46,10 +32,8 @@ public class FirebaseManager {
 
     /**
      * Deletes an event from firebase
-     * @param event
-     * event to be deleted
-     * @param eventsRef
-     * collection reference to events collection
+     * @param event event to be deleted
+     * @param eventsRef collection reference to events collection
      */
     public void deleteEvent(Event event, CollectionReference eventsRef) {
         DocumentReference docRef = eventsRef.document(event.getEventID());
@@ -58,109 +42,88 @@ public class FirebaseManager {
 
     /**
      * Adds a user to firebase
-     * @param user
-     * the user to be added
-     * @param usersRef
-     * a reference to the users collection
+     * @param user the user to be added
+     * @param usersRef a reference to the users collection
      */
     public void addUser(User user, CollectionReference usersRef) {
         DocumentReference docRef = usersRef.document(user.getDeviceId());
         docRef.set(user);
+        user.initializeEvents();
     }
 
-    //updates to various different event fields (newValue type changes)
-
-    /**
-     * Updates specified event field with specified value
-     * @param eventsRef
-     * a reference to the events collection
-     * @param event
-     * the event to be updated
-     * @param field
-     * the field to be updated
-     * @param newValue
-     * the new value to be added
-     */
-    public void updateEvent(CollectionReference eventsRef, Event event, String field, String newValue) {
-        DocumentReference docRef = eventsRef.document(event.getEventID());
-        docRef.update(field, newValue);
-    }
-    /**
-     * Updates specified event field with specified value
-     * @param eventsRef
-     * a reference to the events collection
-     * @param event
-     * the event to be updated
-     * @param field
-     * the field to be updated
-     * @param newValue
-     * the new value to be added
-     */
-    public void updateEvent(CollectionReference eventsRef, Event event, String field, Long newValue) {
-        DocumentReference docRef = eventsRef.document(event.getEventID());
-        docRef.update(field, newValue);
-    }
-    /**
-     * Updates specified event field with specified value
-     * @param eventsRef
-     * a reference to the events collection
-     * @param event
-     * the event to be updated
-     * @param field
-     * the field to be updated
-     * @param newValue
-     * the new value to be added
-     */
-    public void updateEvent(CollectionReference eventsRef, Event event, String field, GeoPoint newValue) {
-        DocumentReference docRef = eventsRef.document(event.getEventID());
-        docRef.update(field, newValue);
-    }
-    /**
-     * Updates specified event field with specified value
-     * @param eventsRef
-     * a reference to the events collection
-     * @param event
-     * the event to be updated
-     * @param field
-     * the field to be updated
-     * @param newValue
-     * the new value to be added
-     */
-    public static void updateEvent(CollectionReference eventsRef, Event event, String field, ArrayList<String> newValue) {
-        DocumentReference docRef = eventsRef.document(event.getEventID());
-        docRef.update(field, newValue);
-    }
-    /**
-     * Updates specified event field with specified value
-     * @param eventsRef
-     * a reference to the events collection
-     * @param event
-     * the event to be updated
-     * @param field
-     * the field to be updated
-     * @param newValue
-     * the new value to be added
-     */
-    public void updateEvent(CollectionReference eventsRef, Event event, String field, double newValue) {
-        DocumentReference docRef = eventsRef.document(event.getEventID());
-        docRef.update(field, newValue);
-    }
-
-    //updates to user
-    /**
-     * Updates specified user field with specified value
-     * @param usersRef
-     * a reference to the users collection
-     * @param user
-     * the event to be updated
-     * @param field
-     * the field to be updated
-     * @param newValue
-     * the new value to be added
-     */
-    public void updateUser(CollectionReference usersRef, User user, String field, String newValue) {
+    public void deleteUser(User user, CollectionReference usersRef) {
+        for (Event event : user.getWaitlistedEventsList()) {
+            user.leaveEventWaitList(event);
+        }
+        for (Event event : user.getOrganizedEventsList()) {
+            deleteEvent(event, getDB().collection("events"));
+        }
+        for (Event event : user.getInvitedEventsList()) {
+            user.cancelUser(event);
+        }
         DocumentReference docRef = usersRef.document(user.getDeviceId());
-        docRef.update(field,newValue);
+        docRef.delete();
     }
 
+    // ── Event update overloads (all unchanged) ────────────────────────────
+
+    public static void updateEvent(CollectionReference eventsRef, Event event,
+                                   String field, String newValue) {
+        eventsRef.document(event.getEventID()).update(field, newValue);
+    }
+
+    public void updateEvent(CollectionReference eventsRef, Event event,
+                            String field, Long newValue) {
+        eventsRef.document(event.getEventID()).update(field, newValue);
+    }
+
+    public void updateEvent(CollectionReference eventsRef, Event event,
+                            String field, GeoPoint newValue) {
+        eventsRef.document(event.getEventID()).update(field, newValue);
+    }
+
+    public static void updateEvent(CollectionReference eventsRef, Event event,
+                                   String field, ArrayList<String> newValue) {
+        eventsRef.document(event.getEventID()).update(field, newValue);
+    }
+
+    public void updateEvent(CollectionReference eventsRef, Event event,
+                            String field, double newValue) {
+        eventsRef.document(event.getEventID()).update(field, newValue);
+    }
+
+    // ── User update overloads ─────────────────────────────────────────────
+
+    /**
+     * Updates specified user field with a String value
+     * @param usersRef a reference to the users collection
+     * @param user the user to be updated
+     * @param field the field to be updated
+     * @param newValue the new String value
+     */
+    public void updateUser(CollectionReference usersRef, User user,
+                           String field, String newValue) {
+        DocumentReference docRef = usersRef.document(user.getDeviceId());
+        docRef.update(field, newValue);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // US 01.04.03
+    // Boolean overload of updateUser — needed to persist the
+    // notificationsEnabled flag to Firestore.
+    // Called by User.setNotificationsEnabled().
+    // Follows the same pattern as the String overload above.
+    // ─────────────────────────────────────────────────────────────────────
+    /**
+     * Updates specified user field with a boolean value
+     * @param usersRef a reference to the users collection
+     * @param user the user to be updated
+     * @param field the field to be updated
+     * @param newValue the new boolean value
+     */
+    public void updateUser(CollectionReference usersRef, User user,
+                           String field, boolean newValue) {
+        DocumentReference docRef = usersRef.document(user.getDeviceId());
+        docRef.update(field, newValue);
+    }
 }

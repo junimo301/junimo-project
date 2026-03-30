@@ -39,11 +39,10 @@
             android:id="@+id/create_event_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:backgroundTint="#000000"
+            android:backgroundTint="#FFFFFF"
             android:text="+"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             android:textSize="22sp" />
-
         <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -80,6 +79,7 @@
         android:textStyle="bold" />
 
     <Button
+        android:id="@+id/view_entrants_button"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
