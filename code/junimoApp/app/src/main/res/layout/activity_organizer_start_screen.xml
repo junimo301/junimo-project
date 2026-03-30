@@ -35,14 +35,16 @@
                 android:textSize="16sp" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/create_event_button"
+
+        <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:backgroundTint="#FFFFFF"
-            android:text="+"
-            android:textColor="#000000"
-            android:textSize="22sp" />
+            android:background="@android:color/transparent"
+            android:contentDescription="Add"
+            android:src="@android:drawable/ic_input_add"
+            app:tint="#FFFFFF"
+            android:id="@+id/create_event_button"/>
+
         <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
