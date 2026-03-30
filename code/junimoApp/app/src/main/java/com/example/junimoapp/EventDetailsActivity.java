@@ -33,11 +33,16 @@ import java.util.HashMap;
 /**
  * user stories implemented:
  *  - US 01.06.02: Entrant wants to be able to sign up for a waiting list from event details.
+ *  - US 01.08.01: As an entrant, I want to post a comment on an event.
+ *  - US 01.08.02: As an entrant, I want to view comments on an event.
+ *  - US 02.08.01: As an organizer, I want to view and delete entrant comments on my event.
+ *  - US 02.08.02: As an organizer, I want to comment on my events.
  */
 
 /**
  * Provides details for events, such as the eventID, waitlists
  * Allows user to join wait list and leave waitlist
+ * Displays comments
  */
 
 public class EventDetailsActivity extends AppCompatActivity {
@@ -68,6 +73,9 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     ArrayAdapter<String> commentsAdapter;
     ArrayList<String> commentsList = new ArrayList<>();
+    ArrayList<String> commentIds = new ArrayList<>();
+
+    boolean isOrganizer = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +110,8 @@ public class EventDetailsActivity extends AppCompatActivity {
 
                     selectedEvent=(new Event(title, description, startDate, endDate, dateEvent, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation, organizerID));
                     Log.d("Firebase",selectedEvent.toString());
+
+                    isOrganizer = deviceId.equals(organizerID);
 
                     eventTitle.setText(selectedEvent.getTitle());
                     descriptionText.setText(selectedEvent.getDescription());
@@ -150,6 +160,31 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         commentsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, commentsList);
         commentsListView.setAdapter(commentsAdapter);
+
+        commentsListView.setOnItemLongClickListener((parent, view, position, id) -> {
+
+            //only organizers can del comms
+            if (!isOrganizer) return true;
+
+            String commentId = commentIds.get(position);
+
+            new android.app.AlertDialog.Builder(this)
+                    .setTitle("Delete Comment")
+                    .setMessage("Are you sure you want to delete this comment?")
+                    .setPositiveButton("Delete", (dialog, which) -> {
+
+                        db.collection("events")
+                                .document(eventId)
+                                .collection("comments")
+                                .document(commentId)
+                                .delete()
+                                .addOnSuccessListener(aVoid -> loadComments());
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+
+            return true;
+        });
 
         postCommentButton.setOnClickListener(v -> {
             String text = commentInput.getText().toString().trim();
@@ -225,6 +260,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     //loads comments on an event
     private void loadComments() {
+        commentIds.clear();
         db.collection("events")
                 .document(eventId)
                 .collection("comments")
@@ -235,7 +271,12 @@ public class EventDetailsActivity extends AppCompatActivity {
                         for (QueryDocumentSnapshot doc : task.getResult()) {
                             String text = doc.getString("text");
                             String user = doc.getString("userId");
-                            commentsList.add(user + ": " + text);
+                            if (text == null || user == null) continue;
+
+                            String display = user + ": " + text;
+
+                            commentsList.add(display);
+                            commentIds.add(doc.getId());
                         }
                         commentsAdapter.notifyDataSetChanged();
                     }
