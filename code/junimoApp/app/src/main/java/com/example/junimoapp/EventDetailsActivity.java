@@ -3,7 +3,10 @@ package com.example.junimoapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,11 +33,16 @@ import java.util.HashMap;
 /**
  * user stories implemented:
  *  - US 01.06.02: Entrant wants to be able to sign up for a waiting list from event details.
+ *  - US 01.08.01: As an entrant, I want to post a comment on an event.
+ *  - US 01.08.02: As an entrant, I want to view comments on an event.
+ *  - US 02.08.01: As an organizer, I want to view and delete entrant comments on my event.
+ *  - US 02.08.02: As an organizer, I want to comment on my events.
  */
 
 /**
  * Provides details for events, such as the eventID, waitlists
  * Allows user to join wait list and leave waitlist
+ * Displays comments
  */
 
 public class EventDetailsActivity extends AppCompatActivity {
@@ -58,6 +66,16 @@ public class EventDetailsActivity extends AppCompatActivity {
     Button joinWaitlistButton;
     Button acceptButton;
     Button declineButton;
+
+    EditText commentInput;
+    Button postCommentButton;
+    ListView commentsListView;
+
+    ArrayAdapter<String> commentsAdapter;
+    ArrayList<String> commentsList = new ArrayList<>();
+    ArrayList<String> commentIds = new ArrayList<>();
+
+    boolean isOrganizer = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +111,8 @@ public class EventDetailsActivity extends AppCompatActivity {
                     selectedEvent=(new Event(title, description, startDate, endDate, dateEvent, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation, organizerID));
                     Log.d("Firebase",selectedEvent.toString());
 
+                    isOrganizer = deviceId.equals(organizerID);
+
                     eventTitle.setText(selectedEvent.getTitle());
                     descriptionText.setText(selectedEvent.getDescription());
                     organizerText.setText(selectedEvent.getOrganizerID());
@@ -107,6 +127,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                         waitlistText = waitlistText+"/"+String.valueOf(selectedEvent.getMaxCapacity());
                     }
                     countOnList.setText(waitlistText);
+                    loadComments();
                 }
                 else {
                     Log.d("Firestore", "Error getting documents: ", task.getException());
@@ -132,6 +153,58 @@ public class EventDetailsActivity extends AppCompatActivity {
         backButton.setOnClickListener(v -> back());
         joinWaitlistButton.setOnClickListener(v -> JoinWaitlist(selectedEvent,user));
         declineButton.setOnClickListener(v -> LeaveWaitlist(selectedEvent,user));
+
+        commentInput = findViewById(R.id.commentInput);
+        postCommentButton = findViewById(R.id.postCommentButton);
+        commentsListView = findViewById(R.id.commentsListView);
+
+        commentsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, commentsList);
+        commentsListView.setAdapter(commentsAdapter);
+
+        commentsListView.setOnItemLongClickListener((parent, view, position, id) -> {
+
+            //only organizers can del comms
+            if (!isOrganizer) return true;
+
+            String commentId = commentIds.get(position);
+
+            new android.app.AlertDialog.Builder(this)
+                    .setTitle("Delete Comment")
+                    .setMessage("Are you sure you want to delete this comment?")
+                    .setPositiveButton("Delete", (dialog, which) -> {
+
+                        db.collection("events")
+                                .document(eventId)
+                                .collection("comments")
+                                .document(commentId)
+                                .delete()
+                                .addOnSuccessListener(aVoid -> loadComments());
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+
+            return true;
+        });
+
+        postCommentButton.setOnClickListener(v -> {
+            String text = commentInput.getText().toString().trim();
+
+            if (!text.isEmpty()) {
+                HashMap<String, Object> comment = new HashMap<>();
+                comment.put("text", text);
+                comment.put("userId", deviceId);
+                comment.put("timestamp", new Date());
+
+                db.collection("events")
+                        .document(eventId)
+                        .collection("comments")
+                        .add(comment)
+                        .addOnSuccessListener(docRef -> {
+                            commentInput.setText("");
+                            loadComments(); //refresh comments
+                        });
+            }
+        });
     }
 
     private void back() {
@@ -183,6 +256,31 @@ public class EventDetailsActivity extends AppCompatActivity {
         FirebaseManager.updateEvent(db.collection("events"), event, "waitList", updatedList);
         declineButton.setText("WAITLIST LEFT");
 
+    }
+
+    //loads comments on an event
+    private void loadComments() {
+        commentIds.clear();
+        db.collection("events")
+                .document(eventId)
+                .collection("comments")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        commentsList.clear();
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            String text = doc.getString("text");
+                            String user = doc.getString("userId");
+                            if (text == null || user == null) continue;
+
+                            String display = user + ": " + text;
+
+                            commentsList.add(display);
+                            commentIds.add(doc.getId());
+                        }
+                        commentsAdapter.notifyDataSetChanged();
+                    }
+                });
     }
 
 }
