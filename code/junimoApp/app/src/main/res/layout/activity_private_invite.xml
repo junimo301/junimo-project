@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    US 02.01.03
+    Layout for PrivateInviteActivity.
+    Organizer searches for entrants by name, email, or phone
+    and taps Invite to add them to the private event waiting list.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Page title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Invite Entrants"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:background="#2A2A2A" />
+
+    <!-- Subtitle explaining what to search by -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Search entrants by name, email, or phone"
+        android:textColor="#D2D2D2"
+        android:textSize="14sp" />
+
+    <!--
+        US 02.01.03
+        Search box — results update on every keystroke,
+        no submit button needed.
+    -->
+    <EditText
+        android:id="@+id/search_field"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="10dp"
+        android:background="#3A3A3A"
+        android:hint="Type a name, email, or phone number..."
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#AFAFAF"
+        android:textSize="15sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:background="#2A2A2A" />
+
+    <!--
+        US 02.01.03
+        List of matching users returned by the search.
+        Each row has the user's name, email/phone, and an Invite button.
+    -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/results_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#2A2A2A" />
+
+    <!-- Back navigation -->
+    <TextView
+        android:id="@+id/back_button_private"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
+        android:padding="8dp"
+        android:text="← Back"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
+
+</LinearLayout>
