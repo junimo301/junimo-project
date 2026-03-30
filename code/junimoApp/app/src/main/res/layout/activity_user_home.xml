@@ -66,6 +66,17 @@
         android:textAllCaps="false"
         android:textColor="#000000"
         android:textStyle="bold" />
+    <!-- US 01.06.01 — button to open the QR code scanner -->
+    <Button
+        android:id="@+id/scanQRButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#EAEAEA"
+        android:text="Scan QR Code"
+        android:textAllCaps="false"
+        android:textColor="#000000"
+        android:textStyle="bold" />
 
     <!--
         US 01.04.01 / 01.04.02 / 01.05.06

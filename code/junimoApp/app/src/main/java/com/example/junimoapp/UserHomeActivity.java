@@ -133,7 +133,11 @@ public class UserHomeActivity extends AppCompatActivity {
                 intent.putExtra("eventId", eventList.get(i).getEventID());
                 startActivity(intent);
             }
+
         });
+        Button scanQRButton = findViewById(R.id.scanQRButton);
+        scanQRButton.setOnClickListener(v ->
+                startActivity(new Intent(this, QRScanActivity.class)));
     }
 
     private void loadEvents() {
