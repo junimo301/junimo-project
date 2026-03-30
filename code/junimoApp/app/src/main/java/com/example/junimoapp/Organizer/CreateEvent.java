@@ -30,6 +30,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -356,51 +357,70 @@ public class CreateEvent extends AppCompatActivity {
             StorageReference storageRef = FirebaseStorage.getInstance()
                     .getReference("event_poster/" + eventID + ".jpg");
 
-            storageRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
-                storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    String poster = uri.toString();
+            Log.d("createEvent", "Uploading image: " + imageUri.toString());
 
-                    // Build the event object
-                    Event saveEvent = new Event(
-                            title, description, startDate, endDate, dateEvent,
-                            maxCapacity, finalWaitingListLimit, price, geoLocation,
-                            poster, eventID, eventLocation, organizerID);
+            try (InputStream stream = getContentResolver().openInputStream(imageUri)){
+                if (stream != null) {
+                    storageRef.putStream(stream).addOnSuccessListener(taskSnapshot -> {
+                        storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                            String poster = uri.toString();
 
-                    // ─────────────────────────────────────────────────────────
-                    // US 02.01.02
-                    // Read the private checkbox and apply to the event.
-                    // If private: clear any QR string so it is never saved.
-                    // If public:  attach the QR code if one was generated.
-                    // ─────────────────────────────────────────────────────────
-                    boolean isPrivate = checkPrivate.isChecked();
-                    saveEvent.setPrivate(isPrivate);
+                            // Build the event object
+                            Event saveEvent = new Event(
+                                    title, description, startDate, endDate, dateEvent,
+                                    maxCapacity, finalWaitingListLimit, price, geoLocation,
+                                    poster, eventID, eventLocation, organizerID);
 
-                    if (isPrivate) {
-                        // Private events must not store a QR code
-                        QRCodeString = null;
-                    } else if (QRCodeString != null) {
-                        saveEvent.setQRCode(QRCodeString);
-                    }
+                            // ─────────────────────────────────────────────────────────
+                            // US 02.01.02
+                            // Read the private checkbox and apply to the event.
+                            // If private: clear any QR string so it is never saved.
+                            // If public:  attach the QR code if one was generated.
+                            // ─────────────────────────────────────────────────────────
+                            boolean isPrivate = checkPrivate.isChecked();
+                            saveEvent.setPrivate(isPrivate);
 
-                    // Upload to Firebase
-                    FirebaseManager firebase = new FirebaseManager();
-                    CollectionReference eventsRef = firebase.getDB().collection("events");
-                    firebase.addEvent(saveEvent, eventsRef);
+                            if (isPrivate) {
+                                // Private events must not store a QR code
+                                QRCodeString = null;
+                            } else if (QRCodeString != null) {
+                                saveEvent.setQRCode(QRCodeString);
+                            }
 
-                    Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();
+                            // Upload to Firebase
+                            FirebaseManager firebase = new FirebaseManager();
+                            CollectionReference eventsRef = firebase.getDB().collection("events");
+                            firebase.addEvent(saveEvent, eventsRef);
 
-                    String logMessage = (createdEvent != null)
-                            ? "Event updated: " + saveEvent.getTitle()
-                            : "Event created: " + saveEvent.getTitle();
-                    Log.d("createEvent", logMessage);
+                            Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();
 
-                    finish();
-                });
-            });
+                            String logMessage = (createdEvent != null)
+                                    ? "Event updated: " + saveEvent.getTitle()
+                                    : "Event created: " + saveEvent.getTitle();
+                            Log.d("createEvent", logMessage);
+
+                            finish();
+
+                        }).addOnFailureListener(e -> {
+                            Toast.makeText(CreateEvent.this, "Failed to get URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.e("createEvent", "getDownloadUrl failed", e);
+                        });
+
+                    }).addOnFailureListener(e -> {
+                        Toast.makeText(CreateEvent.this, "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("createEvent", "upload failed", e);
+                    });
+                } else {
+                    Toast.makeText(this, "Error opening image stream", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Error reading image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
         } else {  //If an image isn't uploaded, use the default image
             String poster = "";
 
-            // Build the event object
             Event saveEvent = new Event(
                     title, description, startDate, endDate, dateEvent,
                     maxCapacity, finalWaitingListLimit, price, geoLocation,
