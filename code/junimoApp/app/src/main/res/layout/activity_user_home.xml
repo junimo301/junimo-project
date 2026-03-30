@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:backgroundTint="#EAEAEA"
-        android:text="Invitations"
+        android:text="Notifications"
         android:textAllCaps="false"
         android:textColor="#000000"
         android:textStyle="bold" />

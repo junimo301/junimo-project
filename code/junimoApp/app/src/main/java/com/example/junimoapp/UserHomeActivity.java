@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.junimoapp.Organizer.notifications;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -53,9 +54,9 @@ public class UserHomeActivity extends AppCompatActivity {
 
         eventListView = findViewById(R.id.eventListView);
 
-        //open invitations page
+        //open notifications page
         invitationsButton.setOnClickListener(v ->
-                startActivity(new Intent(this, InvitationsActivity.class)));
+                startActivity(new Intent(this, notifications.class)));
 
         //open profile page
         profileButton.setOnClickListener(v ->
