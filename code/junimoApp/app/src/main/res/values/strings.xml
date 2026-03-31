@@ -11,4 +11,16 @@
     <string name="browse_remove_organizers">Browse/Remove Organizers</string>
     <string name="browse_images">Browse Images</string>
     <string name="browse_events">Browse Events</string>
+
+    <!-- Search/filter stuff -->
+    <string name="search_events">Search Events</string>
+    <string name="event_tag_prompt">Select Event Tag</string>
+    <string-array name="event_tags">
+        <item>None</item>
+        <item>Athletics</item>
+        <item>Entertainment</item>
+        <item>Social</item>
+        <item>Professional</item>
+        <item>Education</item>
+    </string-array>
 </resources>
