@@ -37,6 +37,7 @@
         <activity android:name=".GuidelinesActivity"/>
         <activity android:name=".EventDetailsActivity"/>
         <activity android:name=".NotificationsActivity" />
+        <activity android:name=".EventSearchActivity" />
 
         <!--
             US 01.06.01
