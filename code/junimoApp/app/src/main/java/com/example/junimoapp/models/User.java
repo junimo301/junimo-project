@@ -249,9 +249,10 @@ public class User {
                                             String eventID2      = doc.getString("eventID");
                                             String eventLocation = doc.getString("eventLocation");
                                             String organizerID   = doc.getString("organizerID");
+                                            String tag           = doc.getString("tag");
                                             Event event = new Event(title, description, startDate, endDate,
                                                     dateEvent, maxCapacity, waitingListLimit, price,
-                                                    geoLocation, poster, eventID2, eventLocation, organizerID);
+                                                    geoLocation, poster, eventID2, eventLocation, organizerID, tag);
                                             eventList.add(event);
                                         } else {
                                             Log.d("Firestore", "No such document");

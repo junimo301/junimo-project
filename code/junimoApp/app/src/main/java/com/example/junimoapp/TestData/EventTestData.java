@@ -30,7 +30,8 @@ public class EventTestData {
                 "poster1",
                 "event001",
                 "Downtown Park",
-                "id:8910"
+                "id:8910",
+                "Entertainment"
         ));
 
         events.add(new Event(
@@ -46,7 +47,8 @@ public class EventTestData {
                 "poster2",
                 "event002",
                 "University Hall",
-                "id:1234"
+                "id:1234",
+                "Education"
         ));
 
         events.add(new Event(
@@ -62,7 +64,8 @@ public class EventTestData {
                 "poster3",
                 "event003",
                 "Community Center",
-                "id:5678"
+                "id:5678",
+                "None"
         ));
 
         return events;
