@@ -87,7 +87,7 @@ public class UserHomeActivity extends AppCompatActivity {
         //back button
         backButton = findViewById(R.id.backToHomeText);
 
-        // Existing navigation — unchanged
+        // Existing navigation — unchanged, added back intent extras
         invitationsButton.setOnClickListener(v ->
                 startActivity(new Intent(this, InvitationsActivity.class)));
         profileButton.setOnClickListener(v -> {
@@ -161,6 +161,7 @@ public class UserHomeActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(UserHomeActivity.this, EventDetailsActivity.class);
                 intent.putExtra("eventId", eventList.get(i).getEventID());
+                intent.putExtra("fromHistory",false);
                 startActivity(intent);
             }
 

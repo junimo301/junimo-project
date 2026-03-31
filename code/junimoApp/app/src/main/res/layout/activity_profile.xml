@@ -51,6 +51,15 @@
             android:textColorHint="#D6D6D6"
             android:textSize="52sp"
             android:textStyle="bold" />
+        <Button
+            android:id="@+id/eventHistoryButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#1E1E1E"
+            android:text="@string/view_booking_history"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -102,38 +111,22 @@
         <Button
             android:id="@+id/saveButton"
             android:layout_width="match_parent"
-            android:layout_height="34dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="4dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="14dp"
             android:backgroundTint="#EAEAEA"
             android:text="@string/save_changes"
-            android:textSize="12dp"
             android:textAllCaps="true"
-            android:textColor="#000000"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/changeRolesButton"
-            android:layout_width="match_parent"
-            android:layout_height="34dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:backgroundTint="#EAEAEA"
-            android:text="@string/change_roles"
-            android:textAllCaps="true"
-            android:textSize="12dp"
             android:textColor="#000000"
             android:textStyle="bold" />
         <Button
             android:id="@+id/deleteButton"
             android:layout_width="match_parent"
-            android:layout_height="34dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:backgroundTint="#EAEAEA"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="#E00000"
             android:text="@string/delete_account"
             android:textAllCaps="true"
-            android:textSize="12dp"
             android:textColor="#000000"
             android:textStyle="bold" />
 
