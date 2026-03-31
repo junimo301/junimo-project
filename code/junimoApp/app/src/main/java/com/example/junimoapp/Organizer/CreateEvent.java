@@ -50,6 +50,8 @@ public class CreateEvent extends AppCompatActivity {
             editEventLocation, editMaxCapacity, editWaitingList, editPrice,
             editGeoLocation;
 
+    android.widget.Spinner editTagSpinner;
+
     Button uploadNewEvent, previewButton, QRCodeButton, cancelButton;
     TextView backButton;
 
@@ -109,6 +111,17 @@ public class CreateEvent extends AppCompatActivity {
         editEndDate = findViewById(R.id.edit_end_date);
         editDateEvent = findViewById(R.id.edit_date);
         editEventLocation = findViewById(R.id.edit_event_location);
+        editMaxCapacity   = findViewById(R.id.edit_max_capacity);
+        editWaitingList   = findViewById(R.id.edit_waiting_list);
+        editPrice         = findViewById(R.id.edit_price);
+        editGeoLocation   = findViewById(R.id.edit_geo_location);
+        editPoster        = findViewById(R.id.edit_poster);
+        uploadNewEvent    = findViewById(R.id.upload_event_button);
+        QRCodeButton      = findViewById(R.id.QR_code_button);
+        backButton        = findViewById(R.id.backButton);
+        cancelButton      = findViewById(R.id.cancel_button);
+        previewButton     = findViewById(R.id.preview_event_button);
+        editTagSpinner    = findViewById(R.id.edit_tag_spinner);
         editMaxCapacity = findViewById(R.id.edit_max_capacity);
         editWaitingList = findViewById(R.id.edit_waiting_list);
         editPrice = findViewById(R.id.edit_price);
@@ -164,6 +177,17 @@ public class CreateEvent extends AppCompatActivity {
                             .placeholder(R.drawable.bg_event_tile)
                             .error(R.drawable.bg_event_tile)
                             .into(eventPoster);
+                }
+
+                // US 01.01.05 and 01.01.06: set spinner selection based on existing tag
+                if (createdEvent.getTag() != null && !createdEvent.getTag().isEmpty()) {
+                    android.widget.ArrayAdapter<CharSequence> adapter = (android.widget.ArrayAdapter<CharSequence>) editTagSpinner.getAdapter();
+                    if (adapter != null) {
+                        int position = adapter.getPosition(createdEvent.getTag());
+                        if (position >=0) {
+                            editTagSpinner.setSelection(position);
+                        }
+                    }
                 }
 
                 // ─────────────────────────────────────────────────────────
@@ -355,6 +379,18 @@ public class CreateEvent extends AppCompatActivity {
             return;
         }
 
+                //Get selected tag from spinner
+                String tag = editTagSpinner.getSelectedItem().toString();
+                if (tag.equals("None")) {
+                    tag = ""; //empty string for no tag
+                }
+
+                // Build the event object
+                Event saveEvent = new Event(
+                        title, description, startDate, endDate, dateEvent,
+                        maxCapacity, waitingListLimit, price,
+                        geoLocation, poster, eventID, eventLocation, organizerID, tag
+                );
         //Upload image before creating event
         if (imageUri != null) {
             StorageReference storageRef = FirebaseStorage.getInstance()

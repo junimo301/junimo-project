@@ -132,8 +132,9 @@ public class OrganizerStartScreen extends AppCompatActivity {
                         String eventID = doc.getString("eventID");
                         String eventLocation = doc.getString("eventLocation");
                         String organizerID = doc.getString("organizerID");
+                        String tag = doc.getString("tag");
 
-                        Event event = new Event(title, description, startDate, endDate, dateEvent, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation, organizerID);
+                        Event event = new Event(title, description, startDate, endDate, dateEvent, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation, organizerID, tag);
                         if(organizerID != null){
                             if(event.getOrganizerID().equals(currentUser.getDeviceId())) {
                                 eventList.add(event);

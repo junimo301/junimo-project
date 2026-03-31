@@ -69,6 +69,9 @@ public class Event {
     // ─────────────────────────────────────────────────────────────────────
     private boolean isPrivate = false;
 
+    //tag for filtering events: US 01.01.05 and 01.01.06
+    private String tag;
+
     FirebaseManager firebase = new FirebaseManager();
     FirebaseFirestore db = firebase.getDB();
 
@@ -88,11 +91,12 @@ public class Event {
      * @param poster
      * @param eventID
      * @param organizerID
+     * @param tag
      */
     public Event(String title, String description, String startDate, String endDate,
                  String dateEvent, int maxCapacity, int waitingListLimit, double price,
                  GeoPoint geoLocation, String poster, String eventID,
-                 String eventLocation, String organizerID) {
+                 String eventLocation, String organizerID, String tag) {
         this.title = title;
         this.description = description;
         this.startDate = startDate;
@@ -108,6 +112,7 @@ public class Event {
         this.waitList = "";
         initializeWaitlist();
         this.organizerID = organizerID;
+        this.tag = tag;
     }
 
     // ─────────────────────────────────────────────────────────────────────
@@ -127,6 +132,10 @@ public class Event {
     }
 
     // ── Existing getters / setters (unchanged) ────────────────────────────
+
+    public String getTag() { return tag; }
+
+    public void setTag(String tag) { this.tag = tag; }
 
     public String getWaitList() {
         return waitList;

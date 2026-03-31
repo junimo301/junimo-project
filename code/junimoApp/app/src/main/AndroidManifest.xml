@@ -2,6 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!--
+        US 01.06.01
+        Camera permission required for QR code scanning in QRScanActivity.
+        android:required="false" means the app installs on devices without
+        a camera — the scan button just won't work on those devices.
+    -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -27,19 +36,31 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".GuidelinesActivity"/>
         <activity android:name=".EventDetailsActivity"/>
-        <!-- US 01.04.01/02/03 — shows entrant notifications -->
         <activity android:name=".NotificationsActivity" />
+        <activity android:name=".EventSearchActivity" />
+
+        <!--
+            US 01.06.01
+            QRScanActivity opens the camera, scans Junimo event QR codes,
+            and navigates to EventDetailsActivity with the parsed eventId.
+        -->
+        <activity android:name=".QRScanActivity" />
 
         <!-- Organizer activities -->
         <activity android:name=".OrganizerStartScreen" />
         <activity android:name=".Organizer.CreateEvent" />
         <activity android:name=".Organizer.EventPreview" />
         <activity android:name=".Organizer.Entrants" />
-        <activity android:name=".Organizer.SelectAnEvent"/>
-        <!-- US 02.01.03 — PrivateInviteActivity lets organizer search and invite entrants to a private event -->
+        <activity android:name=".Organizer.SelectAnEvent" />
+
+        <!--
+            US 02.01.03
+            PrivateInviteActivity lets the organizer search and invite
+            entrants to a private event waiting list.
+        -->
         <activity android:name=".Organizer.PrivateInviteActivity" />
 
-        <!--Admin activities -->
+        <!-- Admin activities -->
         <activity android:name=".admin.AdminHomeActivity" />
         <activity android:name=".admin.AdminBrowseEventsActivity" />
         <activity android:name=".admin.AdminBrowseProfilesActivity" />

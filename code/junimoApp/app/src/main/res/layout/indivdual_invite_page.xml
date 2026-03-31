@@ -222,6 +222,52 @@
                 android:text="Join"
                 android:visibility="gone" />
 
+            <!-- COMMENTS SECTION -->
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="#8C8C8C" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Comments"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ListView
+                android:id="@+id/commentsListView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="8dp"
+                android:divider="#FFFFFF"
+                android:dividerHeight="1dp" />
+
+            <EditText
+                android:id="@+id/commentInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="Write a comment..."
+                android:textColor="#FFFFFF"
+                android:textColorHint="#AAAAAA"
+                android:backgroundTint="#FFFFFF" />
+
+            <Button
+                android:id="@+id/postCommentButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:text="Post Comment"
+                android:textAllCaps="false"
+                android:backgroundTint="#EAEAEA"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
         </LinearLayout>
 
     </LinearLayout>
