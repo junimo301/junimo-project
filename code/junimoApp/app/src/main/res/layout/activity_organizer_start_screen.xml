@@ -50,7 +50,17 @@
             android:contentDescription="@string/settings"
             android:src="@android:drawable/ic_menu_manage"
             app:tint="#FFFFFF" />
+
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/backToHomeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="@string/back_to_home"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
 
     <View
         android:layout_width="match_parent"

@@ -39,6 +39,7 @@ public class UserHomeActivity extends AppCompatActivity {
     Button invitationsButton;
     Button profileButton;
     Button guidelinesButton;
+    TextView backButton;
     private ArrayAdapter<String> adapter;
     private ArrayList<Event> eventList;
     private ArrayList<String> eventListString;
@@ -83,13 +84,27 @@ public class UserHomeActivity extends AppCompatActivity {
         notifSwitch         = findViewById(R.id.notifSwitch);
         searchEventsButton = findViewById(R.id.searchEventsButton);
 
+        //back button
+        backButton = findViewById(R.id.backToHomeText);
+
         // Existing navigation — unchanged
         invitationsButton.setOnClickListener(v ->
                 startActivity(new Intent(this, InvitationsActivity.class)));
-        profileButton.setOnClickListener(v ->
-                startActivity(new Intent(this, ProfileActivity.class)));
+        profileButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra("new", false);
+            intent.putExtra("organizer",false);
+            startActivity(intent);
+        });
+
         guidelinesButton.setOnClickListener(v ->
                 startActivity(new Intent(this, GuidelinesActivity.class)));
+
+        //back button
+        backButton.setOnClickListener(v->{
+            Intent intent = new Intent(UserHomeActivity.this,MainActivity.class);
+            startActivity(intent);
+        });
 
         // ─────────────────────────────────────────────────────────────────
         // US 01.04.01 / 01.04.02 / 01.05.06

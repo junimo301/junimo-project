@@ -28,6 +28,14 @@
         android:textColor="#D2D2D2"
         android:textSize="16sp" />
 
+    <TextView
+        android:id="@+id/backToHomeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="@string/back_to_home"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

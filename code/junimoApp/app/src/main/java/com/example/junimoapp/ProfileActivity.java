@@ -72,7 +72,11 @@ public class ProfileActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(organizer) {
+                if(newUser) {
+                    Intent intent= new Intent(ProfileActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+                else if(organizer) {
                     Intent intent = new Intent(ProfileActivity.this, OrganizerStartScreen.class);
                     startActivity(intent);
                 }
