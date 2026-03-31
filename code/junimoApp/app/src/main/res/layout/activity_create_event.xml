@@ -27,7 +27,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Event Lottery"
+                    android:text="@string/event_lottery"
                     android:textColor="#FFFFFF"
                     android:textSize="28sp"
                     android:textStyle="bold" />
@@ -43,7 +43,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@android:color/transparent"
-                android:contentDescription="Add"
+                android:contentDescription="@string/add"
                 android:src="@android:drawable/ic_input_add"
                 app:tint="#FFFFFF" />
 
@@ -51,7 +51,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@android:color/transparent"
-                android:contentDescription="Settings"
+                android:contentDescription="@string/settings"
                 android:src="@android:drawable/ic_menu_manage"
                 app:tint="#FFFFFF" />
         </LinearLayout>
@@ -67,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:text="← Back to Home"
+            android:text="@string/back_to_home"
             android:textColor="#FFFFFF"
             android:textSize="18sp" />
 
@@ -75,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Create New Event"
+            android:text="@string/create_new_event"
             android:textColor="#FFFFFF"
             android:textSize="42sp"
             android:textStyle="bold" />
@@ -91,7 +91,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Title*"
+                android:text="@string/spec_title"
                 android:textColor="#E6E6E6"
                 android:textSize="16sp" />
 
@@ -114,7 +114,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Description"
+                android:text="@string/description"
                 android:textColor="#E6E6E6"
                 android:textSize="16sp" />
 
@@ -135,7 +135,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Date*"
+                android:text="@string/spec_date"
                 android:textColor="#E6E6E6"
                 android:textSize="16sp" />
 
@@ -156,7 +156,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Location*"
+                android:text="@string/spec_location"
                 android:textColor="#E6E6E6"
                 android:textSize="16sp" />
 
@@ -177,7 +177,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Max Capacity*"
+                android:text="@string/spec_max_capacity"
                 android:textColor="#E6E6E6"
                 android:textSize="16sp" />
 
@@ -199,7 +199,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Registration Period"
+                android:text="@string/registration_period"
                 android:textColor="#E6E6E6"
                 android:textSize="16sp" />
 
@@ -208,7 +208,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:background="@android:color/transparent"
-                android:hint="Start"
+                android:hint="@string/start"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#AFAFAF" />
 
@@ -217,7 +217,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:background="@android:color/transparent"
-                android:hint="End"
+                android:hint="@string/end"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#AFAFAF" />
 
@@ -230,7 +230,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Waiting List Limit"
+                android:text="@string/waiting_list_limit"
                 android:textColor="#E6E6E6"
                 android:textSize="16sp" />
 
@@ -252,7 +252,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Price*"
+                android:text="@string/spec_price"
                 android:textColor="#E6E6E6"
                 android:textSize="16sp" />
 
@@ -274,7 +274,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Generate QR code"
+                android:text="@string/generate_qr_code"
                 android:textColor="#E6E6E6"
                 android:textSize="16sp" />
 
@@ -284,15 +284,15 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="8dp"
                 android:backgroundTint="#D9D9D9"
-                android:text="Generate"
+                android:text="@string/generate"
                 android:textAllCaps="false"
                 android:textColor="#000000" />
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="22dp"
                 android:layout_marginTop="12dp"
-                android:text="Geo Location*"
+                android:text="@string/spec_geo_location"
                 android:textColor="#E6E6E6"
                 android:textSize="16sp" />
 
@@ -322,7 +322,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Private Event (invite-only, no QR code)"
+                android:text="@string/private_event_invite_only_no_qr_code"
                 android:textColor="#E6E6E6"
                 android:textSize="16sp" />
 
@@ -356,7 +356,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Poster"
+                android:text="@string/poster"
                 android:textColor="#E6E6E6"
                 android:textSize="16sp" />
 
@@ -365,7 +365,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:background="@android:color/transparent"
-                android:hint="Insert Image"
+                android:hint="@string/insert_image"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#AFAFAF" />
 
@@ -373,7 +373,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Fields with * must be filled in"
+                android:text="@string/fields_with_must_be_filled_in"
                 android:textColor="#B0B0B0"
                 android:textSize="13sp" />
         </LinearLayout>
@@ -384,7 +384,7 @@
             android:layout_height="48dp"
             android:layout_marginTop="16dp"
             android:backgroundTint="#EAEAEA"
-            android:text="Preview"
+            android:text="@string/preview"
             android:textAllCaps="false"
             android:textColor="#000000" />
 
@@ -394,7 +394,7 @@
             android:layout_height="48dp"
             android:layout_marginTop="10dp"
             android:backgroundTint="#EAEAEA"
-            android:text="Publish"
+            android:text="@string/publish"
             android:textAllCaps="false"
             android:textColor="#000000"
             android:textStyle="bold" />
@@ -405,7 +405,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="12dp"
             android:backgroundTint="#EAEAEA"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textAllCaps="false"
             android:textColor="#000000"
             android:id="@+id/cancel_button" />
