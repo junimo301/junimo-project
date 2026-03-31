@@ -15,7 +15,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Event Lottery"
+        android:text="@string/event_lottery"
         android:textColor="#FFFFFF"
         android:textSize="28sp"
         android:textStyle="bold" />
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="User Home"
+        android:text="@string/user_home"
         android:textColor="#D2D2D2"
         android:textSize="16sp" />
 
@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:backgroundTint="#EAEAEA"
-        android:text="Invitations"
+        android:text="@string/invitations"
         android:textAllCaps="false"
         android:textColor="#000000"
         android:textStyle="bold" />
@@ -51,7 +51,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="10dp"
         android:backgroundTint="#EAEAEA"
-        android:text="Profile"
+        android:text="@string/profile"
         android:textAllCaps="false"
         android:textColor="#000000"
         android:textStyle="bold" />
@@ -62,7 +62,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="10dp"
         android:backgroundTint="#EAEAEA"
-        android:text="Guidelines"
+        android:text="@string/guidelines"
         android:textAllCaps="false"
         android:textColor="#000000"
         android:textStyle="bold" />
@@ -73,7 +73,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="10dp"
         android:backgroundTint="#EAEAEA"
-        android:text="Scan QR Code"
+        android:text="@string/scan_qr_code"
         android:textAllCaps="false"
         android:textColor="#000000"
         android:textStyle="bold" />
@@ -89,7 +89,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="10dp"
         android:backgroundTint="#EAEAEA"
-        android:text="Notifications"
+        android:text="@string/notifications"
         android:textAllCaps="false"
         android:textColor="#000000"
         android:textStyle="bold" />
@@ -112,7 +112,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Receive notifications"
+            android:text="@string/receive_notifications"
             android:textColor="#FFFFFF"
             android:textSize="15sp" />
 
@@ -143,7 +143,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Browse Events"
+        android:text="@string/browse_events"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         android:textStyle="bold" />

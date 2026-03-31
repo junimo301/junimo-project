@@ -63,7 +63,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Email"
+                android:text="@string/email"
                 android:textColor="#E8E8E8"
                 android:textSize="16sp" />
 
@@ -82,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Phone"
+                android:text="@string/phone"
                 android:textColor="#E8E8E8"
                 android:textSize="16sp" />
 
@@ -106,9 +106,9 @@
             android:layout_marginTop="12dp"
             android:layout_marginBottom="4dp"
             android:backgroundTint="#EAEAEA"
-            android:text="SAVE CHANGES"
+            android:text="@string/save_changes"
             android:textSize="12dp"
-            android:textAllCaps="false"
+            android:textAllCaps="true"
             android:textColor="#000000"
             android:textStyle="bold" />
 
@@ -119,8 +119,8 @@
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             android:backgroundTint="#EAEAEA"
-            android:text="CHANGE ROLES"
-            android:textAllCaps="false"
+            android:text="@string/change_roles"
+            android:textAllCaps="true"
             android:textSize="12dp"
             android:textColor="#000000"
             android:textStyle="bold" />
@@ -131,8 +131,8 @@
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             android:backgroundTint="#EAEAEA"
-            android:text="DELETE ACCOUNT"
-            android:textAllCaps="false"
+            android:text="@string/delete_account"
+            android:textAllCaps="true"
             android:textSize="12dp"
             android:textColor="#000000"
             android:textStyle="bold" />

@@ -23,6 +23,7 @@
         <item>Professional</item>
         <item>Education</item>
     </string-array>
+
     <string name="sys_description">Join waiting lists for popular community events through our lottery system</string>
     <string name="add">Add</string>
     <string name="create_new_event">Create New Event</string>
@@ -73,4 +74,46 @@
     <string name="search_entrants_by_name_email_or_phone">Search entrants by name, email, or phone</string>
     <string name="type_a_name_email_or_phone_number">Type a name, email, or phone number...</string>
     <string name="your_name">Your Name</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="save_changes">save changes</string>
+    <string name="change_roles">change roles</string>
+    <string name="delete_account">delete account</string>
+    <string name="scan_event_qr_code">Scan Event QR Code</string>
+    <string name="point_your_camera_at_a_junimo_event_qr_code">Point your camera at a Junimo event QR code</string>
+    <string name="select_event">Select Event</string>
+    <string name="user_home">User Home</string>
+    <string name="invitations">Invitations</string>
+    <string name="profile">Profile</string>
+    <string name="guidelines">Guidelines</string>
+    <string name="scan_qr_code">Scan QR Code</string>
+    <string name="receive_notifications">Receive notifications</string>
+    <string name="event_name">Event Name</string>
+    <string name="organized_by_host">Organized by [Host].</string>
+    <string name="add_a_description_develop_the_ultimate_core_strength_and_coordination_with_pilates_movement">Add a description: Develop the ultimate core strength and coordination with Pilates movement...</string>
+    <string name="event_details">Event Details</string>
+    <string name="event_location_address">Event location address</string>
+    <string name="registration_details">Registration Details</string>
+    <string name="capacity">Capacity</string>
+    <string name="current_status">Current Status</string>
+    <string name="join_waitlist">join waitlist</string>
+    <string name="leave_waitlist">leave waitlist</string>
+    <string name="comments">Comments</string>
+    <string name="write_a_comment">Write a comment...</string>
+    <string name="post_comment">Post Comment</string>
+    <string name="congratulations_you_ve_been_selected_accept_your_invite_and_secure_a_spot">Congratulations! You\'ve been selected. Accept your invite and secure a spot!</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
+    <string name="remove">Remove</string>
+    <string name="organizer_name">Organizer Name</string>
+    <string name="flagged_no">Flagged: No</string>
+    <string name="organizer_email_example_com">organizer.email@example.com</string>
+    <string name="remove_status">Remove Status</string>
+    <string name="invite">Invite</string>
+    <string name="edit">Edit</string>
+    <string name="view_booking_history">View booking history</string>
+    <string name="address">Address</string>
+    <string name="edmonton">Edmonton</string>
+    <string name="province">Province</string>
+    <string name="postal_code">Postal Code</string>
 </resources>

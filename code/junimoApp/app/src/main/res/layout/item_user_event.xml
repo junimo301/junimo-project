@@ -9,9 +9,8 @@
     android:layout_marginEnd="8dp"
     android:background="#000000"
     android:padding="12dp"
-    android:text="Event Title"
+    android:text="@string/event_name"
     android:textColor="#FFFFFF"
     android:textSize="16sp"
     android:textStyle="bold"
-    tools:layout_height="match_parent"
-    tools:text="Event Title" />
+    tools:layout_height="match_parent" />

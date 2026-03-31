@@ -17,7 +17,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Event Lottery"
+            android:text="@string/event_lottery"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -26,7 +26,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@android:color/transparent"
-            android:contentDescription="Settings"
+            android:contentDescription="@string/settings"
             android:src="@android:drawable/ic_menu_manage"
             app:tint="#FFFFFF" />
     </LinearLayout>
@@ -43,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="\u2190  Back to Home"
+        android:text="@string/back_to_home"
         android:textColor="#FFFFFF"
         android:textSize="16sp" />
 
@@ -51,7 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
-        android:text="Congratulations! You've been selected. Accept your invite and secure a spot!"
+        android:text="@string/congratulations_you_ve_been_selected_accept_your_invite_and_secure_a_spot"
         android:textColor="#FFFFFF"
         android:textSize="14sp"
         android:lineSpacingExtra="2dp"
@@ -69,7 +69,7 @@
             android:id="@+id/invitationTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Event Name"
+            android:text="@string/event_name"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -87,7 +87,7 @@
                 android:layout_marginEnd="6dp"
                 android:layout_weight="1"
                 android:backgroundTint="#EAEAEA"
-                android:text="Accept"
+                android:text="@string/accept"
                 android:textAllCaps="false"
                 android:textColor="#000000"
                 android:textStyle="bold" />
@@ -99,7 +99,7 @@
                 android:layout_marginStart="6dp"
                 android:layout_weight="1"
                 android:backgroundTint="#555555"
-                android:text="Decline"
+                android:text="@string/decline"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
