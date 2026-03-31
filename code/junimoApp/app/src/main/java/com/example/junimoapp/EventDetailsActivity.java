@@ -107,8 +107,9 @@ public class EventDetailsActivity extends AppCompatActivity {
                     String eventID = doc.getString("eventID");
                     String eventLocation = doc.getString("eventLocation");
                     String organizerID = doc.getString("organizerID");
+                    String tag = doc.getString("tag");
 
-                    selectedEvent=(new Event(title, description, startDate, endDate, dateEvent, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation, organizerID));
+                    selectedEvent=(new Event(title, description, startDate, endDate, dateEvent, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation, organizerID, tag));
                     Log.d("Firebase",selectedEvent.toString());
 
                     isOrganizer = deviceId.equals(organizerID);
