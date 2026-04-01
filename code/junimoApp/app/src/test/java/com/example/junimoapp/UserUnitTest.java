@@ -33,7 +33,8 @@ public class UserUnitTest {
                 "",                    // poster
                 "event-uuid-001",      // eventID
                 "Rec Centre",          // eventLocation
-                "organizer-device-id"  // organizerID
+                "organizer-device-id", // organizerID
+                ""                     // tag
         );
         String testList=event.getWaitList();
         testList = testList + (deviceId) + ",";
@@ -60,7 +61,8 @@ public class UserUnitTest {
                 "",                    // poster
                 "event-uuid-001",      // eventID
                 "Rec Centre",          // eventLocation
-                "organizer-device-id"  // organizerID
+                "organizer-device-id", // organizerID
+                ""                     // tag
         );
         String testList=event.getWaitList();
         testList = testList + (deviceId) + ",";
@@ -69,7 +71,7 @@ public class UserUnitTest {
         assertEquals(event.getWaitList(),testList);
 
         event.removeFromWaitList(deviceId);
-        testList.replace(deviceId+",","");
+        testList = testList.replace(deviceId+",","");
 
         assertEquals(event.getWaitList(),testList);
     }

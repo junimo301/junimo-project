@@ -20,7 +20,7 @@ public class ProfileActivityTest {
         String email = "dummyname@test.com";
         String phone = "123456789";
 
-        User user = new User(deviceId, name, email, phone);
+        User user = new User(deviceId, name, email, phone, "", "", "");
 
         assertEquals(deviceId, user.getDeviceId());
         assertEquals(name, user.getName());
@@ -36,7 +36,7 @@ public class ProfileActivityTest {
         String email = "";
         String phone = "";
 
-        User user = new User(deviceId, name, email, phone);
+        User user = new User(deviceId, name, email, phone, "", "", "");
 
         assertEquals(deviceId, user.getDeviceId());
         assertEquals("", user.getName());
@@ -49,7 +49,7 @@ public class ProfileActivityTest {
 
         String deviceId = "uniqueDeviceID";
 
-        User user = new User(deviceId, "Test", "test@email.com", "111111");
+        User user = new User(deviceId, "Test", "test@email.com", "111111", "", "", "");
 
         assertTrue(user.getDeviceId().equals(deviceId));
     }
