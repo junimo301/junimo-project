@@ -49,8 +49,8 @@ public class Event {
     /** the location of the event */
     private String eventLocation;
 
-    /** the poster/image for the event */
-    private String poster;
+    /** the poster/image for the event saved as a url */
+    private String poster;  //event images
 
     /** list of the user id who are on the waiting list */
     private String waitList;
