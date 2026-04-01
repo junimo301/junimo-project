@@ -43,19 +43,12 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@android:color/transparent"
-                android:contentDescription="@string/add"
-                android:src="@android:drawable/ic_input_add"
-                app:tint="#FFFFFF" />
-
-            <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@android:color/transparent"
                 android:contentDescription="@string/settings"
                 android:src="@android:drawable/ic_menu_manage"
                 app:tint="#FFFFFF" />
         </LinearLayout>
 
+        <!-- PAGE DETAILS -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -88,6 +81,7 @@
             android:orientation="vertical"
             android:padding="14dp">
 
+            <!-- EVENT DETAILS -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -100,7 +94,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:background="@android:color/transparent"
-                android:hint=""
                 android:paddingStart="2dp"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#AFAFAF" />
@@ -270,6 +263,7 @@
                 android:layout_height="1dp"
                 android:background="#8C8C8C" />
 
+            <!-- QR CODE -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -288,6 +282,7 @@
                 android:textAllCaps="false"
                 android:textColor="#000000" />
 
+            <!-- GEO LOCATION -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="22dp"
@@ -332,6 +327,7 @@
                 android:layout_marginTop="12dp"
                 android:background="#8C8C8C" />
 
+            <!-- POSTER -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -349,8 +345,9 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"/>
-
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:background="#8C8C8C" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -359,15 +356,22 @@
                 android:text="@string/poster"
                 android:textColor="#E6E6E6"
                 android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/edit_poster"
+            <Button
+                android:id="@+id/pick_image_button"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#D9D9D9"
+                android:text="Upload"
+                android:textAllCaps="false"
+                android:textColor="#000000" />
+            <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:background="@android:color/transparent"
-                android:hint="@string/insert_image"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#AFAFAF" />
+                android:layout_height="match_parent"
+                android:id="@+id/event_poster"
+                android:scaleType="centerCrop"
+                android:src="@drawable/bg_event_tile"
+                android:alpha="0.37"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -378,6 +382,7 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
+        <!-- BUTTONS -->
         <Button
             android:id="@+id/preview_event_button"
             android:layout_width="match_parent"

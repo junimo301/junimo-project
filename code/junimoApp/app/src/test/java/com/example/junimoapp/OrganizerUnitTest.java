@@ -38,7 +38,8 @@ public class OrganizerUnitTest {
                 "",                    // poster
                 "event-uuid-001",      // eventID
                 "Rec Centre",          // eventLocation
-                "organizer-device-id"  // organizerID
+                "organizer-device-id", // organizerID
+                ""                     // tag (none)
         );
 
         assertEquals("Swimming Lessons", event.getTitle());
@@ -70,7 +71,8 @@ public class OrganizerUnitTest {
         Event event = new Event(
                 "Dance Class", "Beginner dance",
                 "2025-01-01", "2025-01-07", "2025-01-15",
-                30, 0, 0.0, null, "", "event-uuid-002", "Studio", "org-id"
+                30, 0, 0.0, null, "",
+                "event-uuid-002", "Studio", "org-id", ""
         );
 
         String qr = "junimo://event?id=event-uuid-002";
@@ -104,7 +106,8 @@ public class OrganizerUnitTest {
         Event event = new Event(
                 "Test Event", "A test",
                 "2025-01-01", "2025-01-07", "2025-01-15",
-                10, 0, 0.0, null, "", "search-test-id", "Location", "org-id"
+                10, 0, 0.0, null, "",
+                "search-test-id", "Location", "org-id", ""
         );
 
         EventData.addOrEditEvent(event);
@@ -126,14 +129,14 @@ public class OrganizerUnitTest {
         Event original = new Event(
                 "Original Title", "desc",
                 "", "", "", 10, 0, 0.0, null, "",
-                "edit-test-id", "loc", "org"
+                "edit-test-id", "loc", "org", ""
         );
         EventData.addOrEditEvent(original);
 
         Event updated = new Event(
                 "Updated Title", "desc",
                 "", "", "", 10, 0, 0.0, null, "",
-                "edit-test-id", "loc", "org"
+                "edit-test-id", "loc", "org", ""
         );
         EventData.addOrEditEvent(updated);
 
@@ -159,7 +162,8 @@ public class OrganizerUnitTest {
                 "2025-01-01",  // startDate — registration opens
                 "2025-01-07",  // endDate   — registration closes
                 "2025-01-15",  // dateEvent — actual event date
-                30, 0, 0.0, null, "", "event-id-002", "Studio A", "org-id"
+                30, 0, 0.0, null, "",
+                "event-id-002", "Studio A", "org-id", ""
         );
 
         assertEquals("2025-01-01", event.getStartDate());
@@ -214,7 +218,8 @@ public class OrganizerUnitTest {
                 "2025-02-01", "2025-02-07", "2025-02-15",
                 50,
                 30,    // waitingListLimit explicitly set to 30
-                15.0, null, "", "event-id-003", "Yoga Studio", "org-id"
+                15.0, null, "", "event-id-003",
+                "Yoga Studio", "org-id", ""
         );
 
         assertEquals(30, event.getWaitingListLimit());
@@ -233,7 +238,8 @@ public class OrganizerUnitTest {
                 "2025-03-01", "2025-03-07", "2025-03-15",
                 20,
                 0,     // 0 = no waiting list limit (field left empty)
-                60.0, null, "", "event-id-004", "Music Room", "org-id"
+                60.0, null, "", "event-id-004",
+                "Music Room", "org-id", ""
         );
 
         // 0 means no limit was set
@@ -267,7 +273,8 @@ public class OrganizerUnitTest {
                 "Swimming Lessons", "Beginner swim",
                 "2025-01-01", "2025-01-07", "2025-01-15",
                 20,    // maxCapacity — system samples this many attendees
-                0, 60.0, null, "", "event-id-005", "Pool", "org-id"
+                0, 60.0, null, "", "event-id-005",
+                "Pool", "org-id", ""
         );
 
         assertEquals(20, event.getMaxCapacity());

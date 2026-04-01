@@ -29,7 +29,7 @@ public class QRandPrivateinviteUnitTest {
                 "Private Gala", "desc", "", "", "2025-09-01",
                 30, 15, 25.0,
                 new GeoPoint(0, 0), "", "private-event-id",
-                "Venue", "organizer-id"
+                "Venue", "organizer-id", ""
         );
         testUser = new User(
                 "device-user-id", "Test User",

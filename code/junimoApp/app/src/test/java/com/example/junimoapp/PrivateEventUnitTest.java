@@ -30,7 +30,7 @@ public class PrivateEventUnitTest {
                 "Test Event", "desc", "2025-01-01", "2025-01-10",
                 "2025-02-01", 50, 20, 10.0,
                 new GeoPoint(0, 0), "", "event-test-id",
-                "Test Location", "organizer-test-id"
+                "Test Location", "organizer-test-id", ""
         );
         // Real User object using the same constructor as the rest of the app
         testUser = new User(

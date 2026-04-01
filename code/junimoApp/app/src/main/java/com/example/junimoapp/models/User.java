@@ -42,8 +42,8 @@ public class User {
     // ─────────────────────────────────────────────────────────────────────
     private boolean notificationsEnabled = true;
 
-    FirebaseManager firebase = new FirebaseManager();
-    FirebaseFirestore db = firebase.getDB();
+    FirebaseManager firebase;
+    FirebaseFirestore db;
 
     public User(String deviceId, String name, String email, String phone,
                 String organized, String invited, String waitlisted) {
@@ -57,6 +57,13 @@ public class User {
         this.invitedEvents = invited;
         this.waitlistedEvents = waitlisted;
         this.cancelledEvents = "";
+
+        try {
+            firebase = new FirebaseManager();
+            db = firebase.getDB();
+        } catch (Exception e) {
+            // Running unit tests, don't want/need firebase
+        }
     }
 
     // ── Existing getters / setters (unchanged) ────────────────────────────
@@ -98,8 +105,10 @@ public class User {
     // ─────────────────────────────────────────────────────────────────────
     public void setNotificationsEnabled(boolean enabled) {
         this.notificationsEnabled = enabled;
-        firebase.updateUser(db.collection("users"), this,
-                "notificationsEnabled", enabled);
+        if (db != null) {
+            firebase.updateUser(db.collection("users"), this,
+                    "notificationsEnabled", enabled);
+        }
     }
 
     // ── Existing methods (unchanged) ──────────────────────────────────────

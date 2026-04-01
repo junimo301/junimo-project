@@ -9,14 +9,6 @@
     android:orientation="vertical"
     android:padding="8dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/event_lottery"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp"
-        android:textStyle="bold" />
-
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -24,43 +16,62 @@
         android:layout_marginBottom="8dp"
         android:background="#2A2A2A" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="@string/back_to_home"
-        android:textColor="#E1E1E1"
-        android:textSize="14sp" />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="160dp"
-        android:background="@drawable/bg_event_tile"
         android:padding="4dp">
 
-        <TextView
-            android:id="@+id/event_title"
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/background_poster"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_event_tile"
+            android:alpha="0.37"/>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_gravity="start|top"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/event_name"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            />
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:id="@+id/event_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="@string/event_name" />
+
+            <TextView
+                android:id="@+id/event_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:singleLine="false"
+                android:ellipsize="end"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:layout_marginTop="10dp"
+                android:maxLines="2"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="50dp"/>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/edit_event_button"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="end|top"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="12dp"
             android:backgroundTint="#595959"
-            android:minHeight="0dp"
             android:minWidth="0dp"
+            android:minHeight="0dp"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             android:text="@string/edit"
@@ -69,13 +80,5 @@
             android:textSize="12sp" />
 
     </FrameLayout>
-
-    <TextView
-        android:id="@+id/event_description"
-        android:layout_width="1dp"
-        android:layout_height="1dp"
-        android:text="@string/description"
-        android:visibility="gone"
-         />
 
 </LinearLayout>
