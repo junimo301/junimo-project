@@ -4,7 +4,6 @@ package com.example.junimoapp.Organizer;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -73,9 +72,9 @@ public class EventPreview extends AppCompatActivity {
         String eEndDate       = createEventData.getStringExtra("endDate");
         String eDateEvent     = createEventData.getStringExtra("dateEvent");
         String eEventLocation = createEventData.getStringExtra("eventLocation");
-        int eMaxCapacity      = createEventData.getIntExtra("maxCapacity", 0);
+        String eMaxCapacity      = createEventData.getStringExtra("maxCapacity");
         String eWaitingList   = createEventData.getStringExtra("waitingListLimit");
-        double ePrice         = createEventData.getDoubleExtra("price",0);
+        String ePrice         = createEventData.getStringExtra("price");
         String eGeoLocation   = createEventData.getStringExtra("geoLocation_string");
         String ePoster        = createEventData.getStringExtra("poster");
         String ePosterURI     = createEventData.getStringExtra("posterURI");
@@ -104,14 +103,14 @@ public class EventPreview extends AppCompatActivity {
         endDate.setText(eEndDate);
         dateEvent.setText(eDateEvent);
         eventLocation.setText(eEventLocation);
-        maxCapacity.setText(String.valueOf(eMaxCapacity));
+        maxCapacity.setText(eMaxCapacity);
         waitingList.setText(eWaitingList);
-        price.setText(String.valueOf(ePrice));
+        price.setText(ePrice);
         geoLocation.setText(eGeoLocation);
         //poster.setText(ePoster);
 
 
-        /** returns to creating/editing the event */
+        // returns to creating/editing the event
         backButton.setOnClickListener(view -> {
             finish();
         });

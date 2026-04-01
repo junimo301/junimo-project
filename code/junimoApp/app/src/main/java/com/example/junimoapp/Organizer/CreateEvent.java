@@ -115,28 +115,17 @@ public class CreateEvent extends AppCompatActivity {
         editWaitingList   = findViewById(R.id.edit_waiting_list);
         editPrice         = findViewById(R.id.edit_price);
         editGeoLocation   = findViewById(R.id.edit_geo_location);
-        editPoster        = findViewById(R.id.edit_poster);
         uploadNewEvent    = findViewById(R.id.upload_event_button);
         QRCodeButton      = findViewById(R.id.QR_code_button);
         backButton        = findViewById(R.id.backButton);
         cancelButton      = findViewById(R.id.cancel_button);
         previewButton     = findViewById(R.id.preview_event_button);
         editTagSpinner    = findViewById(R.id.edit_tag_spinner);
-        editMaxCapacity = findViewById(R.id.edit_max_capacity);
-        editWaitingList = findViewById(R.id.edit_waiting_list);
-        editPrice = findViewById(R.id.edit_price);
-        editGeoLocation = findViewById(R.id.edit_geo_location);
-        uploadNewEvent = findViewById(R.id.upload_event_button);
-        QRCodeButton = findViewById(R.id.QR_code_button);
-        backButton = findViewById(R.id.backButton);
-        cancelButton = findViewById(R.id.cancel_button);
-        previewButton = findViewById(R.id.preview_event_button);
         pickImageButton = findViewById(R.id.pick_image_button);
         eventPoster = findViewById(R.id.event_poster);
         Glide.with(this).load((String)null)
                 .placeholder(R.drawable.bg_event_tile)
                 .into(eventPoster);
-
 
         // ─────────────────────────────────────────────────────────────────
         // US 02.01.02
@@ -169,9 +158,7 @@ public class CreateEvent extends AppCompatActivity {
                 editWaitingList.setText(String.valueOf(createdEvent.getWaitingListLimit()));
                 editPrice.setText(String.valueOf(createdEvent.getPrice()));
                 editGeoLocation.setText(String.valueOf(createdEvent.getGeoLocation()));
-
                 editEventLocation.setText(createdEvent.getEventLocation());
-
                 if (createdEvent.getPoster() != null && !createdEvent.getPoster().isEmpty()) {
                     Glide.with(this).load(createdEvent.getPoster())
                             .placeholder(R.drawable.bg_event_tile)
@@ -247,8 +234,8 @@ public class CreateEvent extends AppCompatActivity {
             String dateEvent          = editDateEvent.getText().toString();
             String geoLocation_string = editGeoLocation.getText().toString();
             String eventLocation      = editEventLocation.getText().toString();
-            int maxCapacity           = Integer.parseInt(editMaxCapacity.getText().toString());
-            double price              = Double.parseDouble(editPrice.getText().toString());
+            String maxCapacity        = editMaxCapacity.getText().toString();
+            String price              = editPrice.getText().toString();
 
             Intent previewEvent = new Intent(CreateEvent.this, EventPreview.class);
             previewEvent.putExtra("title", title);
@@ -282,15 +269,15 @@ public class CreateEvent extends AppCompatActivity {
     private void uploadNewEvent() {
         //optional fields
         String description = editDescription.getText().toString();
-        String startDate   = editStartDate.getText().toString();
-        String endDate     = editEndDate.getText().toString();
+        String startDate = editStartDate.getText().toString();
+        String endDate = editEndDate.getText().toString();
 
         // US 02.01.04 — validate registration period dates
         if (!startDate.equals("") && !endDate.equals("")) {
             try {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 Date start = format.parse(startDate);
-                Date end   = format.parse(endDate);
+                Date end = format.parse(endDate);
                 if (start.after(end)) {
                     editStartDate.setError("Start date must be before end date");
                     editStartDate.requestFocus();
@@ -320,14 +307,14 @@ public class CreateEvent extends AppCompatActivity {
         // Required fields
         String title = editTitle.getText().toString();
         if (title.equals("")) {
-            editTitle.setError("*Field Required*");
+            editTitle.setError("*Field Required");
             editTitle.requestFocus();
             return;
         }
 
         String dateEvent = editDateEvent.getText().toString();
         if (dateEvent.equals("")) {
-            editDateEvent.setError("*Field Required*");
+            editDateEvent.setError("*Field Required");
             editDateEvent.requestFocus();
             return;
         }
@@ -344,20 +331,20 @@ public class CreateEvent extends AppCompatActivity {
 
         String eventLocation = editEventLocation.getText().toString();
         if (eventLocation.equals("")) {
-            editEventLocation.setError("*Field Required*");
+            editEventLocation.setError("*Field Required");
             editEventLocation.requestFocus();
             return;
         }
 
         if (editMaxCapacity.getText().toString().equals("")) {
-            editMaxCapacity.setError("*Field Required*");
+            editMaxCapacity.setError("*Field Required");
             editMaxCapacity.requestFocus();
             return;
         }
         int maxCapacity = Integer.parseInt(editMaxCapacity.getText().toString());
 
         if (editPrice.getText().toString().equals("")) {
-            editPrice.setError("*Field Required*");
+            editPrice.setError("*Field Required");
             editPrice.requestFocus();
             return;
         }
@@ -379,19 +366,14 @@ public class CreateEvent extends AppCompatActivity {
             return;
         }
 
-                //Get selected tag from spinner
-                String tag = editTagSpinner.getSelectedItem().toString();
-                if (tag.equals("None")) {
-                    tag = ""; //empty string for no tag
-                }
+        //Get selected tag from spinner
+        String tag = editTagSpinner.getSelectedItem().toString();
+        if (tag.equals("None")) {
+            tag = ""; //empty string for no tag
+        }
 
-                // Build the event object
-                Event saveEvent = new Event(
-                        title, description, startDate, endDate, dateEvent,
-                        maxCapacity, waitingListLimit, price,
-                        geoLocation, poster, eventID, eventLocation, organizerID, tag
-                );
         //Upload image before creating event
+        String finalTag;
         if (imageUri != null) {
             StorageReference storageRef = FirebaseStorage.getInstance()
                     .getReference("event_poster/" + eventID + ".jpg");
@@ -400,63 +382,65 @@ public class CreateEvent extends AppCompatActivity {
             Log.d("createEvent", "Storage path: " + storageRef.getPath());
 
 
-                storageRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
-                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        String poster = uri.toString();
+            finalTag = tag;
+            storageRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+                storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    String poster = uri.toString();
 
-                        // Build the event object
-                        Event saveEvent = new Event(
-                                title, description, startDate, endDate, dateEvent,
-                                maxCapacity, finalWaitingListLimit, price, geoLocation,
-                                poster, eventID, eventLocation, organizerID);
+                    // Build the event object
+                    Event saveEvent = new Event(
+                            title, description, startDate, endDate, dateEvent,
+                            maxCapacity, finalWaitingListLimit, price, geoLocation,
+                            poster, eventID, eventLocation, organizerID, finalTag);
 
-                        // ─────────────────────────────────────────────────────────
-                        // US 02.01.02
-                        // Read the private checkbox and apply to the event.
-                        // If private: clear any QR string so it is never saved.
-                        // If public:  attach the QR code if one was generated.
-                        // ─────────────────────────────────────────────────────────
-                        boolean isPrivate = checkPrivate.isChecked();
-                        saveEvent.setPrivate(isPrivate);
+                    // ─────────────────────────────────────────────────────────
+                    // US 02.01.02
+                    // Read the private checkbox and apply to the event.
+                    // If private: clear any QR string so it is never saved.
+                    // If public:  attach the QR code if one was generated.
+                    // ─────────────────────────────────────────────────────────
+                    boolean isPrivate = checkPrivate.isChecked();
+                    saveEvent.setPrivate(isPrivate);
 
-                        if (isPrivate) {
-                            // Private events must not store a QR code
-                            QRCodeString = null;
-                        } else if (QRCodeString != null) {
-                            saveEvent.setQRCode(QRCodeString);
-                        }
+                    if (isPrivate) {
+                        // Private events must not store a QR code
+                        QRCodeString = null;
+                    } else if (QRCodeString != null) {
+                        saveEvent.setQRCode(QRCodeString);
+                    }
 
-                        // Upload to Firebase
-                        FirebaseManager firebase = new FirebaseManager();
-                        CollectionReference eventsRef = firebase.getDB().collection("events");
-                        firebase.addEvent(saveEvent, eventsRef);
+                    // Upload to Firebase
+                    FirebaseManager firebase = new FirebaseManager();
+                    CollectionReference eventsRef = firebase.getDB().collection("events");
+                    firebase.addEvent(saveEvent, eventsRef);
 
-                        Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();
 
-                        String logMessage = (createdEvent != null)
-                                ? "Event updated: " + saveEvent.getTitle()
-                                : "Event created: " + saveEvent.getTitle();
-                        Log.d("createEvent", logMessage);
+                    String logMessage = (createdEvent != null)
+                            ? "Event updated: " + saveEvent.getTitle()
+                            : "Event created: " + saveEvent.getTitle();
+                    Log.d("createEvent", logMessage);
 
-                        finish();
-
-                    }).addOnFailureListener(e -> {
-                        Toast.makeText(CreateEvent.this, "Failed to get URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.e("createEvent", "getDownloadUrl failed", e);
-                    });
+                    finish();
 
                 }).addOnFailureListener(e -> {
-                    Toast.makeText(CreateEvent.this, "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("createEvent", "upload failed", e);
+                    Toast.makeText(CreateEvent.this, "Failed to get URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("createEvent", "getDownloadUrl failed", e);
                 });
 
-        } else {  //If an image isn't uploaded, use the default image
+            }).addOnFailureListener(e -> {
+                Toast.makeText(CreateEvent.this, "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("createEvent", "upload failed", e);
+            });
+
+        } else {
+            finalTag = null;  //If an image isn't uploaded, use the default image
             String poster = (createdEvent != null) ? createdEvent.getPoster() : "";
 
             Event saveEvent = new Event(
                     title, description, startDate, endDate, dateEvent,
                     maxCapacity, finalWaitingListLimit, price, geoLocation,
-                    poster, eventID, eventLocation, organizerID);
+                    poster, eventID, eventLocation, organizerID, finalTag);
 
             // ─────────────────────────────────────────────────────────
             // US 02.01.02

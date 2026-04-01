@@ -124,9 +124,13 @@ public class OrganizerStartScreen extends AppCompatActivity {
                         String startDate = doc.getString("startDate");
                         String endDate = doc.getString("endDate");
                         String dateEvent = doc.getString("dateEvent");
-                        int maxCapacity = (doc.getLong("maxCapacity")).intValue();
-                        int waitingListLimit = (doc.getLong("waitingListLimit")).intValue();
+
+                        Long capacity = (doc.getLong("maxCapacity"));
+                        int maxCapacity = capacity != null ? capacity.intValue() : 0;
+                        Long limit = (doc.getLong("waitingListLimit"));
+                        int waitingListLimit = limit != null ? limit.intValue() : 0;
                         double price = doc.getDouble("price");
+
                         GeoPoint geoLocation = doc.getGeoPoint("geoLocation"); //geoPoint is a type apparently? seems helpful??
                         String poster = doc.getString("poster");
                         String eventID = doc.getString("eventID");

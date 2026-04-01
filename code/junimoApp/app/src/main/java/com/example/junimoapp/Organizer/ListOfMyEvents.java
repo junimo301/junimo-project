@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide;
 import com.example.junimoapp.models.Event;
 
 import com.example.junimoapp.R;
-import com.example.junimoapp.models.Event;
 
 import java.util.List;
 
