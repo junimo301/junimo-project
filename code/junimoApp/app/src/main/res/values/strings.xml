@@ -118,4 +118,18 @@
     <string name="postal_code">Postal Code</string>
     <string name="event_history">Event History</string>
     <string name="past_events">Past Events</string>
+    <string name="date">Date</string>
+    <string name="no_tag">No Tag</string>
+    <string name="capacity_colon">"Capacity: "</string>
+    <string name="none">None</string>
+    <string name="remove_event">Remove Event</string>
+    <string name="are_you_sure">Are you sure you want to remove</string>
+    <string name="permanent">(Permanent!)</string>
+    <string name="event_removed">Event Removed</string>
+    <string name="failed_to_remove">Failed to remove event.</string>
+    <string name="remove_organizer">Remove Organizer Status</string>
+    <string name="remove_organizer_message">\"\'s Organizer status? This will delete all of their created events as well</string>
+    <string name="remove_profile">Remove Profile</string>
+    <string name="remove_profile_message">"'s profile?</string>
+
 </resources>

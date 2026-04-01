@@ -115,7 +115,7 @@ public class AdminBrowseProfilesActivity extends AppCompatActivity {
                     //log error (debugging purposes)
                     Log.e(TAG, "Failed to load users", e);
                     //notify user that something failed
-                    Toast.makeText(this, "Failed to load users", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, "Failed to load users", Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -127,12 +127,12 @@ public class AdminBrowseProfilesActivity extends AppCompatActivity {
     private void onDeleteUserClicked(AdminUserAdapter.UserItem user) {
         //get user confirmation
         new AlertDialog.Builder(this)
-                .setTitle("Remove Profile")
-                .setMessage("Are you sure you want to remove \"" + user.name + "\"'s profile? (Permanent!)")
+                .setTitle(this.getString(R.string.remove_profile))
+                .setMessage(this.getString(R.string.are_you_sure)+" \"" + user.name + "\""+this.getString(R.string.remove_profile_message)+this.getString(R.string.permanent))
                 //delete the user
-                .setPositiveButton("Remove", (dialog, which) -> deleteUserFromFirestore(user))
+                .setPositiveButton(this.getString(R.string.remove), (dialog, which) -> deleteUserFromFirestore(user))
                 //don't delete (dismiss dialog)
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(this.getString(R.string.cancel), null)
                 .show();
     }
 
@@ -144,7 +144,7 @@ public class AdminBrowseProfilesActivity extends AppCompatActivity {
     private void deleteUserFromFirestore(AdminUserAdapter.UserItem user) {
         db.collection("users").document(user.documentId).delete()
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "Profile removed!", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, "Profile removed!", Toast.LENGTH_SHORT).show();
                     //remove user from the local list too/update adapter
                     int position = userList.indexOf(user);
                     if (position != -1) {
@@ -154,7 +154,7 @@ public class AdminBrowseProfilesActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error deleting user from database", e);
-                    Toast.makeText(this, "Failed to remove profile.", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, "Failed to remove profile.", Toast.LENGTH_SHORT).show();
                 });
     }
 
