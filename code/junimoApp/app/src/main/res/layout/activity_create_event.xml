@@ -328,7 +328,7 @@
                 android:textColor="#E6E6E6"
                 android:textSize="16sp" />
             <Button
-                android:id="@+id/enable_geoLocation"
+                android:id="@+id/enable_geoLocation_button"
                 android:layout_width="120dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="8dp"

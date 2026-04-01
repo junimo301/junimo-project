@@ -47,12 +47,11 @@ import java.util.UUID;
 public class CreateEvent extends AppCompatActivity {
 
     EditText editTitle, editDescription, editStartDate, editEndDate, editDateEvent,
-            editEventLocation, editMaxCapacity, editWaitingList, editPrice,
-            editGeoLocation;
+            editEventLocation, editMaxCapacity, editWaitingList, editPrice;
 
     android.widget.Spinner editTagSpinner;
 
-    Button uploadNewEvent, previewButton, QRCodeButton, cancelButton;
+    Button uploadNewEvent, previewButton, QRCodeButton, cancelButton, enableGeoLocationButton;
     TextView backButton;
 
     // ─────────────────────────────────────────────────────────────────────
@@ -105,24 +104,24 @@ public class CreateEvent extends AppCompatActivity {
         setContentView(R.layout.activity_create_event);
 
         // Wire up all existing form fields
-        editTitle = findViewById(R.id.edit_title);
-        editDescription = findViewById(R.id.edit_description);
-        editStartDate = findViewById(R.id.edit_start_date);
-        editEndDate = findViewById(R.id.edit_end_date);
-        editDateEvent = findViewById(R.id.edit_date);
-        editEventLocation = findViewById(R.id.edit_event_location);
-        editMaxCapacity   = findViewById(R.id.edit_max_capacity);
-        editWaitingList   = findViewById(R.id.edit_waiting_list);
-        editPrice         = findViewById(R.id.edit_price);
-        editGeoLocation   = findViewById(R.id.edit_geo_location);
-        uploadNewEvent    = findViewById(R.id.upload_event_button);
-        QRCodeButton      = findViewById(R.id.QR_code_button);
-        backButton        = findViewById(R.id.backButton);
-        cancelButton      = findViewById(R.id.cancel_button);
-        previewButton     = findViewById(R.id.preview_event_button);
-        editTagSpinner    = findViewById(R.id.edit_tag_spinner);
-        pickImageButton = findViewById(R.id.pick_image_button);
-        eventPoster = findViewById(R.id.event_poster);
+        editTitle               = findViewById(R.id.edit_title);
+        editDescription         = findViewById(R.id.edit_description);
+        editStartDate           = findViewById(R.id.edit_start_date);
+        editEndDate             = findViewById(R.id.edit_end_date);
+        editDateEvent           = findViewById(R.id.edit_date);
+        editEventLocation       = findViewById(R.id.edit_event_location);
+        editMaxCapacity         = findViewById(R.id.edit_max_capacity);
+        editWaitingList         = findViewById(R.id.edit_waiting_list);
+        editPrice               = findViewById(R.id.edit_price);
+        uploadNewEvent          = findViewById(R.id.upload_event_button);
+        QRCodeButton            = findViewById(R.id.QR_code_button);
+        enableGeoLocationButton = findViewById(R.id.enable_geoLocation_button);
+        backButton              = findViewById(R.id.backButton);
+        cancelButton            = findViewById(R.id.cancel_button);
+        previewButton           = findViewById(R.id.preview_event_button);
+        editTagSpinner          = findViewById(R.id.edit_tag_spinner);
+        pickImageButton         = findViewById(R.id.pick_image_button);
+        eventPoster             = findViewById(R.id.event_poster);
         Glide.with(this).load((String)null)
                 .placeholder(R.drawable.bg_event_tile)
                 .into(eventPoster);
@@ -157,7 +156,6 @@ public class CreateEvent extends AppCompatActivity {
                 editMaxCapacity.setText(String.valueOf(createdEvent.getMaxCapacity()));
                 editWaitingList.setText(String.valueOf(createdEvent.getWaitingListLimit()));
                 editPrice.setText(String.valueOf(createdEvent.getPrice()));
-                editGeoLocation.setText(String.valueOf(createdEvent.getGeoLocation()));
                 editEventLocation.setText(createdEvent.getEventLocation());
                 if (createdEvent.getPoster() != null && !createdEvent.getPoster().isEmpty()) {
                     Glide.with(this).load(createdEvent.getPoster())
@@ -232,7 +230,6 @@ public class CreateEvent extends AppCompatActivity {
             String endDate            = editEndDate.getText().toString();
             String waitingListLimit   = editWaitingList.getText().toString();
             String dateEvent          = editDateEvent.getText().toString();
-            String geoLocation_string = editGeoLocation.getText().toString();
             String eventLocation      = editEventLocation.getText().toString();
             String maxCapacity        = editMaxCapacity.getText().toString();
             String price              = editPrice.getText().toString();
@@ -244,7 +241,6 @@ public class CreateEvent extends AppCompatActivity {
             previewEvent.putExtra("endDate", endDate);
             previewEvent.putExtra("waitingListLimit", waitingListLimit);
             previewEvent.putExtra("dateEvent", dateEvent);
-            previewEvent.putExtra("geoLocation_string", geoLocation_string);
             previewEvent.putExtra("eventLocation", eventLocation);
             previewEvent.putExtra("maxCapacity", maxCapacity);
             previewEvent.putExtra("price", price);
@@ -319,7 +315,6 @@ public class CreateEvent extends AppCompatActivity {
             return;
         }
 
-        String geoLocation_string = editGeoLocation.getText().toString();
         GeoPoint geoLocation = new GeoPoint(0, 0);
         /*  //Uncommented since its not implemented yet
         if (geoLocation_string.equals("")) {

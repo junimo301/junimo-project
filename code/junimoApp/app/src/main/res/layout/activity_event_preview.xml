@@ -233,28 +233,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="@string/geo_location"
-                android:textColor="#BFBFBF"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/preview_geo_location"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textColor="#FFFFFF"
-                android:textSize="15sp" />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="6dp"
-                android:background="#8C8C8C" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
                 android:text="Poster"
                 android:textColor="#BFBFBF"
                 android:textSize="13sp" />
