@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,6 +43,7 @@ public class OrganizerStartScreen extends AppCompatActivity {
     //Create and edit event
     Button createEventButton;
     Button viewEntrantsButton;
+    TextView backButton;
     //view my events
     private RecyclerView scrollable;
     private ListOfMyEvents myEvents;
@@ -58,6 +60,12 @@ public class OrganizerStartScreen extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer_start_screen);
+        /** back button*/
+        backButton = findViewById(R.id.backToHomeText);
+        backButton.setOnClickListener(v->{
+            Intent intent = new Intent(OrganizerStartScreen.this,MainActivity.class);
+            startActivity(intent);
+        });
 
         /** create events */
         //----------CREATE EVENTS-------------------

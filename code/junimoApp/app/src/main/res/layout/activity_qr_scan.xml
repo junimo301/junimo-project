@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
-        android:text="Scan Event QR Code"
+        android:text="@string/scan_event_qr_code"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -27,7 +27,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="8dp"
-        android:text="Point your camera at a Junimo event QR code"
+        android:text="@string/point_your_camera_at_a_junimo_event_qr_code"
         android:textColor="#D2D2D2"
         android:textSize="14sp" />
 

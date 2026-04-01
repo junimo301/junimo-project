@@ -20,7 +20,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Event Lottery"
+                android:text="@string/event_lottery"
                 android:textColor="#FFFFFF"
                 android:textSize="28sp"
                 android:textStyle="bold" />
@@ -30,7 +30,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@android:color/transparent"
-                android:contentDescription="Settings"
+                android:contentDescription="@string/settings"
                 android:src="@android:drawable/ic_menu_manage"
                 android:tint="#FFFFFF" />
         </LinearLayout>
@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:text="\u2190  Back to Invites"
+            android:text="@string/back_to_home"
             android:textColor="#FFFFFF"
             android:textSize="18sp" />
 
@@ -70,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Event Name"
+                android:text="@string/event_name"
                 android:textColor="#FFFFFF"
                 android:textSize="42sp"
                 android:textStyle="bold" />
@@ -80,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Organized by [Host]."
+                android:text="@string/organized_by_host"
                 android:textColor="#D9D9D9"
                 android:textSize="18sp" />
 
@@ -88,7 +88,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Description"
+                android:text="@string/description"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -98,7 +98,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Add a description: Develop the ultimate core strength and coordination with Pilates movement..."
+                android:text="@string/add_a_description_develop_the_ultimate_core_strength_and_coordination_with_pilates_movement"
                 android:textColor="#E6E6E6"
                 android:textSize="16sp" />
 
@@ -112,26 +112,47 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="Event Details"
+                android:text="@string/event_details"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/event_date"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/eventDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Event Date\nFeb 28 2026"
+                android:layout_marginTop="0dp"
+                android:text="Feb 28 2026"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/eventLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Location\nEvent location address"
+                android:text="@string/location"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/eventLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:text="@string/event_location_address"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/price"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
 
@@ -139,8 +160,8 @@
                 android:id="@+id/price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Price\n$80"
+                android:layout_marginTop="0dp"
+                android:text="$80"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
 
@@ -154,17 +175,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="Registration Details"
+                android:text="@string/registration_details"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold" />
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/registration_period"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
             <TextView
                 android:id="@+id/registrationDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Registration Details\nJan 31, 2026 - Feb 16, 2026"
+                android:layout_marginTop="0dp"
+                android:text="Jan 31, 2026 - Feb 16, 2026"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/capacity"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
 
@@ -172,8 +206,8 @@
                 android:id="@+id/capacity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Capacity\n20 / 33 Capacity"
+                android:layout_marginTop="0dp"
+                android:text="20 / 33"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
 
@@ -181,7 +215,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Current Status"
+                android:text="@string/current_status"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -191,7 +225,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="11 on waiting list\n5 selected"
+                android:text="11 on waiting list"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
 
@@ -201,7 +235,8 @@
                 android:layout_height="48dp"
                 android:layout_marginTop="14dp"
                 android:backgroundTint="#EAEAEA"
-                android:text="JOIN WAITLIST"
+                android:text="@string/join_waitlist"
+                android:textAllCaps="true"
                 android:textColor="#000000"
                 android:textStyle="bold" />
 
@@ -211,16 +246,10 @@
                 android:layout_height="44dp"
                 android:layout_marginTop="8dp"
                 android:backgroundTint="#1F1F1F"
-                android:text="LEAVE WAITLIST"
+                android:text="@string/leave_waitlist"
+                android:textAllCaps="true"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/acceptButton"
-                android:layout_width="1dp"
-                android:layout_height="1dp"
-                android:text="Join"
-                android:visibility="gone" />
 
             <!-- COMMENTS SECTION -->
 
@@ -234,7 +263,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="Comments"
+                android:text="@string/comments"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -252,7 +281,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:hint="Write a comment..."
+                android:hint="@string/write_a_comment"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#AAAAAA"
                 android:backgroundTint="#FFFFFF" />
@@ -262,7 +291,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
-                android:text="Post Comment"
+                android:text="@string/post_comment"
                 android:textAllCaps="false"
                 android:backgroundTint="#EAEAEA"
                 android:textColor="#000000"

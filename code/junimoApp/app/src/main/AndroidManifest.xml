@@ -38,6 +38,7 @@
         <activity android:name=".EventDetailsActivity"/>
         <activity android:name=".NotificationsActivity" />
         <activity android:name=".EventSearchActivity" />
+        <activity android:name=".EventHistory" />
 
         <!--
             US 01.06.01
