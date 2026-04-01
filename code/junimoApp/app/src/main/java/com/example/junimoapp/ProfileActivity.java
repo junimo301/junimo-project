@@ -1,5 +1,8 @@
 package com.example.junimoapp;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView backButton;
     private Button saveBtn;
     private Button deleteBtn;
+    private Button historyBtn;
     private String deviceId;
     private FirebaseFirestore db;
     private FirebaseManager firebase;
@@ -56,6 +60,8 @@ public class ProfileActivity extends AppCompatActivity {
         saveBtn = findViewById(R.id.saveButton);
         backButton = findViewById(R.id.backToHomeText);
         deleteBtn = findViewById(R.id.deleteButton);
+        historyBtn = findViewById(R.id.eventHistoryButton);
+        historyBtn.setVisibility(INVISIBLE);
 
         if(!newUser){
             user = UserSession.getCurrentUser();
@@ -63,6 +69,11 @@ public class ProfileActivity extends AppCompatActivity {
             Log.d("profile activity",user.getName());
             emailInput.setText(user.getEmail());
             phoneInput.setText(user.getPhone());
+            historyBtn.setVisibility(VISIBLE);
+            historyBtn.setOnClickListener(v->{
+                Intent intent = new Intent(ProfileActivity.this,EventHistory.class);
+                startActivity(intent);
+            });
         }
         else{
             user = new User(deviceId, "", "", "","","","");
@@ -72,7 +83,11 @@ public class ProfileActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(organizer) {
+                if(newUser) {
+                    Intent intent= new Intent(ProfileActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+                else if(organizer) {
                     Intent intent = new Intent(ProfileActivity.this, OrganizerStartScreen.class);
                     startActivity(intent);
                 }
