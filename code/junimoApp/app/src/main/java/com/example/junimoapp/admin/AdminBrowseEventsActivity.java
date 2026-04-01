@@ -82,6 +82,7 @@ public class AdminBrowseEventsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(AdminBrowseEventsActivity.this, AdminHomeActivity.class);
+                startActivity(intent);
             }
         });
         // fetch events from Firestore and populate the list
@@ -144,13 +145,13 @@ public class AdminBrowseEventsActivity extends AppCompatActivity {
      */
     private void onDeleteEventClicked(AdminEventAdapter.EventItem event) {
         new AlertDialog.Builder(this)
-                .setTitle("Remove Event")
+                .setTitle(this.getString(R.string.remove_event))
                 // include the event title in the message so the admin knows exactly what they're deleting
-                .setMessage("Are you sure you want to remove \"" + event.title + "\"? (Permanent!)")
+                .setMessage(this.getString(R.string.are_you_sure) + " \"" + event.title + "\"? "+this.getString(R.string.permanent))
                 // if confirmed, proceed to delete from Firestore
-                .setPositiveButton("Remove", (dialog, which) -> deleteEventFromFirestore(event))
+                .setPositiveButton(this.getString(R.string.remove), (dialog, which) -> deleteEventFromFirestore(event))
                 // if cancelled, dismiss the dialog and do nothing
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(this.getString(R.string.cancel), null)
                 .show();
     }
 
@@ -171,7 +172,7 @@ public class AdminBrowseEventsActivity extends AppCompatActivity {
     private void deleteEventFromFirestore(AdminEventAdapter.EventItem event) {
         db.collection("events").document(event.documentId).delete()
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "Event removed!", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, this.getString(R.string.event_removed), Toast.LENGTH_SHORT).show();
 
                     // find the position of this event in the local list
                     int position = eventList.indexOf(event);
@@ -184,7 +185,7 @@ public class AdminBrowseEventsActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error deleting event from database", e);
-                    Toast.makeText(this, "Failed to remove event.", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, this.getString(R.string.failed_to_remove), Toast.LENGTH_SHORT).show();
                 });
     }
 }
