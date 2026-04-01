@@ -38,6 +38,7 @@ public class EventHistory extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_history_activity);
+        boolean organizer = getIntent().getBooleanExtra("organizer",false);
 
         User currentUser = UserSession.getCurrentUser();
         String deviceID = currentUser.getDeviceId();
@@ -58,6 +59,7 @@ public class EventHistory extends AppCompatActivity {
                 Intent intent = new Intent(EventHistory.this, EventDetailsActivity.class);
                 intent.putExtra("eventId", eventList.get(i).getEventID());
                 intent.putExtra("fromHistory",true);
+                intent.putExtra("organizer",organizer);
                 startActivity(intent);
             }
 
@@ -66,7 +68,7 @@ public class EventHistory extends AppCompatActivity {
         backButton.setOnClickListener(v->{
             Intent intent = new Intent(EventHistory.this,ProfileActivity.class);
             intent.putExtra("new",false);
-            intent.putExtra("organizer",false);
+            intent.putExtra("organizer",organizer);
             startActivity(intent);
         });
 

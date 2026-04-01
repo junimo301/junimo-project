@@ -72,6 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
             historyBtn.setVisibility(VISIBLE);
             historyBtn.setOnClickListener(v->{
                 Intent intent = new Intent(ProfileActivity.this,EventHistory.class);
+                intent.putExtra("organizer",organizer);
                 startActivity(intent);
             });
         }
