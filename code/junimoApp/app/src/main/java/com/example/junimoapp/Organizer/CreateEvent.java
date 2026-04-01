@@ -50,7 +50,6 @@ public class CreateEvent extends AppCompatActivity {
             editEventLocation, editMaxCapacity, editWaitingList, editPrice;
 
     android.widget.Spinner editTagSpinner;
-
     Button uploadNewEvent, previewButton, QRCodeButton, cancelButton, enableGeoLocationButton;
     TextView backButton;
 
@@ -64,6 +63,7 @@ public class CreateEvent extends AppCompatActivity {
     // ─────────────────────────────────────────────────────────────────────
     CheckBox checkPrivate;
 
+    private boolean geoLocation = false;
     private Event createdEvent = null;
     private String QRCodeString = null;
     private String eventID;
@@ -156,14 +156,12 @@ public class CreateEvent extends AppCompatActivity {
                 editMaxCapacity.setText(String.valueOf(createdEvent.getMaxCapacity()));
                 editWaitingList.setText(String.valueOf(createdEvent.getWaitingListLimit()));
                 editPrice.setText(String.valueOf(createdEvent.getPrice()));
-                editEventLocation.setText(createdEvent.getEventLocation());
                 if (createdEvent.getPoster() != null && !createdEvent.getPoster().isEmpty()) {
                     Glide.with(this).load(createdEvent.getPoster())
                             .placeholder(R.drawable.bg_event_tile)
                             .error(R.drawable.bg_event_tile)
                             .into(eventPoster);
                 }
-
                 // US 01.01.05 and 01.01.06: set spinner selection based on existing tag
                 if (createdEvent.getTag() != null && !createdEvent.getTag().isEmpty()) {
                     android.widget.ArrayAdapter<CharSequence> adapter = (android.widget.ArrayAdapter<CharSequence>) editTagSpinner.getAdapter();
@@ -174,14 +172,32 @@ public class CreateEvent extends AppCompatActivity {
                         }
                     }
                 }
-
                 // ─────────────────────────────────────────────────────────
                 // US 02.01.02
                 // Restore the private flag when editing an existing event
                 // ─────────────────────────────────────────────────────────
                 checkPrivate.setChecked(createdEvent.isPrivate());
+
+                //geolocation
+                geoLocation = createdEvent.isGeoLocation();
+                enableGeoLocationButton.setText(geoLocation ? getString(R.string.enabled) : getString(R.string.disabled));
             }
         }
+
+        /**
+         * Enable geo location for the event
+         * */
+        enableGeoLocationButton.setOnClickListener(view -> {
+            geoLocation = !geoLocation;
+            if (geoLocation) {
+                enableGeoLocationButton.setText(getString(R.string.enabled));
+                //DELETE LATER
+                Toast.makeText(this, "Geo Location Enabled", Toast.LENGTH_SHORT).show();
+            } else {
+                enableGeoLocationButton.setText(getString(R.string.disabled));
+                //DELETE LATER
+                Toast.makeText(this, "Geo Location Disabled", Toast.LENGTH_SHORT).show();
+            } });
 
         /**
          * Upload an event poster
@@ -205,9 +221,7 @@ public class CreateEvent extends AppCompatActivity {
                 Toast.makeText(this,
                         "Private events do not use a QR code.",
                         Toast.LENGTH_SHORT).show();
-                return;
-            }
-
+                return; }
             if (QRCodeString == null) {
                 String QREventID = (createdEvent != null)
                         ? createdEvent.getEventID()
@@ -216,8 +230,7 @@ public class CreateEvent extends AppCompatActivity {
                 if (createdEvent != null) createdEvent.setQRCode(QRCodeString);
                 Toast.makeText(this, "QR code generated", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "QR already exists", Toast.LENGTH_SHORT).show();
-            }
+                Toast.makeText(this, "QR already exists", Toast.LENGTH_SHORT).show(); }
         });
 
         /**
@@ -277,12 +290,10 @@ public class CreateEvent extends AppCompatActivity {
                 if (start.after(end)) {
                     editStartDate.setError("Start date must be before end date");
                     editStartDate.requestFocus();
-                    return;
-                }
+                    return; }
             } catch (Exception e) {
                 Toast.makeText(CreateEvent.this, "Invalid date format", Toast.LENGTH_SHORT).show();
-                return;
-            }
+                return;  }
         }
 
         // US 02.03.01 — optional waiting list limit
@@ -293,8 +304,7 @@ public class CreateEvent extends AppCompatActivity {
             if (parsedLimit < 0) {
                 editWaitingList.setError("Waiting list limit must be a positive integer");
                 editWaitingList.requestFocus();
-                return;
-            }
+                return; }
             finalWaitingListLimit = parsedLimit;
         } else {
             finalWaitingListLimit = null;
@@ -315,14 +325,7 @@ public class CreateEvent extends AppCompatActivity {
             return;
         }
 
-        GeoPoint geoLocation = new GeoPoint(0, 0);
-        /*  //Uncommented since its not implemented yet
-        if (geoLocation_string.equals("")) {
-            editGeoLocation.setError("*Field Required*");
-            editGeoLocation.requestFocus();
-            return;
-        }
-         */
+        //GEO LOCATION
 
         String eventLocation = editEventLocation.getText().toString();
         if (eventLocation.equals("")) {

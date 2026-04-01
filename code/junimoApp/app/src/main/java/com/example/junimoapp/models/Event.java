@@ -44,7 +44,7 @@ public class Event {
     private String QRCode = null;
 
     /** the location of the entrants for the event */
-    private GeoPoint geoLocation;
+    private boolean geoLocation;
 
     /** the location of the event */
     private String eventLocation;
@@ -95,7 +95,7 @@ public class Event {
      */
     public Event(String title, String description, String startDate, String endDate,
                  String dateEvent, int maxCapacity, int waitingListLimit, double price,
-                 GeoPoint geoLocation, String poster, String eventID,
+                 boolean geoLocation, String poster, String eventID,
                  String eventLocation, String organizerID, String tag) {
         this.title = title;
         this.description = description;
@@ -141,7 +141,6 @@ public class Event {
     }
 
     // ── Existing getters / setters (unchanged) ────────────────────────────
-
     public String getTag() { return tag; }
 
     public void setTag(String tag) { this.tag = tag; }
@@ -242,12 +241,11 @@ public class Event {
         this.price = price;
     }
 
-    public GeoPoint getGeoLocation() {
-        return geoLocation;
-    }
-
-    public void setGeoLocation(GeoPoint geoLocation) {
+    public void setGeoLocation(boolean geoLocation) {
         this.geoLocation = geoLocation;
+    }
+    public boolean isGeoLocation() {
+        return geoLocation;
     }
 
     public String getEventLocation() {
