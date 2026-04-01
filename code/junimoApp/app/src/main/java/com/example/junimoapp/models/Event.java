@@ -49,8 +49,8 @@ public class Event {
     /** the location of the event */
     private String eventLocation;
 
-    /** the poster/image for the event */
-    private String poster;
+    /** the poster/image for the event saved as a url */
+    private String poster;  //event images
 
     /** list of the user id who are on the waiting list */
     private String waitList;
@@ -72,8 +72,8 @@ public class Event {
     //tag for filtering events: US 01.01.05 and 01.01.06
     private String tag;
 
-    FirebaseManager firebase = new FirebaseManager();
-    FirebaseFirestore db = firebase.getDB();
+    FirebaseManager firebase;
+    FirebaseFirestore db;
 
 
     /**
@@ -110,9 +110,16 @@ public class Event {
         this.poster = poster;
         this.eventID = eventID;
         this.waitList = "";
-        initializeWaitlist();
         this.organizerID = organizerID;
         this.tag = tag;
+
+        try {
+            firebase = new FirebaseManager();
+            db = firebase.getDB();
+            initializeWaitlist();
+        } catch (Exception e) {
+            //unit testing environment, we don't need or want firebase
+        }
     }
 
     // ─────────────────────────────────────────────────────────────────────
@@ -128,7 +135,9 @@ public class Event {
     public void setPrivate(boolean aPrivate) {
         isPrivate = aPrivate;
         // Persist to Firestore so all screens that load events see the flag
-        db.collection("events").document(eventID).update("isPrivate", aPrivate);
+        if (db != null) {
+            db.collection("events").document(eventID).update("isPrivate", aPrivate);
+        }
     }
 
     // ── Existing getters / setters (unchanged) ────────────────────────────
@@ -269,7 +278,9 @@ public class Event {
             return false;
         } else {
             waitList = waitList + accountId + ",";
-            firebase.updateEvent(db.collection("events"), this, "waitlist", waitList);
+            if (db != null) {
+                firebase.updateEvent(db.collection("events"), this, "waitlist", waitList);
+            }
             return true;
         }
     }
@@ -282,7 +293,9 @@ public class Event {
     public boolean removeFromWaitList(String accountId) {
         if (waitList.contains(accountId)) {
             waitList = waitList.replace(accountId + ",", "");
-            firebase.updateEvent(db.collection("events"), this, "waitlist", waitList);
+            if (db != null) {
+                firebase.updateEvent(db.collection("events"), this, "waitlist", waitList);
+            }
             return true;
         } else {
             return false;

@@ -5,15 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.junimoapp.models.Event;
 
 import com.example.junimoapp.R;
-import com.example.junimoapp.models.Event;
 
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
         TextView title;
         TextView description;
         Button editEventButton;
+        ImageView backgroundPoster;
 
         /**
          * initializes the view for each event
@@ -52,6 +54,7 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
             title = itemView.findViewById(R.id.event_title);
             description = itemView.findViewById(R.id.event_description);
             editEventButton = itemView.findViewById(R.id.edit_event_button);
+            backgroundPoster = itemView.findViewById(R.id.background_poster);
         }
     }
 
@@ -83,7 +86,13 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
             editEvent.putExtra("event_ID", event.getEventID());
             view.getContext().startActivity(editEvent);
         });
-
+        if (event.getPoster() != null && !event.getPoster().isEmpty()) {
+            Glide.with(holder.itemView.getContext()).load(event.getPoster())
+                    .centerCrop()
+                    .into(holder.backgroundPoster);
+        } else {
+            holder.backgroundPoster.setImageResource(R.drawable.bg_event_tile);
+        }
     }
 
     /**

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +42,7 @@ import java.util.List;
  * */
 public class OrganizerStartScreen extends AppCompatActivity {
     //Create and edit event
-    Button createEventButton;
+    ImageButton createEventButton;
     Button viewEntrantsButton;
     TextView backButton;
     //view my events
@@ -49,7 +50,6 @@ public class OrganizerStartScreen extends AppCompatActivity {
     private ListOfMyEvents myEvents;
     private List<Event> eventList;
     private FirebaseFirestore db;
-
 
 
     /**
@@ -132,9 +132,14 @@ public class OrganizerStartScreen extends AppCompatActivity {
                         String startDate = doc.getString("startDate");
                         String endDate = doc.getString("endDate");
                         String dateEvent = doc.getString("dateEvent");
-                        int maxCapacity = (doc.getLong("maxCapacity")).intValue();
-                        int waitingListLimit = (doc.getLong("waitingListLimit")).intValue();
-                        double price = doc.getDouble("price");
+
+                        Long capacity = (doc.getLong("maxCapacity"));
+                        int maxCapacity = capacity != null ? capacity.intValue() : 0;
+                        Long limit = (doc.getLong("waitingListLimit"));
+                        int waitingListLimit = limit != null ? limit.intValue() : 0;
+                        Double priceObj = doc.getDouble("price");
+                        double price = priceObj != null ? priceObj : 0.0;
+
                         GeoPoint geoLocation = doc.getGeoPoint("geoLocation"); //geoPoint is a type apparently? seems helpful??
                         String poster = doc.getString("poster");
                         String eventID = doc.getString("eventID");
