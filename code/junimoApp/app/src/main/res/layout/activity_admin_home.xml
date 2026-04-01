@@ -87,7 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Join waiting lists for popular community events through our lottery system"
+            android:text="@string/sys_description"
             android:textColor="#C5C5C5"
             android:textSize="14sp" />
 

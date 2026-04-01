@@ -62,6 +62,12 @@ public class UserHomeActivity extends AppCompatActivity {
     // ─────────────────────────────────────────────────────────────────────
     Switch notifSwitch;
 
+    // ---------------------------------------------------
+    // US 01.01.04 / 01.01.05 / 01.01.06
+    // Button for searching events
+    // ---------------------------------------------------
+    Button searchEventsButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +82,7 @@ public class UserHomeActivity extends AppCompatActivity {
         // New views
         notificationsButton = findViewById(R.id.notificationsButton);
         notifSwitch         = findViewById(R.id.notifSwitch);
+        searchEventsButton = findViewById(R.id.searchEventsButton);
 
         //open notifications page
         invitationsButton.setOnClickListener(v ->
@@ -93,6 +100,14 @@ public class UserHomeActivity extends AppCompatActivity {
         // ─────────────────────────────────────────────────────────────────
         notificationsButton.setOnClickListener(v ->
                 startActivity(new Intent(this, NotificationsActivity.class)));
+
+        // ---------------------------------
+        // US 01.01.04 / 01.01.05 / 01.01.06
+        // Opens Events SearchActivity to allow users to search/filter
+        // ---------------------------------
+        searchEventsButton.setOnClickListener(v ->
+                startActivity(new Intent(this, EventSearchActivity.class)));
+
 
         // ─────────────────────────────────────────────────────────────────
         // US 01.04.03
@@ -136,7 +151,11 @@ public class UserHomeActivity extends AppCompatActivity {
                 intent.putExtra("eventId", eventList.get(i).getEventID());
                 startActivity(intent);
             }
+
         });
+        Button scanQRButton = findViewById(R.id.scanQRButton);
+        scanQRButton.setOnClickListener(v ->
+                startActivity(new Intent(this, QRScanActivity.class)));
     }
 
     private void loadEvents() {
@@ -170,9 +189,12 @@ public class UserHomeActivity extends AppCompatActivity {
                         String eventLocation = doc.getString("eventLocation");
                         String organizerID   = doc.getString("organizerID");
 
+                        String tag           = doc.getString("tag");
+                        if (tag == null) tag = ""; //default to no tag if it's an old event with no tags
+
                         Event event = new Event(title, description, startDate, endDate,
                                 dateEvent, maxCapacity, waitingListLimit, price,
-                                geoLocation, poster, eventID, eventLocation, organizerID);
+                                geoLocation, poster, eventID, eventLocation, organizerID, tag);
                         eventList.add(event);
                         eventListString.add(title);
                         Log.d("user browse activity", eventListString.toString());
