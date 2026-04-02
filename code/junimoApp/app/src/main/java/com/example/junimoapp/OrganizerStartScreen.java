@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.junimoapp.Organizer.MapActivity;
 import com.example.junimoapp.R;
 
 import com.example.junimoapp.Organizer.CreateEvent;
@@ -41,7 +42,7 @@ import java.util.List;
 public class OrganizerStartScreen extends AppCompatActivity {
     //Create and edit event
     ImageButton createEventButton;
-    Button viewEntrantsButton;
+    Button viewEntrantsButton, mapButton;
     TextView backButton;
     ImageButton settingsButton;
     //view my events
@@ -74,7 +75,6 @@ public class OrganizerStartScreen extends AppCompatActivity {
             startActivity(intent);
         });
 
-        /** create events */
         //----------CREATE EVENTS-------------------
         createEventButton = findViewById(R.id.create_event_button);
         createEventButton.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +85,16 @@ public class OrganizerStartScreen extends AppCompatActivity {
             }
         });
 
-        /** View entrants */
+        //----------MAP OF ENTRANTS----------------------------
+        mapButton = findViewById(R.id.map_button);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent map = new Intent(OrganizerStartScreen.this, MapActivity.class);
+                startActivity(map);
+            }
+        });
+
         //----------VIEW ENTRANTS-------------------
         viewEntrantsButton = findViewById(R.id.view_entrants_button);
         viewEntrantsButton.setOnClickListener(new View.OnClickListener() {

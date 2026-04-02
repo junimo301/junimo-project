@@ -1,6 +1,7 @@
 package com.example.junimoapp.Organizer;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,10 +24,14 @@ import com.google.firebase.firestore.CollectionReference;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
 
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.InputStream;
@@ -72,6 +77,19 @@ public class CreateEvent extends AppCompatActivity {
     private ImageView eventPoster;
     private Uri imageUri;
     private Button pickImageButton;
+
+
+    //visual QRcode
+    private Bitmap generateQRCode(String content, int size) {
+        try{
+            BitMatrix matrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, size, size);
+            return BitcodeEncoder.createBitmap(matrix);
+        } catch (Exception e) {
+            Log.e("QR", "Failed to generate QR code", e);
+            return null;
+        }
+    }
+
 
     //pick an image
     private final ActivityResultLauncher<String>
@@ -230,6 +248,25 @@ public class CreateEvent extends AppCompatActivity {
                 Toast.makeText(this, "QR code generated", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "QR already exists", Toast.LENGTH_SHORT).show(); }
+
+            Bitmap QRBitmap = generateQRCode(QRCodeString, 600);
+            if (QRBitmap == null) return;
+
+            View dialogView = getLayoutInflater().inflate(R.layout.pop_up_qr_code, null);
+            ImageView QRImage = dialogView.findViewById(R.id.QR_image);
+            TextView eventTitle = dialogView.findViewById(R.id.event_title);
+
+            QRImage.setImageBitmap(QRBitmap);
+            eventTitle.setText(editTitle.getText().toString());
+
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setView(dialogView)
+                    .create();
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            }
+            dialogView.findViewById(R.id.close_button).setOnClickListener(v -> dialog.dismiss());
+            dialog.show();
         });
 
         /**

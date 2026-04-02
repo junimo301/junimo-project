@@ -54,5 +54,7 @@ dependencies {
     annotationProcessor("com.github.bumptech.glide:compiler:5.0.5")
 
     implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    implementation("org.osmdroid:osmdroid-android:7.2.0")
 }
 
