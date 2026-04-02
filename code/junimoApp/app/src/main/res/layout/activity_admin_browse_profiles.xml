@@ -18,9 +18,8 @@ of users for displaying the user list-->
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
@@ -38,15 +37,6 @@ of users for displaying the user list-->
                 android:textColor="#D2D2D2"
                 android:textSize="18sp" />
         </LinearLayout>
-
-        <ImageButton
-            android:id="@+id/settingsIcon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/settings"
-            android:src="@android:drawable/ic_menu_manage"
-            app:tint="#FFFFFF" />
     </LinearLayout>
 
     <View

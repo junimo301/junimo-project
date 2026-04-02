@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- Admin notification log screen (US 03.08.01) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="https://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    android:orientation="vertical"
     android:padding="16dp">
 
     <LinearLayout
@@ -23,14 +26,14 @@
                 android:text="@string/event_lottery"
                 android:textColor="#FFFFFF"
                 android:textSize="28sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/admin"
                 android:textColor="#D2D2D2"
-                android:textSize="18sp" />
+                android:textSize="18sp"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -52,59 +55,20 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/search_events_label"
+        android:layout_marginTop="16dp"
+        android:text="@string/notification_log_title"
         android:textColor="#FFFFFF"
-        android:textSize="18sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/search_events_label"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/searchEventsInput"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:hint=""
-            android:textColor="#FFFFFF"
-            android:textColorHint="#A9A9A9" />
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:contentDescription="@string/search"
-            android:src="@android:drawable/ic_menu_search"
-            android:tint="#D9D9D9" />
-    </LinearLayout>
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="12dp"
         android:background="#797979" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:text="@string/organize_alphabetical_order_u2191"
-        android:textColor="#D9D9D9"
-        android:textSize="15sp" />
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/adminEventsRecyclerView"
+        android:id="@+id/adminNotifRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
