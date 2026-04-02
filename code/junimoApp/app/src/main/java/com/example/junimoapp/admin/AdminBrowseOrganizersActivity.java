@@ -86,7 +86,7 @@ public class AdminBrowseOrganizersActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Failed to load organizers", e);
-                    Toast.makeText(this, "Failed to load organizers", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, "Failed to load organizers", Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -147,10 +147,10 @@ public class AdminBrowseOrganizersActivity extends AppCompatActivity {
      */
     private void onDemoteOrganizerClicked(AdminOrganizerAdapter.OrganizerItem organizer) {
         new AlertDialog.Builder(this)
-                .setTitle("Remove Organizer Status")
-                .setMessage("Are you sure you want to remove \"" + organizer.name + "\"'s Organizer status? This will delete all of their created events as well. (Permanent!)")
-                .setPositiveButton("Confirm", (dialog, which) -> demoteOrganizer(organizer))
-                .setNegativeButton("Cancel", null)
+                .setTitle(this.getString(R.string.remove_organizer))
+                .setMessage(this.getString(R.string.are_you_sure)+" \"" + organizer.name + this.getString(R.string.remove_organizer_message)+ this.getString(R.string.permanent))
+                .setPositiveButton(this.getString(R.string.remove), (dialog, which) -> demoteOrganizer(organizer))
+                .setNegativeButton(this.getString(R.string.cancel), null)
                 .show();
     }
 
@@ -170,7 +170,7 @@ public class AdminBrowseOrganizersActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Failed to remove organizer status", e);
-                    Toast.makeText(this, "Failed to remove organizer status.", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, "Failed to remove organizer status.", Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -189,7 +189,7 @@ public class AdminBrowseOrganizersActivity extends AppCompatActivity {
                         batch.delete(doc.getReference());
                     }
                     batch.commit().addOnSuccessListener(aVoid -> {
-                        Toast.makeText(this, "Organizer status removed and events deleted.", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(this, "Organizer status removed and events deleted.", Toast.LENGTH_LONG).show();
                         //remove user from local list, update UI
                         int position = organizerList.indexOf(organizer);
                         if (position != -1) {
@@ -198,12 +198,12 @@ public class AdminBrowseOrganizersActivity extends AppCompatActivity {
                         }
                     }).addOnFailureListener(e -> {
                         Log.e(TAG, "Failed to delete organizer's events", e);
-                        Toast.makeText(this, "Removed organizer status, but failed to delete their events.", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(this, "Removed organizer status, but failed to delete their events.", Toast.LENGTH_LONG).show();
                     });
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Failed to find organizer's events to delete", e);
-                    Toast.makeText(this, "Removed organizer status, but could not find their events to delete.", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(this, "Removed organizer status, but could not find their events to delete.", Toast.LENGTH_LONG).show();
                 });
     }
 

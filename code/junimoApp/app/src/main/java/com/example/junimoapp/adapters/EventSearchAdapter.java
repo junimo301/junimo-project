@@ -64,18 +64,18 @@ public class EventSearchAdapter extends ArrayAdapter<Event> {
 
         //populate TextViews with Event's data
         titleText.setText(currentEvent.getTitle());
-        dateText.setText("Date: " + currentEvent.getDateEvent());
+        dateText.setText(context.getString(R.string.date) + currentEvent.getDateEvent());
 
         //Display tag if it exists, otherwise "No Tag"
         String tag = currentEvent.getTag();
-        if (tag != null && !tag.isEmpty() && !tag.equals("None")) {
+        if (tag != null && !tag.isEmpty() && !tag.equals(context.getString(R.string.none))) {
             tagText.setText(tag);
         } else {
-            tagText.setText("No Tag");
+            tagText.setText(R.string.no_tag);
         }
 
         //Display event max capacity
-        capacityText.setText("Capacity: " + currentEvent.getMaxCapacity());
+        capacityText.setText(context.getString(R.string.capacity_colon) + currentEvent.getMaxCapacity());
 
         return convertView;
     }

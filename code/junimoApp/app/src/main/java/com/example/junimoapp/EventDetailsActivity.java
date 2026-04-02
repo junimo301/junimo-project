@@ -108,6 +108,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         //eventId should be passed from previous activity
         eventId = getIntent().getStringExtra("eventId");
         boolean fromHistory = getIntent().getBooleanExtra("fromHistory",false);
+        boolean organizer = getIntent().getBooleanExtra("organizer",false);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         db.collection("events").document(eventId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -174,7 +175,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         capacity = findViewById(R.id.capacity);
         countOnList = findViewById(R.id.countOnList);
 
-        backButton.setOnClickListener(v -> back(fromHistory));
+        backButton.setOnClickListener(v -> back(fromHistory,organizer));
         joinWaitlistButton.setOnClickListener(v -> JoinWaitlist(selectedEvent,user));
         declineButton.setOnClickListener(v -> LeaveWaitlist(selectedEvent,user));
 
@@ -231,9 +232,10 @@ public class EventDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void back(boolean fromHistory) {
+    private void back(boolean fromHistory,boolean organizer) {
         if(fromHistory) {
             Intent intent = new Intent(EventDetailsActivity.this, EventHistory.class);
+            intent.putExtra("organizer",organizer);
             startActivity(intent);
         } else {
             Intent intent = new Intent(EventDetailsActivity.this, UserHomeActivity.class);

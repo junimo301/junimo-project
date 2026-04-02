@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -37,7 +38,7 @@ public class UserHomeActivity extends AppCompatActivity {
     // Existing fields — unchanged
     ListView eventsList;
     Button invitationsButton;
-    Button profileButton;
+    ImageButton profileButton;
     Button guidelinesButton;
     TextView backButton;
     private ArrayAdapter<String> adapter;
@@ -75,7 +76,7 @@ public class UserHomeActivity extends AppCompatActivity {
 
         // Existing view wiring — unchanged
         invitationsButton = findViewById(R.id.invitationsButton);
-        profileButton     = findViewById(R.id.profileButton);
+        profileButton     = findViewById(R.id.settingsButton);
         guidelinesButton  = findViewById(R.id.guidelinesButton);
         eventListView     = findViewById(R.id.eventListView);
 

@@ -43,6 +43,7 @@ public class OrganizerStartScreen extends AppCompatActivity {
     ImageButton createEventButton;
     Button viewEntrantsButton;
     TextView backButton;
+    ImageButton settingsButton;
     //view my events
     private RecyclerView scrollable;
     private ListOfMyEvents myEvents;
@@ -58,6 +59,14 @@ public class OrganizerStartScreen extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer_start_screen);
+        /** settings button */
+        settingsButton = findViewById(R.id.settingsButton);
+        settingsButton.setOnClickListener(v->{
+            Intent intent = new Intent(OrganizerStartScreen.this, ProfileActivity.class);
+            intent.putExtra("new", false);
+            intent.putExtra("organizer",true);
+            startActivity(intent);
+        });
         /** back button*/
         backButton = findViewById(R.id.backToHomeText);
         backButton.setOnClickListener(v->{
