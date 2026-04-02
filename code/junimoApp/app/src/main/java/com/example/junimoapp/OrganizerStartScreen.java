@@ -7,8 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +20,7 @@ import com.example.junimoapp.Organizer.CreateEvent;
 import com.example.junimoapp.Organizer.EventData;
 import com.example.junimoapp.Organizer.ListOfMyEvents;
 import com.example.junimoapp.Organizer.SelectAnEvent;
+import com.example.junimoapp.Organizer.notifications;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
@@ -42,15 +41,15 @@ import java.util.List;
  * */
 public class OrganizerStartScreen extends AppCompatActivity {
     //Create and edit event
-    ImageButton createEventButton;
+    Button createEventButton;
     Button viewEntrantsButton;
-    TextView backButton;
-    ImageButton settingsButton;
+    Button notificationsButton;
     //view my events
     private RecyclerView scrollable;
     private ListOfMyEvents myEvents;
     private List<Event> eventList;
     private FirebaseFirestore db;
+
 
 
     /**
@@ -61,20 +60,6 @@ public class OrganizerStartScreen extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer_start_screen);
-        /** settings button */
-        settingsButton = findViewById(R.id.settingsButton);
-        settingsButton.setOnClickListener(v->{
-            Intent intent = new Intent(OrganizerStartScreen.this, ProfileActivity.class);
-            intent.putExtra("new", false);
-            intent.putExtra("organizer",true);
-            startActivity(intent);
-        });
-        /** back button*/
-        backButton = findViewById(R.id.backToHomeText);
-        backButton.setOnClickListener(v->{
-            Intent intent = new Intent(OrganizerStartScreen.this,MainActivity.class);
-            startActivity(intent);
-        });
 
         /** create events */
         //----------CREATE EVENTS-------------------
@@ -84,6 +69,15 @@ public class OrganizerStartScreen extends AppCompatActivity {
             public void onClick(View v) {
                 Intent createNewEvent = new Intent(OrganizerStartScreen.this, CreateEvent.class);
                 startActivity(createNewEvent);
+            }
+        });
+
+        notificationsButton = findViewById(R.id.notifications_button);
+        notificationsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent viewNotifications = new Intent(OrganizerStartScreen.this, notifications.class);
+                startActivity(viewNotifications);
             }
         });
 
@@ -141,14 +135,9 @@ public class OrganizerStartScreen extends AppCompatActivity {
                         String startDate = doc.getString("startDate");
                         String endDate = doc.getString("endDate");
                         String dateEvent = doc.getString("dateEvent");
-
-                        Long capacity = (doc.getLong("maxCapacity"));
-                        int maxCapacity = capacity != null ? capacity.intValue() : 0;
-                        Long limit = (doc.getLong("waitingListLimit"));
-                        int waitingListLimit = limit != null ? limit.intValue() : 0;
-                        Double priceObj = doc.getDouble("price");
-                        double price = priceObj != null ? priceObj : 0.0;
-
+                        int maxCapacity = (doc.getLong("maxCapacity")).intValue();
+                        int waitingListLimit = (doc.getLong("waitingListLimit")).intValue();
+                        double price = doc.getDouble("price");
                         GeoPoint geoLocation = doc.getGeoPoint("geoLocation"); //geoPoint is a type apparently? seems helpful??
                         String poster = doc.getString("poster");
                         String eventID = doc.getString("eventID");
