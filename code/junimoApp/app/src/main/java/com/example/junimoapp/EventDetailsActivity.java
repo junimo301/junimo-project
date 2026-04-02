@@ -125,7 +125,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                     int maxCapacity = (doc.getLong("maxCapacity")).intValue();
                     int waitingListLimit = (doc.getLong("waitingListLimit")).intValue();
                     double price = doc.getDouble("price");
-                    boolean geoLocation = doc.getBoolean("geoLocation"); //geoPoint is a type apparently? seems helpful??
+                    boolean geoLocation = doc.getBoolean("geoLocation");
                     String poster = doc.getString("poster");
                     String eventID = doc.getString("eventID");
                     String eventLocation = doc.getString("eventLocation");

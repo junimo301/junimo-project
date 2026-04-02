@@ -2,7 +2,6 @@ package com.example.junimoapp;
 
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
-import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +27,7 @@ public class QRandPrivateinviteUnitTest {
         testEvent = new Event(
                 "Private Gala", "desc", "", "", "2025-09-01",
                 30, 15, 25.0,
-                new GeoPoint(0, 0), "", "private-event-id",
+                true, "", "private-event-id",
                 "Venue", "organizer-id", ""
         );
         testUser = new User(

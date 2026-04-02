@@ -2,7 +2,6 @@ package com.example.junimoapp;
 
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
-import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +33,7 @@ public class NotificationUnitTest {
         testEvent = new Event(
                 "Notif Event", "desc", "", "", "2025-06-01",
                 100, 50, 0.0,
-                new GeoPoint(0, 0), "", "notif-event-id",
+                false, "", "notif-event-id",
                 "Location", "organizer-id", ""
         );
     }

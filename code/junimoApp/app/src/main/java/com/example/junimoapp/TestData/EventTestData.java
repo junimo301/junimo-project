@@ -2,7 +2,6 @@
 package com.example.junimoapp.TestData;
 
 import com.example.junimoapp.models.Event;
-import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;

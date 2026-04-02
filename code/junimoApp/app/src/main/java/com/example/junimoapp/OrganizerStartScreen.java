@@ -147,7 +147,7 @@ public class OrganizerStartScreen extends AppCompatActivity {
                         Double priceObj = doc.getDouble("price");
                         double price = priceObj != null ? priceObj : 0.0;
 
-                        boolean geoLocation = doc.getBoolean("geoLocation"); //geoPoint is a type apparently? seems helpful??
+                        boolean geoLocation = doc.getBoolean("geoLocation");
                         String poster = doc.getString("poster");
                         String eventID = doc.getString("eventID");
                         String eventLocation = doc.getString("eventLocation");

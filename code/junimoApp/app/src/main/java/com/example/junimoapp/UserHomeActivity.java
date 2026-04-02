@@ -21,7 +21,6 @@ import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 
