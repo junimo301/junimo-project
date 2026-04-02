@@ -42,15 +42,11 @@
 
     </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#8C8C8C"
-            android:layout_marginBottom="6dp"/>
-
         <ImageView
+            android:layout_marginTop="5dp"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:id="@+id/QR_image" />
+            android:id="@+id/QR_image"
+            android:contentDescription="@string/generate_qr_code" />
 
 </LinearLayout>
