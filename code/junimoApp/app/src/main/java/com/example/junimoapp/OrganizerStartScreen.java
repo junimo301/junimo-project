@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,7 +42,7 @@ import java.util.List;
  * */
 public class OrganizerStartScreen extends AppCompatActivity {
     //Create and edit event
-    Button createEventButton;
+    ImageButton createEventButton;
     Button viewEntrantsButton;
     Button notificationsButton;
     //view my events
