@@ -35,7 +35,7 @@ public class NotificationUnitTest {
                 "Notif Event", "desc", "", "", "2025-06-01",
                 100, 50, 0.0,
                 new GeoPoint(0, 0), "", "notif-event-id",
-                "Location", "organizer-id"
+                "Location", "organizer-id", ""
         );
     }
 

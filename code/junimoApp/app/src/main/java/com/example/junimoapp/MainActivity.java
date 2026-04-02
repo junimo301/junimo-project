@@ -1,5 +1,8 @@
 package com.example.junimoapp;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,13 +42,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     String deviceId;
-    private FirebaseFirestore db;
-    private CollectionReference eventsRef;
-    private CollectionReference usersRef;
-    private ArrayList<Event> eventArrayList;
-    private ArrayAdapter<Event> eventArrayAdapter;
-    private ArrayList<User> userArrayList;
-    private ArrayAdapter<User> userArrayAdapter;
     private FirebaseManager firebase = new FirebaseManager();
 
     @Override
@@ -59,54 +55,75 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+        //prevent button from flashing in and out
+        Button adminButton = findViewById(R.id.admin_button);
+        adminButton.setVisibility(INVISIBLE);
+        Button organizerButton = findViewById(R.id.organizer_button);
+        organizerButton.setVisibility(INVISIBLE);
         //get device id
         deviceId = DeviceUtils.getDeviceId(this);
 
-        Button userButton = findViewById(R.id.user_button);
-        userButton.setOnClickListener(v -> {
-            //get device id
-            deviceId = DeviceUtils.getDeviceId(this);
-            ArrayList<User> allUsers = new ArrayList<>();
-            usersRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        boolean check = false;
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Log.d("Firestore", document.getId() + " => " + document.getData());
-                            String docDeviceId = document.getString("deviceId");
-                            String name = document.getString("name");
-                            String email = document.getString("email");
-                            String phone = document.getString("phone");
-                            String organizedEvents = document.getString("organizedEvents");
-                            String invitedEvents = document.getString("invitedEvents");
-                            String enrolledEvents = document.getString("enrolledEvents");
+        usersRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    boolean check = false;
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d("Firestore", document.getId() + " => " + document.getData());
+                        String docDeviceId = document.getString("deviceId");
+                        String name = document.getString("name");
+                        String email = document.getString("email");
+                        String phone = document.getString("phone");
+                        String organizedEvents = document.getString("organizedEvents");
+                        String invitedEvents = document.getString("invitedEvents");
+                        String enrolledEvents = document.getString("enrolledEvents");
+                        Boolean admin = document.getBoolean("admin");
+                        Boolean organizer = document.getBoolean("organizer");
 
-                            if (docDeviceId.equals(deviceId)) {
-                                User currentUser = new User(docDeviceId, name, email, phone,organizedEvents,invitedEvents,enrolledEvents);
-                                UserSession.setCurrentUser(currentUser);
-                                currentUser.initializeEvents();
-                                check = true;
-                                break;
+                        if (docDeviceId.equals(deviceId)) {
+                            User currentUser = new User(docDeviceId, name, email, phone, organizedEvents, invitedEvents, enrolledEvents);
+                            UserSession.setCurrentUser(currentUser);
+                            currentUser.initializeEvents();
+                            currentUser.setOrganizer(organizer);
+                            currentUser.setAdmin(admin);
+
+                            //Organizer button
+                            Button organizerButton = findViewById(R.id.organizer_button);
+                            if(currentUser.isOrganizer()){
+                                organizerButton.setVisibility(VISIBLE);
+
+                                organizerButton.setOnClickListener(v -> {
+                                    Intent intent = new Intent(MainActivity.this, OrganizerStartScreen.class);
+                                    startActivity(intent);
+                                });
                             }
-                        }
-                        if (!check) {
-                            //send to login page if device id is not in users
-                            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                            intent.putExtra("new",true);
-                            intent.putExtra("organizer",false);
-                            startActivity(intent);
-                        } else {
-                            //send to user activity if user exists
-                            Intent intent = new Intent(MainActivity.this, UserHomeActivity.class);
-                            startActivity(intent);
+                            //Admin button
+                            Button adminButton = findViewById(R.id.admin_button);
 
+                            if(currentUser.isAdmin()) {
+                                adminButton.setVisibility(VISIBLE);
+
+                                adminButton.setOnClickListener(v -> {
+                                    Intent intent = new Intent(MainActivity.this, AdminHomeActivity.class);
+                                    startActivity(intent);
+                                });
+                            }
+
+                            check = true;
+                            break;
                         }
-                    } else {
-                        Log.d("Firestore", "Error getting documents: ", task.getException());
                     }
+                    if (!check) {
+                        //send to login page if device id is not in users
+                        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                        intent.putExtra("new", true);
+                        intent.putExtra("organizer", false);
+                        startActivity(intent);
+                    }
+                } else {
+                    Log.d("Firestore", "Error getting documents: ", task.getException());
                 }
-            });
+            }
         });
 
 
@@ -116,60 +133,15 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        Button organizerButton = findViewById(R.id.organizer_button);
 
-        organizerButton.setOnClickListener(v -> {
-            //get device id
-            deviceId = DeviceUtils.getDeviceId(this);
-            usersRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        boolean check = false;
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Log.d("Firestore", document.getId() + " => " + document.getData());
-                            String docDeviceId = document.getString("deviceId");
-                            String name = document.getString("name");
-                            String email = document.getString("email");
-                            String phone = document.getString("phone");
-                            String organizedEvents = document.getString("organizedEvents");
-                            String invitedEvents = document.getString("invitedEvents");
-                            String enrolledEvents = document.getString("enrolledEvents");
-
-                            if (docDeviceId.equals(deviceId)) {
-                                User currentUser = new User(docDeviceId, name, email, phone,organizedEvents,invitedEvents,enrolledEvents);
-                                UserSession.setCurrentUser(currentUser);
-                                currentUser.initializeEvents();
-                                check = true;
-                                break;
-                            }
-                        }
-                        if (!check) {
-                            //send to login page if device id is not in users
-                            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                            intent.putExtra("new",true);
-                            intent.putExtra("organizer",true);
-                            startActivity(intent);
-                        } else {
-                            //send to organizer activity if user exists
-                            Intent intent = new Intent(MainActivity.this, OrganizerStartScreen.class);
-                            startActivity(intent);
-
-                        }
-                    } else {
-                        Log.d("Firestore", "Error getting documents: ", task.getException());
-                    }
-                }
-            });
-        });
-
-
-        //Admin button
-        Button adminButton = findViewById(R.id.admin_button);
-        adminButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, AdminHomeActivity.class);
+        //User button
+        Button userButton = findViewById(R.id.user_button);
+        userButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, UserHomeActivity.class);
             startActivity(intent);
         });
+
+
 
     }
 

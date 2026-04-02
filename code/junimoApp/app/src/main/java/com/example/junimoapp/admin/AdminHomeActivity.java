@@ -3,9 +3,11 @@ package com.example.junimoapp.admin;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.junimoapp.MainActivity;
 import com.example.junimoapp.R;
 
 /**
@@ -29,6 +31,7 @@ public class AdminHomeActivity extends AppCompatActivity {
         Button browseEventsButton = findViewById(R.id.adminBrowseEventsButton);
         Button browseProfilesButton = findViewById(R.id.adminBrowseProfilesButton);
         Button browseOrganizersButton = findViewById(R.id.adminBrowseOrganizersButton);
+        TextView backButton = findViewById(R.id.backToHomeText);
 
         //navigation for the event browsing button (click listener)
         browseEventsButton.setOnClickListener(v -> startActivity(new Intent(this, AdminBrowseEventsActivity.class)));
@@ -39,5 +42,9 @@ public class AdminHomeActivity extends AppCompatActivity {
         //navigation for the organizers browsing button (click listener)
         browseOrganizersButton.setOnClickListener(v -> startActivity(new Intent(this, AdminBrowseOrganizersActivity.class)));
 
+        backButton.setOnClickListener(v->{
+            Intent intent = new Intent(AdminHomeActivity.this, MainActivity.class);
+            startActivity(intent);
+        });
     }
 }

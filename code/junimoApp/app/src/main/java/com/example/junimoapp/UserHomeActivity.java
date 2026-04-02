@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -14,7 +15,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.junimoapp.Organizer.notifications;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
@@ -38,8 +38,9 @@ public class UserHomeActivity extends AppCompatActivity {
     // Existing fields — unchanged
     ListView eventsList;
     Button invitationsButton;
-    Button profileButton;
+    ImageButton profileButton;
     Button guidelinesButton;
+    TextView backButton;
     private ArrayAdapter<String> adapter;
     private ArrayList<Event> eventList;
     private ArrayList<String> eventListString;
@@ -75,7 +76,7 @@ public class UserHomeActivity extends AppCompatActivity {
 
         // Existing view wiring — unchanged
         invitationsButton = findViewById(R.id.invitationsButton);
-        profileButton     = findViewById(R.id.profileButton);
+        profileButton     = findViewById(R.id.settingsButton);
         guidelinesButton  = findViewById(R.id.guidelinesButton);
         eventListView     = findViewById(R.id.eventListView);
 
@@ -84,15 +85,27 @@ public class UserHomeActivity extends AppCompatActivity {
         notifSwitch         = findViewById(R.id.notifSwitch);
         searchEventsButton = findViewById(R.id.searchEventsButton);
 
-        //open notifications page
-        invitationsButton.setOnClickListener(v ->
-                startActivity(new Intent(this, notifications.class)));
+        //back button
+        backButton = findViewById(R.id.backToHomeText);
 
-        //open profile page
-        profileButton.setOnClickListener(v ->
-                startActivity(new Intent(this, ProfileActivity.class)));
+        // Existing navigation — unchanged, added back intent extras
+        invitationsButton.setOnClickListener(v ->
+                startActivity(new Intent(this, InvitationsActivity.class)));
+        profileButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra("new", false);
+            intent.putExtra("organizer",false);
+            startActivity(intent);
+        });
+
         guidelinesButton.setOnClickListener(v ->
                 startActivity(new Intent(this, GuidelinesActivity.class)));
+
+        //back button
+        backButton.setOnClickListener(v->{
+            Intent intent = new Intent(UserHomeActivity.this,MainActivity.class);
+            startActivity(intent);
+        });
 
         // ─────────────────────────────────────────────────────────────────
         // US 01.04.01 / 01.04.02 / 01.05.06
@@ -149,6 +162,7 @@ public class UserHomeActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(UserHomeActivity.this, EventDetailsActivity.class);
                 intent.putExtra("eventId", eventList.get(i).getEventID());
+                intent.putExtra("fromHistory",false);
                 startActivity(intent);
             }
 

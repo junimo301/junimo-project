@@ -22,7 +22,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Event Lottery"
+                android:text="@string/event_lottery"
                 android:textColor="#FFFFFF"
                 android:textSize="28sp"
                 android:textStyle="bold" />
@@ -30,27 +30,40 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Organizer Home"
+                android:text="@string/organizer_home"
                 android:textColor="#D2D2D2"
                 android:textSize="16sp" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/create_event_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:backgroundTint="#FFFFFF"
-            android:text="+"
-            android:textColor="#000000"
-            android:textSize="22sp" />
+
         <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@android:color/transparent"
-            android:contentDescription="Settings"
+            android:contentDescription="Add"
+            android:src="@android:drawable/ic_input_add"
+            app:tint="#FFFFFF"
+            android:id="@+id/create_event_button"/>
+
+        <ImageButton
+            android:id="@+id/settingsButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/settings"
             android:src="@android:drawable/ic_menu_manage"
             app:tint="#FFFFFF" />
+
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/backToHomeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="@string/back_to_home"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
 
     <View
         android:layout_width="match_parent"
@@ -64,7 +77,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="14dp"
         android:backgroundTint="#373737"
-        android:text="Notifications"
+        android:text="@string/notifications"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         android:textStyle="bold" />
@@ -74,7 +87,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="#373737"
-        android:text="Map"
+        android:text="@string/map"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         android:textStyle="bold" />
@@ -85,7 +98,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="#373737"
-        android:text="Entrants"
+        android:text="@string/entrants"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         android:textStyle="bold" />
@@ -94,7 +107,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
-        android:text="My Events"
+        android:text="@string/my_events"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         android:textStyle="bold" />
