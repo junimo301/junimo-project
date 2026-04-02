@@ -1,11 +1,9 @@
 package com.example.junimoapp;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -13,14 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.junimoapp.R;
 //import com.example.junimoapp.TestData.EventTestData;
 
 import com.example.junimoapp.Organizer.CreateEvent;
 import com.example.junimoapp.Organizer.EventData;
 import com.example.junimoapp.Organizer.ListOfMyEvents;
 import com.example.junimoapp.Organizer.SelectAnEvent;
-import com.example.junimoapp.Organizer.notifications;
+import com.example.junimoapp.Organizer.organizerNotifications;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
@@ -76,7 +73,7 @@ public class OrganizerStartScreen extends AppCompatActivity {
         notificationsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent viewNotifications = new Intent(OrganizerStartScreen.this, notifications.class);
+                Intent viewNotifications = new Intent(OrganizerStartScreen.this, organizerNotifications.class);
                 startActivity(viewNotifications);
             }
         });

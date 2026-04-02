@@ -34,7 +34,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class notifications extends AppCompatActivity {
+
+/**
+ * Ayema
+ * */
+public class organizerNotifications extends AppCompatActivity {
 
     private static final String EVENTS_COLLECTION = "events";
     private static final String USERS_COLLECTION = "users";
@@ -53,11 +57,11 @@ public class notifications extends AppCompatActivity {
     private Button cancelButton;
     private TextView backButton;
 
-    public notifications() {
+    public organizerNotifications() {
         this(null);
     }
 
-    notifications(FirebaseFirestore db) {
+    organizerNotifications(FirebaseFirestore db) {
         this.db = db;
     }
 
@@ -86,7 +90,7 @@ public class notifications extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notifications);
+        setContentView(R.layout.activity_notifications_organizer);
 
         eventGroup = findViewById(R.id.notifications_event_group);
         notificationTypeSpinner = findViewById(R.id.notifications_type_spinner);
@@ -209,13 +213,13 @@ public class notifications extends AppCompatActivity {
             @Override
             public void onSuccess(int notifiedCount) {
                 sendButton.setEnabled(true);
-                Toast.makeText(notifications.this, "Notification sent to " + notifiedCount + " users", Toast.LENGTH_SHORT).show();
+                Toast.makeText(organizerNotifications.this, "Notification sent to " + notifiedCount + " users", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(@NonNull Exception exception) {
                 sendButton.setEnabled(true);
-                Toast.makeText(notifications.this, "Failed to send notification", Toast.LENGTH_SHORT).show();
+                Toast.makeText(organizerNotifications.this, "Failed to send notification", Toast.LENGTH_SHORT).show();
             }
         });
     }

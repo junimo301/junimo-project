@@ -112,7 +112,7 @@ public class UserHomeActivity extends AppCompatActivity {
         // Opens NotificationsActivity to show the user their notifications.
         // ─────────────────────────────────────────────────────────────────
         notificationsButton.setOnClickListener(v ->
-                startActivity(new Intent(this, NotificationsActivity.class)));
+                startActivity(new Intent(this, UserNotificationsActivity.class)));
 
         // ---------------------------------
         // US 01.01.04 / 01.01.05 / 01.01.06
