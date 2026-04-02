@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -27,6 +28,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -83,7 +85,8 @@ public class CreateEvent extends AppCompatActivity {
     private Bitmap generateQRCode(String content, int size) {
         try{
             BitMatrix matrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, size, size);
-            return BitcodeEncoder.createBitmap(matrix);
+            BarcodeEncoder encoder = new BarcodeEncoder();
+            return encoder.createBitmap(matrix);
         } catch (Exception e) {
             Log.e("QR", "Failed to generate QR code", e);
             return null;
@@ -264,6 +267,8 @@ public class CreateEvent extends AppCompatActivity {
                     .create();
             if (dialog.getWindow() != null) {
                 dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                dialog.getWindow().setDimAmount(0.5f);
             }
             dialogView.findViewById(R.id.close_button).setOnClickListener(v -> dialog.dismiss());
             dialog.show();
