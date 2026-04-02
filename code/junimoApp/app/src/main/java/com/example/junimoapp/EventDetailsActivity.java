@@ -1,6 +1,8 @@
 package com.example.junimoapp;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -8,7 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,6 +22,8 @@ import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
 import com.example.junimoapp.utils.DeviceUtils;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -74,6 +81,20 @@ public class EventDetailsActivity extends AppCompatActivity {
     ArrayList<String> commentsList = new ArrayList<>();
     ArrayList<String> commentIds = new ArrayList<>();
 
+    //for locations
+    private FusedLocationProviderClient fusedLocationClient;
+
+    //geo location
+    private final ActivityResultLauncher<String> requestLocationPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    saveUserLocation(selectedEvent,UserSession.getCurrentUser());
+                } else {
+                    //DELETE LATER
+                    Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
+                }
+            });
+
     boolean isOrganizer = false;
 
     @Override
@@ -87,6 +108,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         //eventId should be passed from previous activity
         eventId = getIntent().getStringExtra("eventId");
         boolean fromHistory = getIntent().getBooleanExtra("fromHistory",false);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         db.collection("events").document(eventId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -102,14 +124,16 @@ public class EventDetailsActivity extends AppCompatActivity {
                     int maxCapacity = (doc.getLong("maxCapacity")).intValue();
                     int waitingListLimit = (doc.getLong("waitingListLimit")).intValue();
                     double price = doc.getDouble("price");
-                    GeoPoint geoLocation = doc.getGeoPoint("geoLocation"); //geoPoint is a type apparently? seems helpful??
+                    boolean geoLocation = doc.getBoolean("geoLocation"); //geoPoint is a type apparently? seems helpful??
                     String poster = doc.getString("poster");
                     String eventID = doc.getString("eventID");
                     String eventLocation = doc.getString("eventLocation");
                     String organizerID = doc.getString("organizerID");
                     String tag = doc.getString("tag");
 
-                    selectedEvent=(new Event(title, description, startDate, endDate, dateEvent, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation, organizerID, tag));
+                    selectedEvent=(new Event(title, description, startDate, endDate, dateEvent,
+                            maxCapacity, waitingListLimit, price, geoLocation, poster, eventID,
+                            eventLocation, organizerID, tag));
                     Log.d("Firebase",selectedEvent.toString());
 
                     isOrganizer = deviceId.equals(organizerID);
@@ -217,6 +241,38 @@ public class EventDetailsActivity extends AppCompatActivity {
         }
 
     }
+
+    private void requestUserLocation(Event event, User user) {
+        if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestLocationPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION);
+            return;
+        }
+        saveUserLocation(event,user);
+    }
+
+    @SuppressLint("MissingPermission")
+    private void saveUserLocation(Event event,User user) {
+        fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+            if (location != null) {
+                GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+                db.collection("events")
+                        .document(eventId)
+                        .collection("userLocations")
+                        .document(deviceId)
+                        .set(new HashMap<String, Object>() {{
+                            put("geoLocation", geoPoint);
+                            put("timestamp", new Date());
+                        }})
+                        .addOnSuccessListener(aVoid -> {
+                            Log.d("geoLocation", "User location saved: " + deviceId); })
+                        .addOnFailureListener(e -> {
+                            Log.e("geoLocation", "Error saving user location", e);
+                        });
+
+            } else { Log.w("geoLocation", "Location is null"); }
+        });
+    }
+
     private void JoinWaitlist(Event event, User user){
         Log.d("button click","waitlist button clicked");
         String startDate= event.getStartDate();
@@ -228,6 +284,9 @@ public class EventDetailsActivity extends AppCompatActivity {
                 String updatedList = event.getWaitList();
                 FirebaseManager.updateEvent(db.collection("events"), event, "waitList", updatedList);
                 joinWaitlistButton.setText("ADDED TO WAITLIST");
+
+                //GeoLocation
+                if (event.isGeoLocation()) { requestUserLocation(event, user); }
             }
             else {
                 joinWaitlistButton.setText("REGISTRATION PERIOD NOT OPEN");
@@ -239,7 +298,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
     //check if registration period is open
     public boolean registrationPeriod(String startDate, String endDate) {
-        if (startDate != "" && startDate != null) {
+        if (startDate != null && !startDate.equals("")) {
             try {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 Date start = format.parse(startDate);

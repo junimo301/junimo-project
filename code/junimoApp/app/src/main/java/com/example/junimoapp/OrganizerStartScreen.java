@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.junimoapp.R;
-//import com.example.junimoapp.TestData.EventTestData;
 
 import com.example.junimoapp.Organizer.CreateEvent;
 import com.example.junimoapp.Organizer.EventData;
@@ -28,7 +27,6 @@ import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -140,7 +138,7 @@ public class OrganizerStartScreen extends AppCompatActivity {
                         Double priceObj = doc.getDouble("price");
                         double price = priceObj != null ? priceObj : 0.0;
 
-                        GeoPoint geoLocation = doc.getGeoPoint("geoLocation"); //geoPoint is a type apparently? seems helpful??
+                        boolean geoLocation = doc.getBoolean("geoLocation"); //geoPoint is a type apparently? seems helpful??
                         String poster = doc.getString("poster");
                         String eventID = doc.getString("eventID");
                         String eventLocation = doc.getString("eventLocation");

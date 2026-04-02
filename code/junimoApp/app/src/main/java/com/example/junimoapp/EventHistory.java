@@ -100,7 +100,7 @@ public class EventHistory extends AppCompatActivity {
                                             int maxCapacity = (doc.getLong("maxCapacity")).intValue();
                                             int waitingListLimit = (doc.getLong("waitingListLimit")).intValue();
                                             double price = doc.getDouble("price");
-                                            GeoPoint geoLocation = doc.getGeoPoint("geoLocation");
+                                            boolean geoLocation = doc.getBoolean("geoLocation");
                                             String poster = doc.getString("poster");
                                             String eventID = doc.getString("eventID");
                                             String eventLocation = doc.getString("eventLocation");
