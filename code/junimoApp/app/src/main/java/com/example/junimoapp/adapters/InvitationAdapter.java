@@ -14,6 +14,10 @@ import com.example.junimoapp.models.InvitationItem;
 
 import java.util.List;
 
+/**
+ * adapter for the invitation stuff
+ */
+
 public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.ViewHolder> {
 
     public interface InvitationListener {
