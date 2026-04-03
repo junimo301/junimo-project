@@ -131,7 +131,6 @@ public class User {
             firebase.updateUser(db.collection("users"), this, "invitedEvents", invitedEvents);
         }
         invitedEventsList.remove(event);
-        leaveEventWaitList(event);
         cancelledEvents = cancelledEvents + event.getEventID() + ",";
     }
 

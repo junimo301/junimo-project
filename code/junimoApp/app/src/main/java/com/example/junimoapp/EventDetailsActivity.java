@@ -64,7 +64,6 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     TextView backButton;
     Button joinWaitlistButton;
-    Button acceptButton;
     Button declineButton;
 
     EditText commentInput;
@@ -87,6 +86,8 @@ public class EventDetailsActivity extends AppCompatActivity {
         deviceId = user.getDeviceId();
         //eventId should be passed from previous activity
         eventId = getIntent().getStringExtra("eventId");
+        boolean fromHistory = getIntent().getBooleanExtra("fromHistory",false);
+        boolean organizer = getIntent().getBooleanExtra("organizer",false);
 
         db.collection("events").document(eventId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -138,7 +139,6 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         backButton = findViewById(R.id.backToInvitesText);
         joinWaitlistButton = findViewById(R.id.joinWaitlistButton);
-        acceptButton = findViewById(R.id.acceptButton);
         declineButton = findViewById(R.id.declineButton);
 
         eventTitle = findViewById(R.id.eventTitle);
@@ -151,7 +151,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         capacity = findViewById(R.id.capacity);
         countOnList = findViewById(R.id.countOnList);
 
-        backButton.setOnClickListener(v -> back());
+        backButton.setOnClickListener(v -> back(fromHistory,organizer));
         joinWaitlistButton.setOnClickListener(v -> JoinWaitlist(selectedEvent,user));
         declineButton.setOnClickListener(v -> LeaveWaitlist(selectedEvent,user));
 
@@ -208,9 +208,16 @@ public class EventDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void back() {
-        Intent intent = new Intent(EventDetailsActivity.this, UserHomeActivity.class);
-        startActivity(intent);
+    private void back(boolean fromHistory,boolean organizer) {
+        if(fromHistory) {
+            Intent intent = new Intent(EventDetailsActivity.this, EventHistory.class);
+            intent.putExtra("organizer",organizer);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(EventDetailsActivity.this, UserHomeActivity.class);
+            startActivity(intent);
+        }
+
     }
     private void JoinWaitlist(Event event, User user){
         Log.d("button click","waitlist button clicked");

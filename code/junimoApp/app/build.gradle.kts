@@ -41,6 +41,7 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore:26.1.1")
     implementation(libs.recyclerview)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.storage)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -50,5 +51,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.9.0"))
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
+    implementation("com.github.bumptech.glide:glide:5.0.5")
+    annotationProcessor("com.github.bumptech.glide:compiler:5.0.5")
 }
 

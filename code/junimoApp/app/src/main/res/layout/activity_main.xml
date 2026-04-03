@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Event Lottery"
+            android:text="@string/event_lottery"
             android:textColor="#FFFFFF"
             android:textSize="28sp"
             android:textStyle="bold" />
@@ -38,16 +38,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="14dp"
-            android:text="Choose your role"
+            android:text="@string/choose_your_role"
             android:textColor="#BDBDBD"
             android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/user_button"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:backgroundTint="#EAEAEA"
+            android:text="@string/user"
+            android:textAllCaps="false"
+            android:textColor="#000000"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/organizer_button"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_marginTop="12dp"
             android:backgroundTint="#EAEAEA"
-            android:text="Organizer"
+            android:text="@string/organizer"
             android:textAllCaps="false"
             android:textColor="#000000"
             android:textStyle="bold" />
@@ -58,20 +69,11 @@
             android:layout_height="48dp"
             android:layout_marginTop="12dp"
             android:backgroundTint="#EAEAEA"
-            android:text="Admin"
+            android:text="@string/admin"
             android:textAllCaps="false"
             android:textColor="#000000"
             android:textStyle="bold" />
-        <Button
-            android:id="@+id/user_button"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="12dp"
-            android:backgroundTint="#EAEAEA"
-            android:text="User"
-            android:textAllCaps="false"
-            android:textColor="#000000"
-            android:textStyle="bold" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

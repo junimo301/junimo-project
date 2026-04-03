@@ -23,7 +23,7 @@
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold"
-            tools:text="Event Name" />
+            android:text="@string/event_name" />
 
         <TextView
             android:id="@+id/adminEventDescription"
@@ -32,7 +32,7 @@
             android:layout_marginTop="4dp"
             android:textColor="#D8D8D8"
             android:textSize="13sp"
-            tools:text="Event description" />
+            android:text="@string/description" />
     </LinearLayout>
 
     <Button
@@ -44,7 +44,7 @@
         android:minWidth="0dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        android:text="Remove"
+        android:text="@string/remove"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         android:textSize="11sp" />

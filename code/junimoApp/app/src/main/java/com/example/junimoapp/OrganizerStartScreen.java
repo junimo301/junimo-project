@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import com.example.junimoapp.Organizer.CreateEvent;
 import com.example.junimoapp.Organizer.EventData;
 import com.example.junimoapp.Organizer.ListOfMyEvents;
 import com.example.junimoapp.Organizer.SelectAnEvent;
+import com.example.junimoapp.Organizer.notifications;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
@@ -40,8 +42,9 @@ import java.util.List;
  * */
 public class OrganizerStartScreen extends AppCompatActivity {
     //Create and edit event
-    Button createEventButton;
+    ImageButton createEventButton;
     Button viewEntrantsButton;
+    Button notificationsButton;
     //view my events
     private RecyclerView scrollable;
     private ListOfMyEvents myEvents;
@@ -67,6 +70,15 @@ public class OrganizerStartScreen extends AppCompatActivity {
             public void onClick(View v) {
                 Intent createNewEvent = new Intent(OrganizerStartScreen.this, CreateEvent.class);
                 startActivity(createNewEvent);
+            }
+        });
+
+        notificationsButton = findViewById(R.id.notifications_button);
+        notificationsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent viewNotifications = new Intent(OrganizerStartScreen.this, notifications.class);
+                startActivity(viewNotifications);
             }
         });
 

@@ -38,6 +38,7 @@
         <activity android:name=".EventDetailsActivity"/>
         <activity android:name=".NotificationsActivity" />
         <activity android:name=".EventSearchActivity" />
+        <activity android:name=".EventHistory" />
 
         <!--
             US 01.06.01
@@ -51,6 +52,7 @@
         <activity android:name=".Organizer.CreateEvent" />
         <activity android:name=".Organizer.EventPreview" />
         <activity android:name=".Organizer.Entrants" />
+        <activity android:name=".Organizer.notifications" />
         <activity android:name=".Organizer.SelectAnEvent" />
 
         <!--
