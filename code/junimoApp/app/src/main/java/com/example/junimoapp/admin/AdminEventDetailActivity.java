@@ -108,7 +108,7 @@ public class AdminEventDetailActivity extends AppCompatActivity {
                     descriptionText.setText(getString(R.string.description_label) + description);
                     locationText.setText(getString(R.string.location_label) + location);
                     dateText.setText(getString(R.string.date_label) + date);
-                    organizerIdText.setText(getString(R.string.organizer_id_label) + organizerIdText);
+                    organizerIdText.setText(getString(R.string.organizer_id_label) + organizerId);
                 })
                 .addOnFailureListener(e -> Log.e(TAG, "failed to load event details", e));
     }

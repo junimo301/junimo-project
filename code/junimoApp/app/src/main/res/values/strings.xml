@@ -46,6 +46,7 @@
     <string name="permanent">This action is permanent.</string>
     <string name="remove">Remove</string>
     <string name="cancel">Cancel</string>
+    <string name="remove_status">Remove Status</string>
 
 
     <!-- Search/filter stuff -->
