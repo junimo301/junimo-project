@@ -2,8 +2,11 @@ package com.example.junimoapp.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
@@ -16,6 +19,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * AdminBrowseEventsActivity allows an administrator to view all events stored
@@ -41,12 +45,15 @@ public class AdminBrowseEventsActivity extends AppCompatActivity {
     //back button view
     private TextView backButton;
 
+    //search input field
+    private EditText searchInput;
+
     // the adapter that connects our eventList data to the RecyclerView rows
     private AdminEventAdapter adapter;
 
     // the in-memory list of events fetched from Firestore
     // the adapter reads from this list to draw each row
-    private List<AdminEventAdapter.EventItem> eventList;
+    private List<AdminEventAdapter.EventItem> allEvents;
 
     // Firestore database reference - obtained via FirebaseManager singleton
     private FirebaseFirestore db;
@@ -70,21 +77,35 @@ public class AdminBrowseEventsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // initialize the empty list that will hold events once loaded
-        eventList = new ArrayList<>();
+        allEvents = new ArrayList<>();
 
         // create the adapter, passing the list and a method reference for delete clicks
         // "this::onDeleteEventClicked" means: when delete is clicked, call our method below
-        adapter = new AdminEventAdapter(eventList, this::onDeleteEventClicked);
+        adapter = new AdminEventAdapter(new ArrayList<>(), this::onDeleteEventClicked, this::onEventRowClicked);
         recyclerView.setAdapter(adapter);
 
         backButton=findViewById(R.id.backToHomeText);
-        backButton.setOnClickListener(new View.OnClickListener() {
+        backButton.setOnClickListener(v -> finish());
+
+        searchInput = findViewById(R.id.searchEventsInput);
+        searchInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(AdminBrowseEventsActivity.this, AdminHomeActivity.class);
-                startActivity(intent);
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //intentionally empty
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //refilter when text changes
+                filterEvents(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //intentionally empty
             }
         });
+
         // fetch events from Firestore and populate the list
         loadEvents();
     }
@@ -103,7 +124,7 @@ public class AdminBrowseEventsActivity extends AppCompatActivity {
         db.collection("events").get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     // clear any old data before loading fresh results
-                    eventList.clear();
+                    allEvents.clear();
 
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         // the document ID is the unique key for this event in Firestore
@@ -121,18 +142,37 @@ public class AdminBrowseEventsActivity extends AppCompatActivity {
                         if (description == null || description.isEmpty()) description = "(no description)";
 
                         // add a new EventItem to our list with the data from this document
-                        eventList.add(new AdminEventAdapter.EventItem(docId, title, description));
+                        allEvents.add(new AdminEventAdapter.EventItem(docId, title, description));
                     }
 
-                    // tell the adapter the data has changed so it redraws the list
-                    adapter.notifyDataSetChanged();
+                    //apply any search texted already typed
+                    filterEvents(searchInput.getText().toString());
                 })
                 .addOnFailureListener(e -> {
                     // log the error for debugging in Logcat
                     Log.e(TAG, "Failed to load events", e);
                     // show a brief message to the admin so they know something went wrong
-                    Toast.makeText(this, "Failed to load events", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "Failed to load events", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    /**
+     * Filters allEvents by title and refreshes adapter
+     * @param query text to search for
+     */
+    private void filterEvents(String query) {
+        List<AdminEventAdapter.EventItem> filtered;
+
+        if (query.isEmpty()) {
+            //no filter, show everything
+            filtered = new ArrayList<>(allEvents);
+        } else {
+            String lower = query.toLowerCase();
+            filtered = allEvents.stream()
+                    .filter(e -> e.title.toLowerCase().contains(lower))
+                    .collect(Collectors.toList());
+        }
+        adapter.filterList(filtered);
     }
 
     /**
@@ -145,15 +185,29 @@ public class AdminBrowseEventsActivity extends AppCompatActivity {
      */
     private void onDeleteEventClicked(AdminEventAdapter.EventItem event) {
         new AlertDialog.Builder(this)
-                .setTitle(this.getString(R.string.remove_event))
+                .setTitle(getString(R.string.remove_event))
                 // include the event title in the message so the admin knows exactly what they're deleting
-                .setMessage(this.getString(R.string.are_you_sure) + " \"" + event.title + "\"? "+this.getString(R.string.permanent))
+                .setMessage(getString(R.string.are_you_sure) + " \"" + event.title + "\"? " + getString(R.string.permanent))
                 // if confirmed, proceed to delete from Firestore
-                .setPositiveButton(this.getString(R.string.remove), (dialog, which) -> deleteEventFromFirestore(event))
+                .setPositiveButton(getString(R.string.remove), (dialog, which) -> deleteEventFromFirestore(event))
                 // if cancelled, dismiss the dialog and do nothing
-                .setNegativeButton(this.getString(R.string.cancel), null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show();
     }
+
+    /**
+     * Called when admin taps an event (not on delete)
+     * launches AdminEventDetailsActivity
+     * @param event the EventItem tapped
+     */
+    private void onEventRowClicked(AdminEventAdapter.EventItem event) {
+        //pass firestore doc ID
+        Intent intent = new Intent(this, AdminEventDetailActivity.class);
+        intent.putExtra("eventId", event.documentId);
+        startActivity(intent);
+    }
+
+
 
     /**
      * Permanently deletes the given event document from the Firestore "events" collection.
@@ -172,20 +226,14 @@ public class AdminBrowseEventsActivity extends AppCompatActivity {
     private void deleteEventFromFirestore(AdminEventAdapter.EventItem event) {
         db.collection("events").document(event.documentId).delete()
                 .addOnSuccessListener(aVoid -> {
-//                    Toast.makeText(this, this.getString(R.string.event_removed), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "Event removed!", Toast.LENGTH_SHORT).show();
 
-                    // find the position of this event in the local list
-                    int position = eventList.indexOf(event);
-                    if (position != -1) {
-                        // remove from the local list so the UI stays in sync with Firestore
-                        eventList.remove(position);
-                        // tell the adapter exactly which row was removed for a smooth animation
-                        adapter.notifyItemRemoved(position);
-                    }
+                    allEvents.remove(event);
+                    filterEvents(searchInput.getText().toString());
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error deleting event from database", e);
-//                    Toast.makeText(this, this.getString(R.string.failed_to_remove), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "Failed to remove event.", Toast.LENGTH_SHORT).show();
                 });
     }
 }

@@ -11,6 +11,43 @@
     <string name="browse_remove_organizers">Browse/Remove Organizers</string>
     <string name="browse_images">Browse Images</string>
     <string name="browse_events">Browse Events</string>
+    <string name="search_events_label">Search Events</string>
+
+    <!-- Admin notification stuff -->
+    <string name="browse_notification_log">Browse Notification Log</string>
+    <string name="notification_log_title">Notification Log</string>
+    <string name="sent_by">Sent by: </string>
+    <string name="no_notifications_found">No notifications found.</string>
+
+    <!-- Admin event detail screen (comments) -->
+    <string name="event_details_admin">Event Details</string>
+    <string name="comments_header">Comments</string>
+    <string name="remove_comment">Remove Comment</string>
+    <string name="remove_comment_confirm">Are you sure you want to remove this comment? </string>
+    <string name="no_comments">No comments on this event.</string>
+    <string name="organizer_id_label">Organizer ID: </string>
+    <string name="description_label">Description: </string>
+    <string name="location_label">Location: </string>
+    <string name="date_label">Date: </string>
+
+    <!-- Admin image browsing screen -->
+    <string name="browse_images_title"> Browse Images</string>
+    <string name="remove_image">Remove Image</string>
+    <string name="remove_image_confirm">Are you sure you want to remove this image? </string>
+    <string name="no_image">No image</string>
+    <string name="image_type_poster">Poster</string>
+    <string name="image_type_profile">Profile Photo</string>
+    <string name="event_title_label">Event: </string>
+    <string name="user_label">User: </string>
+
+    <!-- These ones might be unnecessary -->
+    <string name="remove_event">Remove Event</string>
+    <string name="are_you_sure">Are you sure you want to delete?</string>
+    <string name="permanent">This action is permanent.</string>
+    <string name="remove">Remove</string>
+    <string name="cancel">Cancel</string>
+    <string name="remove_status">Remove Status</string>
+
 
     <!-- Search/filter stuff -->
     <string name="search_events">Search Events</string>
