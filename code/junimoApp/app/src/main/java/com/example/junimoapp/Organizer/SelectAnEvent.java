@@ -19,6 +19,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.List;
 
 /**
+ * Allows organizer to select an event to view the map of entrants
+ *  - organizer clicks and event
+ *  - opens map screen to view entrants locations
+ * Organizer can go back to the organizer start screen
+ *
  * Allows organizer to select an event to view the entrant information for
  *  - organizer clicks and event
  *  - opens Entrants screen to view entrant names
@@ -35,7 +40,6 @@ public class SelectAnEvent extends AppCompatActivity {
     List<Event> myEvents = EventData.getEvents();
     TextView backButton;
 
-
     /**
      * called when activty is first created
      * displays the events that the organizer has created
@@ -51,6 +55,8 @@ public class SelectAnEvent extends AppCompatActivity {
         db = FirebaseManager.getDB();
         eventList = findViewById(R.id.event_list);
 
+        String goTo = getIntent().getStringExtra("go to");
+
         //buttons
         for (Event events: myEvents) {
             Button eventbutton = new Button(this);
@@ -58,14 +64,21 @@ public class SelectAnEvent extends AppCompatActivity {
             LinearLayout.LayoutParams parameters = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             eventbutton.setLayoutParams(parameters);
 
-            //go to entrant info
             eventbutton.setOnClickListener(v -> {
-                Intent viewEntrants = new Intent(SelectAnEvent.this, Entrants.class);
-                viewEntrants.putExtra("event_ID", events.getEventID());
-                startActivity(viewEntrants);
+                //go to entrant info
+                if ("entrants".equals(goTo)) {
+                    Intent viewEntrants = new Intent(SelectAnEvent.this, Entrants.class);
+                    viewEntrants.putExtra("eventID", events.getEventID());
+                    startActivity(viewEntrants);
+
+                //got to map info
+                } else if ("map".equals(goTo)) {
+                    Intent viewMap = new Intent(SelectAnEvent.this, MapActivity.class);
+                    viewMap.putExtra("eventID", events.getEventID());
+                    startActivity(viewMap);
+                }
             });
             eventList.addView(eventbutton);
-
         }
 
         // returns to select organizer home screen
@@ -74,7 +87,5 @@ public class SelectAnEvent extends AppCompatActivity {
                 Intent intent = new Intent(SelectAnEvent.this, OrganizerStartScreen.class);
                 startActivity(intent);            }
         });
-
     }
-
 }
