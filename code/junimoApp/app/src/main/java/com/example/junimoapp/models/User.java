@@ -10,7 +10,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 
@@ -252,7 +251,7 @@ public class User {
                                             int maxCapacity      = (doc.getLong("maxCapacity")).intValue();
                                             int waitingListLimit = (doc.getLong("waitingListLimit")).intValue();
                                             double price         = doc.getDouble("price");
-                                            GeoPoint geoLocation = doc.getGeoPoint("geoLocation");
+                                            boolean geoLocation = doc.getBoolean("geoLocation");
                                             String poster        = doc.getString("poster");
                                             String eventID2      = doc.getString("eventID");
                                             String eventLocation = doc.getString("eventLocation");

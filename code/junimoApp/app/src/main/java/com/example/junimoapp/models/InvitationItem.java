@@ -6,18 +6,18 @@ package com.example.junimoapp.models;
  */
 public class InvitationItem {
 
-    String eventId;
+    String eventID;
     String title;
 
     /**
      * constructs a new InvitationItem with the given event ID and title
-     * @param eventId
+     * @param eventID
      * the unique identifier of the event
      * @param title
      * the title of the event
      */
-    public InvitationItem(String eventId, String title) {
-        this.eventId = eventId;
+    public InvitationItem(String eventID, String title) {
+        this.eventID = eventID;
         this.title = title;
     }
     /**
@@ -26,7 +26,7 @@ public class InvitationItem {
      * the event ID
      */
     public String getEventId() {
-        return eventId;
+        return eventID;
     }
     /**
      * returns the title of the event for this invitation

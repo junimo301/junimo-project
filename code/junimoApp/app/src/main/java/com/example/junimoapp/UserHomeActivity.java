@@ -22,7 +22,6 @@ import com.example.junimoapp.models.UserSession;
 import com.example.junimoapp.utils.BaseActivity;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 
@@ -162,7 +161,7 @@ public class UserHomeActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(UserHomeActivity.this, EventDetailsActivity.class);
-                intent.putExtra("eventId", eventList.get(i).getEventID());
+                intent.putExtra("eventID", eventList.get(i).getEventID());
                 intent.putExtra("fromHistory",false);
                 startActivity(intent);
             }
@@ -198,7 +197,7 @@ public class UserHomeActivity extends BaseActivity {
                         int maxCapacity      = (doc.getLong("maxCapacity")).intValue();
                         int waitingListLimit = (doc.getLong("waitingListLimit")).intValue();
                         double price         = doc.getDouble("price");
-                        GeoPoint geoLocation = doc.getGeoPoint("geoLocation");
+                        boolean geoLocation  = doc.getBoolean("geoLocation");
                         String poster        = doc.getString("poster");
                         String eventID       = doc.getString("eventID");
                         String eventLocation = doc.getString("eventLocation");

@@ -11,6 +11,12 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 
+    <!-- Add permissions for geoLocation -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -44,7 +50,7 @@
         <!--
             US 01.06.01
             QRScanActivity opens the camera, scans Junimo event QR codes,
-            and navigates to EventDetailsActivity with the parsed eventId.
+            and navigates to EventDetailsActivity with the parsed eventID.
         -->
         <activity android:name=".QRScanActivity" />
 
@@ -55,6 +61,8 @@
         <activity android:name=".Organizer.Entrants" />
         <activity android:name=".Organizer.organizerNotifications" />
         <activity android:name=".Organizer.SelectAnEvent" />
+        <activity android:name=".Organizer.MapActivity" />
+        <activity android:name=".Organizer.ZoomedInMap" />
 
         <!--
             US 02.01.03
@@ -72,6 +80,9 @@
         <activity android:name=".admin.AdminEventDetailActivity" />
         <activity android:name=".admin.AdminNotificationLogActivity" />
 
-    </application>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCvVPJpS8VJyGkvA34rFfOR-s3BZXcs8oQ"/>
 
+    </application>
 </manifest>
