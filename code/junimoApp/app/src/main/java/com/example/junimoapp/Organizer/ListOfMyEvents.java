@@ -1,20 +1,28 @@
 package com.example.junimoapp.Organizer;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.junimoapp.models.Event;
 
 import com.example.junimoapp.R;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.util.List;
 
@@ -42,7 +50,7 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
     public static class EventViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView description;
-        Button editEventButton;
+        Button editEventButton, viewQRCodeButton;
         ImageView backgroundPoster;
 
         /**
@@ -54,6 +62,7 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
             title = itemView.findViewById(R.id.event_title);
             description = itemView.findViewById(R.id.event_description);
             editEventButton = itemView.findViewById(R.id.edit_event_button);
+            viewQRCodeButton = itemView.findViewById(R.id.view_QR_code_button);
             backgroundPoster = itemView.findViewById(R.id.background_poster);
         }
     }
@@ -93,6 +102,35 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
         } else {
             holder.backgroundPoster.setImageResource(R.drawable.bg_event_tile);
         }
+        holder.viewQRCodeButton.setOnClickListener(view -> {
+            String QRCodeString = event.getQRCode();
+            if (QRCodeString == null || QRCodeString.equals("")) {
+                Toast.makeText(view.getContext(), "No QR code available", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            try {
+                BitMatrix matrix = new MultiFormatWriter().encode(QRCodeString, BarcodeFormat.QR_CODE, 600, 600);
+                BarcodeEncoder encoder = new BarcodeEncoder();
+                Bitmap QRBitmap = encoder.createBitmap(matrix);
+
+                View dialogView = LayoutInflater.from(view.getContext()).inflate(R.layout.pop_up_qr_code, null);
+                dialogView.<ImageView>findViewById(R.id.QR_image).setImageBitmap(QRBitmap);;
+                dialogView.<TextView>findViewById(R.id.event_title).setText(event.getTitle());
+
+                AlertDialog dialog = new AlertDialog.Builder(view.getContext())
+                        .setView(dialogView)
+                        .create();
+                if (dialog.getWindow() != null) {
+                    dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                    dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                    dialog.getWindow().setDimAmount(0.5f);
+                }
+                dialogView.findViewById(R.id.close_button).setOnClickListener(v -> dialog.dismiss());
+                dialog.show();
+            } catch (Exception ignored) {}
+        });
+
     }
 
     /**

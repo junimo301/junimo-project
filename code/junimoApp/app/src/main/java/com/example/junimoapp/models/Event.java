@@ -36,7 +36,7 @@ public class Event {
     private double price;
 
     /** unique QR code for the event */
-    private String QRCode = null;
+    private String qrcode;
 
     /** the location of the entrants for the event */
     private boolean geoLocation = false;
@@ -70,6 +70,7 @@ public class Event {
     FirebaseManager firebase;
     FirebaseFirestore db;
 
+    public Event() {}
 
     /**
      * Constructs event with all the details
@@ -157,11 +158,11 @@ public class Event {
     }
 
     public String getQRCode() {
-        return QRCode;
+        return qrcode;
     }
 
     public void setQRCode(String QRCode) {
-        this.QRCode = QRCode;
+        this.qrcode = QRCode;
     }
 
     public String getDateEvent() {

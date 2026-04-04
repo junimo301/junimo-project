@@ -186,6 +186,9 @@ public class CreateEvent extends AppCompatActivity {
         if (eventID != null) {
             createdEvent = EventData.searchEventID(eventID);
             if (createdEvent != null) {
+                if (createdEvent.getQRCode() != null) {
+                    QRCodeString = createdEvent.getQRCode();
+            }
                 editTitle.setText(createdEvent.getTitle());
                 editDescription.setText(createdEvent.getDescription());
                 editStartDate.setText(createdEvent.getStartDate());
@@ -257,13 +260,17 @@ public class CreateEvent extends AppCompatActivity {
                 Toast.makeText(this,
                         "Private events do not use a QR code.",
                         Toast.LENGTH_SHORT).show();
-                return; }
+                return;
+            }
             if (QRCodeString == null) {
-                String QREventID = (createdEvent != null)
-                        ? createdEvent.getEventID()
-                        : UUID.randomUUID().toString();
-                QRCodeString = "junimo://event?id=" + QREventID;
-                if (createdEvent != null) createdEvent.setQRCode(QRCodeString);
+                if (eventID == null) {
+                    eventID = UUID.randomUUID().toString();
+                }
+                QRCodeString = "https://junimo.app/event?id=" + eventID;
+                QRCodeButton.setBackgroundTintList(null);
+                if (createdEvent != null) {
+                    createdEvent.setQRCode(QRCodeString);
+                }
                 Toast.makeText(this, "QR code generated", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "QR already exists", Toast.LENGTH_SHORT).show(); }
@@ -340,7 +347,7 @@ public class CreateEvent extends AppCompatActivity {
                 calendar.set(Integer.parseInt(separators[0]),
                         Integer.parseInt(separators[1]) - 1,
                         Integer.parseInt(separators[2]));
-            } catch (Exception ignore) {
+            } catch (Exception ignored) {
             }
         }
         new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
@@ -354,6 +361,19 @@ public class CreateEvent extends AppCompatActivity {
      * US 02.01.02: saves isPrivate flag and skips QR code for private events.
      */
     private void uploadNewEvent() {
+        // Event ID
+        if (createdEvent != null) {
+            eventID = createdEvent.getEventID();
+        } else if (eventID == null) {
+            eventID = UUID.randomUUID().toString();
+        }
+
+        if (QRCodeString == null && !checkPrivate.isChecked()) {
+            QRCodeButton.setText("Must Generate QR Code");
+            Toast.makeText(this, "Must Generate QR Code", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         //optional fields
         String description = editDescription.getText().toString();
         String startDate = editStartDate.getText().toString();
@@ -403,8 +423,6 @@ public class CreateEvent extends AppCompatActivity {
             return;
         }
 
-        //GEO LOCATION
-
         String eventLocation = editEventLocation.getText().toString();
         if (eventLocation.equals("")) {
             editEventLocation.setError("*Field Required");
@@ -425,13 +443,6 @@ public class CreateEvent extends AppCompatActivity {
             return;
         }
         double price = Double.parseDouble(editPrice.getText().toString());
-
-        // Event ID
-        if (createdEvent != null) {
-            eventID = createdEvent.getEventID();
-        } else if (eventID == null) {
-            eventID = UUID.randomUUID().toString();
-        }
 
         // Organizer role check
         User currentUser = UserSession.getCurrentUser();
