@@ -185,7 +185,7 @@ public class UserHomeActivity extends AppCompatActivity {
                         // Skip private events — they must not appear in the
                         // public browse list, only invited entrants can see them.
                         // ─────────────────────────────────────────────────
-                        Boolean isPrivate = doc.getBoolean("isPrivate");
+                        Boolean isPrivate = doc.getBoolean("private");
                         if (Boolean.TRUE.equals(isPrivate)) continue;
 
                         String title         = doc.getString("title");

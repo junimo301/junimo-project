@@ -133,7 +133,7 @@ public class Event {
         isPrivate = aPrivate;
         // Persist to Firestore so all screens that load events see the flag
         if (db != null) {
-            db.collection("events").document(eventID).update("isPrivate", aPrivate);
+            db.collection("events").document(eventID).update("private", aPrivate);
         }
     }
 
