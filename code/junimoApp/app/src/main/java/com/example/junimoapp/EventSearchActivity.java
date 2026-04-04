@@ -103,7 +103,7 @@ public class EventSearchActivity extends AppCompatActivity {
         resultsListView.setOnItemClickListener((parent, view, position, id) -> {
             Event clickedEvent = filteredEvents.get(position);
             Intent intent = new Intent(EventSearchActivity.this, EventDetailsActivity.class);
-            intent.putExtra("eventId", clickedEvent.getEventID());
+            intent.putExtra("eventID", clickedEvent.getEventID());
             startActivity(intent);
         });
     }

@@ -53,8 +53,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         eventID = getIntent().getStringExtra("eventID");
         backButton = findViewById(R.id.back_button);
 
-        MaterialCardView map = findViewById(R.id.map);
-        map.setOnClickListener(view -> {
+        MaterialCardView mapCard = findViewById(R.id.mapCard);
+        mapCard.setOnClickListener(view -> {
             Intent biggerMap = new Intent(MapActivity.this, ZoomedInMap.class);
             biggerMap.putExtra("eventID", eventID);
             startActivity(biggerMap);

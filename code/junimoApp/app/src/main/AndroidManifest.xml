@@ -49,7 +49,7 @@
         <!--
             US 01.06.01
             QRScanActivity opens the camera, scans Junimo event QR codes,
-            and navigates to EventDetailsActivity with the parsed eventId.
+            and navigates to EventDetailsActivity with the parsed eventID.
         -->
         <activity android:name=".QRScanActivity" />
 

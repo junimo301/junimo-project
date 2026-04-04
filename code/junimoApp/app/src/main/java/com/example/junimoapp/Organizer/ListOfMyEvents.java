@@ -83,7 +83,7 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
         holder.description.setText(event.getDescription());
         holder.editEventButton.setOnClickListener(view -> {
             Intent editEvent = new Intent(view.getContext(), CreateEvent.class);
-            editEvent.putExtra("event_ID", event.getEventID());
+            editEvent.putExtra("eventID", event.getEventID());
             view.getContext().startActivity(editEvent);
         });
         if (event.getPoster() != null && !event.getPoster().isEmpty()) {

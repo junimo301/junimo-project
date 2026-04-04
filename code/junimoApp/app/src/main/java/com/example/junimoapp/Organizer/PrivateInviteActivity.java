@@ -53,9 +53,9 @@ public class PrivateInviteActivity extends AppCompatActivity {
 
     // ─────────────────────────────────────────────────────────────────────
     // US 02.01.03
-    // eventId and eventTitle passed in from CreateEvent via Intent
+    // eventID and eventTitle passed in from CreateEvent via Intent
     // ─────────────────────────────────────────────────────────────────────
-    private String eventId;
+    private String eventID;
     private String eventTitle;
 
     @Override
@@ -63,7 +63,7 @@ public class PrivateInviteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_private_invite);
 
-        eventId    = getIntent().getStringExtra("eventId");
+        eventID    = getIntent().getStringExtra("eventID");
         eventTitle = getIntent().getStringExtra("eventTitle");
 
         db       = FirebaseFirestore.getInstance();
@@ -151,7 +151,7 @@ public class PrivateInviteActivity extends AppCompatActivity {
      * US 02.01.03 / US 01.05.06
      * Invites a user to this private event:
      *  1. Reads their current invitedEvents string from Firestore.
-     *  2. Appends this eventId (same format as User.inviteUser()).
+     *  2. Appends this eventID (same format as User.inviteUser()).
      *  3. Saves back using FirebaseManager.updateUser() as requested in review.
      *  4. Sends a private invite notification via NotificationHelper (US 01.05.06)
      *     which respects the user's opt-out preference (US 01.04.03).
@@ -170,8 +170,8 @@ public class PrivateInviteActivity extends AppCompatActivity {
                     String current = snap.getString("invitedEvents");
                     if (current == null) current = "";
 
-                    if (!current.contains(eventId)) {
-                        String updated = current + eventId + ",";
+                    if (!current.contains(eventID)) {
+                        String updated = current + eventID + ",";
 
                         // User shell just provides the deviceId for the doc path
                         User shell = new User(userId, "", "", "", "", "", "");
@@ -186,7 +186,7 @@ public class PrivateInviteActivity extends AppCompatActivity {
                         // US 01.05.06
                         // Send notification — respects opt-out (US 01.04.03)
                         // ─────────────────────────────────────────────────
-                        NotificationHelper.notifyPrivateInvite(userId, eventId, eventTitle);
+                        NotificationHelper.notifyPrivateInvite(userId, eventID, eventTitle);
                         Toast.makeText(this, "Invitation sent!", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this, "User already invited", Toast.LENGTH_SHORT).show();

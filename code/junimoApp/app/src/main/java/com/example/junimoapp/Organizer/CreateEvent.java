@@ -1,5 +1,6 @@
 package com.example.junimoapp.Organizer;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,6 +40,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -146,6 +149,22 @@ public class CreateEvent extends AppCompatActivity {
                 .placeholder(R.drawable.bg_event_tile)
                 .into(eventPoster);
 
+        editDateEvent.setFocusable(false);
+        editDateEvent.setFocusableInTouchMode(false);
+        editDateEvent.setClickable(true);
+        editDateEvent.setOnClickListener(view -> SelectDate(editDateEvent));
+
+
+        editStartDate.setFocusable(false);
+        editStartDate.setFocusableInTouchMode(false);
+        editStartDate.setClickable(true);
+        editStartDate.setOnClickListener(view -> SelectDate(editStartDate));
+
+        editEndDate.setFocusable(false);
+        editEndDate.setFocusableInTouchMode(false);
+        editEndDate.setClickable(true);
+        editEndDate.setOnClickListener(view -> SelectDate(editEndDate));
+
         // ─────────────────────────────────────────────────────────────────
         // US 02.01.02
         // Wire up the private event checkbox and disable QR when checked.
@@ -163,7 +182,7 @@ public class CreateEvent extends AppCompatActivity {
         });
 
         // Pre-fill fields if editing an existing event
-        eventID = getIntent().getStringExtra("event_ID");
+        eventID = getIntent().getStringExtra("eventID");
         if (eventID != null) {
             createdEvent = EventData.searchEventID(eventID);
             if (createdEvent != null) {
@@ -182,6 +201,7 @@ public class CreateEvent extends AppCompatActivity {
                             .error(R.drawable.bg_event_tile)
                             .into(eventPoster);
                 }
+
                 // US 01.01.05 and 01.01.06: set spinner selection based on existing tag
                 if (createdEvent.getTag() != null && !createdEvent.getTag().isEmpty()) {
                     android.widget.ArrayAdapter<CharSequence> adapter = (android.widget.ArrayAdapter<CharSequence>) editTagSpinner.getAdapter();
@@ -306,6 +326,27 @@ public class CreateEvent extends AppCompatActivity {
 
         backButton.setOnClickListener(view -> finish());
         cancelButton.setOnClickListener(view -> finish());
+    }
+
+    /**
+     * Helper method to check date formats
+     * */
+    private void SelectDate(EditText target) {
+        Calendar calendar = Calendar.getInstance();
+        String dateExists = target.getText().toString();
+        if (!dateExists.equals("")) {
+            try {
+                String[] separators = dateExists.split("-");
+                calendar.set(Integer.parseInt(separators[0]),
+                        Integer.parseInt(separators[1]) - 1,
+                        Integer.parseInt(separators[2]));
+            } catch (Exception ignore) {
+            }
+        }
+        new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+            String date = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth);
+            target.setText(date);
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
     /**

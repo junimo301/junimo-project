@@ -68,13 +68,13 @@ public class SelectAnEvent extends AppCompatActivity {
                 //go to entrant info
                 if ("entrants".equals(goTo)) {
                     Intent viewEntrants = new Intent(SelectAnEvent.this, Entrants.class);
-                    viewEntrants.putExtra("event_ID", events.getEventID());
+                    viewEntrants.putExtra("eventID", events.getEventID());
                     startActivity(viewEntrants);
 
                 //got to map info
                 } else if ("map".equals(goTo)) {
                     Intent viewMap = new Intent(SelectAnEvent.this, MapActivity.class);
-                    viewMap.putExtra("event_ID", events.getEventID());
+                    viewMap.putExtra("eventID", events.getEventID());
                     startActivity(viewMap);
                 }
             });

@@ -56,7 +56,7 @@ public class EventHistory extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(EventHistory.this, EventDetailsActivity.class);
-                intent.putExtra("eventId", eventList.get(i).getEventID());
+                intent.putExtra("eventID", eventList.get(i).getEventID());
                 intent.putExtra("fromHistory",true);
                 intent.putExtra("organizer",organizer);
                 startActivity(intent);

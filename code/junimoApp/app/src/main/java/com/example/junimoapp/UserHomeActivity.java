@@ -160,7 +160,7 @@ public class UserHomeActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(UserHomeActivity.this, EventDetailsActivity.class);
-                intent.putExtra("eventId", eventList.get(i).getEventID());
+                intent.putExtra("eventID", eventList.get(i).getEventID());
                 intent.putExtra("fromHistory",false);
                 startActivity(intent);
             }

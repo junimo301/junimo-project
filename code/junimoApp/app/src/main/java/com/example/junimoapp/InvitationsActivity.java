@@ -36,7 +36,7 @@ import java.util.Map;
  *  - We load from BOTH fields so both regular and private invitations appear.
  *
  * On decline (US 01.05.07):
- *  - We remove the eventId from the user's invitedEvents string so the
+ *  - We remove the eventID from the user's invitedEvents string so the
  *    private invite no longer shows — consistent with how User.cancelUser() works.
  */
 public class InvitationsActivity extends AppCompatActivity {
@@ -74,13 +74,13 @@ public class InvitationsActivity extends AppCompatActivity {
 
         adapter = new InvitationAdapter(invitations, new InvitationAdapter.InvitationListener() {
             @Override
-            public void onAccept(String eventId) {
-                acceptInvite(eventId);
+            public void onAccept(String eventID) {
+                acceptInvite(eventID);
             }
 
             @Override
-            public void onDecline(String eventId) {
-                declineInvite(eventId);
+            public void onDecline(String eventID) {
+                declineInvite(eventID);
             }
         });
 
@@ -105,8 +105,8 @@ public class InvitationsActivity extends AppCompatActivity {
                             List<?> eventIdsRaw = (List<?>) invitationsObj;
                             for (Object idObj : eventIdsRaw) {
                                 if (idObj instanceof String) {
-                                    String eventId = (String) idObj;
-                                    loadEventIntoList(eventId);
+                                    String eventID = (String) idObj;
+                                    loadEventIntoList(eventID);
                                 }
                             }
                         }
@@ -118,7 +118,7 @@ public class InvitationsActivity extends AppCompatActivity {
      * US 01.05.07
      * Loads private event invitations from the "invitedEvents" comma-String field.
      * PrivateInviteActivity writes to this field when an organizer invites someone.
-     * We skip any eventId already loaded from the regular "invitations" list
+     * We skip any eventID already loaded from the regular "invitations" list
      * to avoid showing the same event twice.
      */
     private void loadPrivateInvitations() {
@@ -130,19 +130,19 @@ public class InvitationsActivity extends AppCompatActivity {
                     if (invitedEvents == null || invitedEvents.equals("")) return;
 
                     String[] eventIds = invitedEvents.split(",");
-                    for (String eventId : eventIds) {
-                        if (eventId == null || eventId.equals("")) continue;
+                    for (String eventID : eventIds) {
+                        if (eventID == null || eventID.equals("")) continue;
 
                         // Skip if already loaded from the regular invitations list
                         boolean alreadyLoaded = false;
                         for (InvitationItem item : invitations) {
-                            if (item.getEventId().equals(eventId)) {
+                            if (item.getEventId().equals(eventID)) {
                                 alreadyLoaded = true;
                                 break;
                             }
                         }
                         if (!alreadyLoaded) {
-                            loadEventIntoList(eventId);
+                            loadEventIntoList(eventID);
                         }
                     }
                 });
@@ -152,8 +152,8 @@ public class InvitationsActivity extends AppCompatActivity {
      * Fetches event details from Firestore and adds it to the invitations list.
      * Shared by both loadInvitations() and loadPrivateInvitations().
      */
-    private void loadEventIntoList(String eventId) {
-        db.collection("events").document(eventId).get()
+    private void loadEventIntoList(String eventID) {
+        db.collection("events").document(eventID).get()
                 .addOnSuccessListener(eventSnap -> {
                     if (eventSnap.exists()) {
                         String title = eventSnap.getString("title");
@@ -169,7 +169,7 @@ public class InvitationsActivity extends AppCompatActivity {
                                 : title;
 
                         int position = invitations.size();
-                        invitations.add(new InvitationItem(eventId, displayTitle));
+                        invitations.add(new InvitationItem(eventID, displayTitle));
                         adapter.notifyItemInserted(position);
                     }
                 });
@@ -181,14 +181,14 @@ public class InvitationsActivity extends AppCompatActivity {
      * and removes them from the waitlist subcollection.
      * Unchanged from Anica's original implementation.
      */
-    private void acceptInvite(String eventId) {
+    private void acceptInvite(String eventID) {
         Map<String, Object> data = new HashMap<>();
         data.put("name", deviceId);
 
-        db.collection("events").document(eventId)
+        db.collection("events").document(eventID)
                 .collection("acceptedUsers").document(deviceId).set(data);
 
-        db.collection("events").document(eventId)
+        db.collection("events").document(eventID)
                 .collection("waitlist").document(deviceId).delete();
     }
 
@@ -198,24 +198,24 @@ public class InvitationsActivity extends AppCompatActivity {
      * removes from waitlist subcollection.
      *
      * US 01.05.07 addition:
-     * Also removes the eventId from the user's invitedEvents comma-String
+     * Also removes the eventID from the user's invitedEvents comma-String
      * so private event invites are properly cleaned up on decline.
      * This mirrors how User.cancelUser() removes events from invitedEvents.
      */
-    private void declineInvite(String eventId) {
+    private void declineInvite(String eventID) {
         Map<String, Object> data = new HashMap<>();
         data.put("name", deviceId);
 
         // Existing decline logic — unchanged
-        db.collection("events").document(eventId)
+        db.collection("events").document(eventID)
                 .collection("declinedUsers").document(deviceId).set(data);
 
-        db.collection("events").document(eventId)
+        db.collection("events").document(eventID)
                 .collection("waitlist").document(deviceId).delete();
 
         // ─────────────────────────────────────────────────────────────────
         // US 01.05.07
-        // Remove the eventId from invitedEvents so the private invite
+        // Remove the eventID from invitedEvents so the private invite
         // disappears from this screen and the user is no longer considered
         // invited. Mirrors User.cancelUser() logic in User.java.
         // ─────────────────────────────────────────────────────────────────
@@ -223,8 +223,8 @@ public class InvitationsActivity extends AppCompatActivity {
                 .addOnSuccessListener(snap -> {
                     if (!snap.exists()) return;
                     String invitedEvents = snap.getString("invitedEvents");
-                    if (invitedEvents != null && invitedEvents.contains(eventId)) {
-                        String updated = invitedEvents.replace(eventId + ",", "");
+                    if (invitedEvents != null && invitedEvents.contains(eventID)) {
+                        String updated = invitedEvents.replace(eventID + ",", "");
                         db.collection("users").document(deviceId)
                                 .update("invitedEvents", updated);
                     }
@@ -232,7 +232,7 @@ public class InvitationsActivity extends AppCompatActivity {
 
         // Remove from the local list so UI updates immediately
         for (int i = 0; i < invitations.size(); i++) {
-            if (invitations.get(i).getEventId().equals(eventId)) {
+            if (invitations.get(i).getEventId().equals(eventID)) {
                 invitations.remove(i);
                 adapter.notifyItemRemoved(i);
                 break;

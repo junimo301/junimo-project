@@ -131,7 +131,11 @@
                 android:id="@+id/edit_date"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
-                android:inputType="date"
+                android:inputType="none"
+                android:focusable="false"
+                android:clickable="true"
+                android:hint="yyyy-mm-dd"
+                android:textSize="15sp"
                 android:background="@android:color/transparent"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#AFAFAF" />
@@ -200,7 +204,9 @@
                 android:layout_height="44dp"
                 android:background="@android:color/transparent"
                 android:hint="@string/start"
-                android:inputType="date"
+                android:inputType="none"
+                android:focusable="false"
+                android:clickable="true"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#AFAFAF" />
 
@@ -209,8 +215,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:background="@android:color/transparent"
-                android:inputType="date"
                 android:hint="@string/end"
+                android:inputType="none"
+                android:focusable="false"
+                android:clickable="true"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#AFAFAF" />
 

@@ -56,7 +56,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     FirebaseFirestore db;
     String deviceId;
-    String eventId;
+    String eventID;
     Event selectedEvent;
 
     TextView eventTitle;
@@ -105,13 +105,13 @@ public class EventDetailsActivity extends AppCompatActivity {
         db = FirebaseManager.getDB();
         User user = UserSession.getCurrentUser();
         deviceId = user.getDeviceId();
-        //eventId should be passed from previous activity
-        eventId = getIntent().getStringExtra("eventId");
+        //eventID should be passed from previous activity
+        eventID = getIntent().getStringExtra("eventID");
         boolean fromHistory = getIntent().getBooleanExtra("fromHistory",false);
         boolean organizer = getIntent().getBooleanExtra("organizer",false);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        db.collection("events").document(eventId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        db.collection("events").document(eventID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -199,7 +199,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                     .setPositiveButton("Delete", (dialog, which) -> {
 
                         db.collection("events")
-                                .document(eventId)
+                                .document(eventID)
                                 .collection("comments")
                                 .document(commentId)
                                 .delete()
@@ -221,7 +221,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                 comment.put("timestamp", new Date());
 
                 db.collection("events")
-                        .document(eventId)
+                        .document(eventID)
                         .collection("comments")
                         .add(comment)
                         .addOnSuccessListener(docRef -> {
@@ -258,7 +258,7 @@ public class EventDetailsActivity extends AppCompatActivity {
             if (location != null) {
                 GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
                 db.collection("events")
-                        .document(eventId)
+                        .document(eventID)
                         .collection("userLocations")
                         .document(deviceId)
                         .set(new HashMap<String, Object>() {{
@@ -329,7 +329,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     private void loadComments() {
         commentIds.clear();
         db.collection("events")
-                .document(eventId)
+                .document(eventID)
                 .collection("comments")
                 .get()
                 .addOnCompleteListener(task -> {

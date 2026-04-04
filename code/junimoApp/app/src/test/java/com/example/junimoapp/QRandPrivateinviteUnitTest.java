@@ -52,7 +52,7 @@ public class QRandPrivateinviteUnitTest {
                 ? raw.substring(prefix.length()).trim()
                 : null;
 
-        assertEquals("Should parse the eventId from a valid QR string",
+        assertEquals("Should parse the eventID from a valid QR string",
                 "private-event-id", parsed);
     }
 
@@ -90,19 +90,19 @@ public class QRandPrivateinviteUnitTest {
     /**
      * US 01.06.01
      * Verifies that the QR code stored on a public Event object
-     * matches the expected format used by QRScanActivity to parse eventId.
+     * matches the expected format used by QRScanActivity to parse eventID.
      */
     @Test
     public void qr_eventQRCodeFormat_matchesExpectedPrefix() {
-        String eventId = testEvent.getEventID();
-        String qrString = "junimo://event?id=" + eventId;
+        String eventID = testEvent.getEventID();
+        String qrString = "junimo://event?id=" + eventID;
         testEvent.setQRCode(qrString);
 
         String stored = testEvent.getQRCode();
         assertTrue("Stored QR code should start with junimo://event?id=",
                 stored.startsWith("junimo://event?id="));
-        assertTrue("Stored QR code should contain the eventId",
-                stored.contains(eventId));
+        assertTrue("Stored QR code should contain the eventID",
+                stored.contains(eventID));
     }
 
     /**
@@ -135,7 +135,7 @@ public class QRandPrivateinviteUnitTest {
     /**
      * US 01.05.07
      * Simulates the inviteUser logic from PrivateInviteActivity:
-     * appends eventId to invitedEvents string, then checks isInvited().
+     * appends eventID to invitedEvents string, then checks isInvited().
      */
     @Test
     public void privateInvite_afterInvite_userIsInvited() {
@@ -143,28 +143,28 @@ public class QRandPrivateinviteUnitTest {
         // by setting the invitedEvents field directly on the User object
         testUser.setInvitedEvents(testEvent.getEventID() + ",");
 
-        assertTrue("User should be invited after eventId is added to invitedEvents",
+        assertTrue("User should be invited after eventID is added to invitedEvents",
                 testUser.isInvited(testEvent.getEventID()));
     }
 
     /**
      * US 01.05.07
-     * Simulates declining a private invite — removes eventId from invitedEvents.
+     * Simulates declining a private invite — removes eventID from invitedEvents.
      * Mirrors the declineInvite() logic in InvitationsActivity.
      */
     @Test
     public void privateInvite_afterDecline_userNotInvited() {
         // Set up as invited
-        String eventId = testEvent.getEventID();
-        testUser.setInvitedEvents(eventId + ",");
-        assertTrue("Setup: user should be invited", testUser.isInvited(eventId));
+        String eventID = testEvent.getEventID();
+        testUser.setInvitedEvents(eventID + ",");
+        assertTrue("Setup: user should be invited", testUser.isInvited(eventID));
 
-        // Simulate declineInvite() removing the eventId
-        String updated = testUser.getInvitedEvents().replace(eventId + ",", "");
+        // Simulate declineInvite() removing the eventID
+        String updated = testUser.getInvitedEvents().replace(eventID + ",", "");
         testUser.setInvitedEvents(updated);
 
         assertFalse("After declining, user should no longer be invited",
-                testUser.isInvited(eventId));
+                testUser.isInvited(eventID));
     }
 
     /**
@@ -189,25 +189,25 @@ public class QRandPrivateinviteUnitTest {
 
     /**
      * US 01.05.07
-     * Verifies that inviting the same user twice does not duplicate the eventId.
+     * Verifies that inviting the same user twice does not duplicate the eventID.
      * Mirrors the duplicate check in PrivateInviteActivity.inviteUser().
      */
     @Test
     public void privateInvite_invitingTwice_doesNotDuplicate() {
-        String eventId = testEvent.getEventID();
+        String eventID = testEvent.getEventID();
 
         // First invite
-        if (!testUser.isInvited(eventId)) {
-            testUser.setInvitedEvents(testUser.getInvitedEvents() + eventId + ",");
+        if (!testUser.isInvited(eventID)) {
+            testUser.setInvitedEvents(testUser.getInvitedEvents() + eventID + ",");
         }
         // Second invite attempt — should be blocked
-        if (!testUser.isInvited(eventId)) {
-            testUser.setInvitedEvents(testUser.getInvitedEvents() + eventId + ",");
+        if (!testUser.isInvited(eventID)) {
+            testUser.setInvitedEvents(testUser.getInvitedEvents() + eventID + ",");
         }
 
-        // Count occurrences of eventId in the string
+        // Count occurrences of eventID in the string
         String invited = testUser.getInvitedEvents();
-        int count = invited.split(eventId, -1).length - 1;
+        int count = invited.split(eventID, -1).length - 1;
         assertEquals("EventId should only appear once in invitedEvents", 1, count);
     }
 }
