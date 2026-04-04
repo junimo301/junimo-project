@@ -267,7 +267,6 @@ public class CreateEvent extends AppCompatActivity {
                     eventID = UUID.randomUUID().toString();
                 }
                 QRCodeString = "https://junimo.app/event?id=" + eventID;
-                QRCodeButton.setBackgroundTintList(null);
                 if (createdEvent != null) {
                     createdEvent.setQRCode(QRCodeString);
                 }
