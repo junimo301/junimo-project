@@ -24,6 +24,7 @@ import com.example.junimoapp.models.UserSession;
 import com.example.junimoapp.utils.DeviceUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.FirebaseApp;
 
 import java.util.HashMap;
@@ -139,6 +140,12 @@ public class MainActivity extends AppCompatActivity {
         userButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, UserHomeActivity.class);
             startActivity(intent);
+        });
+
+        //settings button (for language change)
+        FloatingActionButton fab = findViewById(R.id.fabSettings);
+        fab.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
         });
 
 

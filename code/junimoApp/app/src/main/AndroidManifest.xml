@@ -39,6 +39,7 @@
         <activity android:name=".UserNotificationsActivity" />
         <activity android:name=".EventSearchActivity" />
         <activity android:name=".EventHistory" />
+        <activity android:name=".SettingsActivity" />
 
         <!--
             US 01.06.01
