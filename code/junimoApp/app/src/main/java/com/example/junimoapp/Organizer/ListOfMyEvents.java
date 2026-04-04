@@ -2,6 +2,7 @@ package com.example.junimoapp.Organizer;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import java.util.List;
  * */
 public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventViewHolder> {
 
+    String QRCodeString;
     /** events to display */
     private List<Event> eventList;
 
@@ -102,8 +104,10 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
         } else {
             holder.backgroundPoster.setImageResource(R.drawable.bg_event_tile);
         }
+
+        QRCodeString = event.getQRCode();
+        Log.d("QR DEBUG", "QR code: " + QRCodeString);
         holder.viewQRCodeButton.setOnClickListener(view -> {
-            String QRCodeString = event.getQRCode();
             if (QRCodeString == null || QRCodeString.equals("")) {
                 Toast.makeText(view.getContext(), "No QR code available", Toast.LENGTH_SHORT).show();
                 return;

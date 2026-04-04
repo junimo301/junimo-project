@@ -495,6 +495,9 @@ public class CreateEvent extends AppCompatActivity {
                         saveEvent.setQRCode(QRCodeString);
                     }
 
+                    Log.d("QR DEBUG", "Saving Qr: " + QRCodeString);
+                    Log.d("QR DEBUG", "Event QR Code: " + saveEvent.getQRCode());
+
                     // Upload to Firebase
                     FirebaseManager firebase = new FirebaseManager();
                     CollectionReference eventsRef = firebase.getDB().collection("events");
