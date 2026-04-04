@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.junimoapp.adapters.InvitationAdapter;
 import com.example.junimoapp.models.InvitationItem;
 import com.example.junimoapp.models.UserSession;
+import com.example.junimoapp.utils.BaseActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ import java.util.Map;
  *  - We remove the eventId from the user's invitedEvents string so the
  *    private invite no longer shows — consistent with how User.cancelUser() works.
  */
-public class InvitationsActivity extends AppCompatActivity {
+public class InvitationsActivity extends BaseActivity {
 
     private InvitationAdapter adapter;
     private TextView backButton;

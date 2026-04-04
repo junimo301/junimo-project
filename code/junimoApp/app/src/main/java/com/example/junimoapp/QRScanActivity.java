@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.junimoapp.utils.BaseActivity;
 import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
@@ -35,7 +36,7 @@ import java.util.List;
  * Layout: activity_qr_scan.xml
  * Camera permission is declared in AndroidManifest.xml.
  */
-public class QRScanActivity extends AppCompatActivity {
+public class QRScanActivity extends BaseActivity {
 
     // ─────────────────────────────────────────────────────────────────────
     // US 01.06.01

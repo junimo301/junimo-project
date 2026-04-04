@@ -17,6 +17,7 @@ import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
+import com.example.junimoapp.utils.BaseActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -25,7 +26,7 @@ import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 
-public class EventHistory extends AppCompatActivity {
+public class EventHistory extends BaseActivity {
     private TextView backButton;
     private ListView eventListView;
     private ArrayList<String> eventListString;

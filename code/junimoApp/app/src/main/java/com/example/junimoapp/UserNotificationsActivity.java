@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.junimoapp.utils.BaseActivity;
 import com.example.junimoapp.utils.DeviceUtils;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -34,7 +35,7 @@ import java.util.List;
  *
  * Treya
  */
-public class UserNotificationsActivity extends AppCompatActivity {
+public class UserNotificationsActivity extends BaseActivity {
 
     private NotifAdapter adapter;
     private final List<String> messages = new ArrayList<>();

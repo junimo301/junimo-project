@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -51,8 +52,6 @@ public class SettingsActivity extends AppCompatActivity {
 
                 //set app language
                 LanguageHelper.setLanguage(langCode);
-
-                recreate();
             }
 
             @Override
@@ -60,5 +59,8 @@ public class SettingsActivity extends AppCompatActivity {
                 //do nothing
             }
         });
+
+        Button backButton = findViewById(R.id.back_sett_button);
+        backButton.setOnClickListener(v -> finish());
     }
 }
