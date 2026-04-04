@@ -73,7 +73,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null && mapFragment.getView() != null) {
-            mapFragment.getMapAsync(this);
             mapFragment.getView().setClickable(true);
         }
         loadUsersLocation();
