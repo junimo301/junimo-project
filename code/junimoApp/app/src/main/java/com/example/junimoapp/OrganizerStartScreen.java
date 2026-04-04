@@ -90,8 +90,9 @@ public class OrganizerStartScreen extends AppCompatActivity {
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent map = new Intent(OrganizerStartScreen.this, MapActivity.class);
-                startActivity(map);
+                Intent viewMap = new Intent(OrganizerStartScreen.this, SelectAnEvent.class);
+                viewMap.putExtra("go to", "map");
+                startActivity(viewMap);
             }
         });
 
@@ -101,6 +102,7 @@ public class OrganizerStartScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent viewEntrants = new Intent(OrganizerStartScreen.this, SelectAnEvent.class);
+                viewEntrants.putExtra("go to", "entrants");
                 startActivity(viewEntrants);
             }
         });

@@ -4,6 +4,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,45 +30,37 @@ import java.util.ArrayList;
 /**
  * GEO LOCATION MAP
  * */
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class ZoomedInMap extends AppCompatActivity implements OnMapReadyCallback {
     FirebaseFirestore db;
     GoogleMap googleMap;
-    ListView listOfEntrants;
-    ArrayAdapter<String> adapter;
-    ArrayList<String> entrantsDetails = new ArrayList<>();
     String eventID;
     String userID;
-    TextView backButton;
+    ImageButton closeButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
-
-        listOfEntrants = findViewById(R.id.list_of_entrants);
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, entrantsDetails);
-        listOfEntrants.setAdapter(adapter);
+        setContentView(R.layout.zoomed_in_map);
 
         db = FirebaseFirestore.getInstance();
         eventID = getIntent().getStringExtra("eventID");
-        backButton = findViewById(R.id.back_button);
+        closeButton = findViewById(R.id.close_button);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
-        backButton.setOnClickListener(view -> finish());
+        closeButton.setOnClickListener(view -> finish());
     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap map) {
         googleMap = map;
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        if (mapFragment != null && mapFragment.getView() != null) {
-            mapFragment.getMapAsync(this);
-            mapFragment.getView().setClickable(true);
-        }
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.getUiSettings().setZoomGesturesEnabled(true);
+        googleMap.getUiSettings().setScrollGesturesEnabled(true);
+
         loadUsersLocation();
     }
 
@@ -99,11 +93,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                             .snippet("Latitude: " + latitude + "\nLongitude: " + longitude));
 
                                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
-
-                                    entrantsDetails.add(usersName + "\n" + latitude + "," + longitude);
-                                    adapter.notifyDataSetChanged();
                                 }
-
                             });
                         }
                     } else {

@@ -137,4 +137,6 @@
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
     <string name="close">Close</string>
+    <string name="map_of_entrants">Map of Entrants</string>
+    <string name="click_to_enlarge">Click To Enlarge</string>
 </resources>
