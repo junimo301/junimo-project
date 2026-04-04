@@ -94,8 +94,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                     Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
                 }
             });
-
-    boolean isOrganizer = false;
+    boolean isOrganizer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,7 +188,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         commentsListView.setOnItemLongClickListener((parent, view, position, id) -> {
 
             //only organizers can del comms
-            if (!isOrganizer) return true;
+            if (!canDeleteComment()) return true;
 
             String commentId = commentIds.get(position);
 
@@ -215,9 +214,11 @@ public class EventDetailsActivity extends AppCompatActivity {
             String text = commentInput.getText().toString().trim();
 
             if (!text.isEmpty()) {
+                User currentUser = UserSession.getCurrentUser();
                 HashMap<String, Object> comment = new HashMap<>();
                 comment.put("text", text);
                 comment.put("userId", deviceId);
+                comment.put("username", currentUser.getName());
                 comment.put("timestamp", new Date());
 
                 db.collection("events")
@@ -337,10 +338,17 @@ public class EventDetailsActivity extends AppCompatActivity {
                         commentsList.clear();
                         for (QueryDocumentSnapshot doc : task.getResult()) {
                             String text = doc.getString("text");
-                            String user = doc.getString("userId");
-                            if (text == null || user == null) continue;
+                            String userId = doc.getString("userId");
+                            String username = doc.getString("username");
 
-                            String display = user + ": " + text;
+                            //in case old comments don't have a username
+                            if (username == null && userId != null) {
+                                username = userId;
+                            }
+
+                            if (text == null || username == null) continue;
+
+                            String display = username + ": " + text;
 
                             commentsList.add(display);
                             commentIds.add(doc.getId());
@@ -348,6 +356,10 @@ public class EventDetailsActivity extends AppCompatActivity {
                         commentsAdapter.notifyDataSetChanged();
                     }
                 });
+    }
+
+    public boolean canDeleteComment() {
+        return isOrganizer;
     }
 
 }

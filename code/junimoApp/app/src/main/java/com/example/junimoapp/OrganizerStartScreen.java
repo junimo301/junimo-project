@@ -22,6 +22,7 @@ import com.example.junimoapp.Organizer.CreateEvent;
 import com.example.junimoapp.Organizer.EventData;
 import com.example.junimoapp.Organizer.ListOfMyEvents;
 import com.example.junimoapp.Organizer.SelectAnEvent;
+import com.example.junimoapp.Organizer.organizerNotifications;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
@@ -45,11 +46,13 @@ public class OrganizerStartScreen extends AppCompatActivity {
     Button viewEntrantsButton, mapButton;
     TextView backButton;
     ImageButton settingsButton;
+    Button notificationsButton;
     //view my events
     private RecyclerView scrollable;
     private ListOfMyEvents myEvents;
     private List<Event> eventList;
     private FirebaseFirestore db;
+
 
 
     /**
@@ -96,6 +99,16 @@ public class OrganizerStartScreen extends AppCompatActivity {
             }
         });
 
+        notificationsButton = findViewById(R.id.notifications_button);
+        notificationsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent viewNotifications = new Intent(OrganizerStartScreen.this, organizerNotifications.class);
+                startActivity(viewNotifications);
+            }
+        });
+
+        /** View entrants */
         //----------VIEW ENTRANTS-------------------
         viewEntrantsButton = findViewById(R.id.view_entrants_button);
         viewEntrantsButton.setOnClickListener(new View.OnClickListener() {

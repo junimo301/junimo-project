@@ -49,6 +49,7 @@ dependencies {
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("com.google.zxing:core:3.4.1")
     implementation(platform("com.google.firebase:firebase-bom:34.9.0"))
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 
     implementation("com.github.bumptech.glide:glide:5.0.5")
     annotationProcessor("com.github.bumptech.glide:compiler:5.0.5")

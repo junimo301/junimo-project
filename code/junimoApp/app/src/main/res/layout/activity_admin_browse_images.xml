@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- layout for user profile browsing screen for admins, with a RecyclerView
-of users for displaying the user list-->
-
+<!-- Admin image browsing screen layout (US 03.03.01 and 03.06.01) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    android:orientation="vertical"
     android:padding="16dp">
 
     <LinearLayout
@@ -58,51 +56,42 @@ of users for displaying the user list-->
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="@string/search_profiles"
+        android:text="@string/search"
         android:textColor="#FFFFFF"
         android:textSize="18sp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/searchProfilesInput"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:hint=""
-            android:textColor="#FFFFFF"
-            android:textColorHint="#A9A9A9" />
+            <EditText
+                android:id="@+id/searchImagesInput"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:hint=""
+                android:textColor="#FFFFFF"
+                android:textColorHint="#A9A9A9" />
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:contentDescription="@string/search"
-            android:src="@android:drawable/ic_menu_search"
-            app:tint="#D9D9D9" />
-
-    </LinearLayout>
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/search"
+                android:src="@android:drawable/ic_menu_search"
+                app:tint="#D9D9D9"/>
+        </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#797979" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:text="@string/organize_alphabetical_order_u2191"
-        android:textColor="#D9D9D9"
-        android:textSize="15sp" />
+        android:background="#797979"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/adminProfilesRecyclerView"
+        android:id="@+id/adminImagesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"

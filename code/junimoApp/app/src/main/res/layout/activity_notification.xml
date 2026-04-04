@@ -15,7 +15,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/event_lottery"
+        android:text="Event Lottery"
         android:textColor="#FFFFFF"
         android:textSize="28sp"
         android:textStyle="bold" />
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="@string/notifications"
+        android:text="Notifications"
         android:textColor="#D2D2D2"
         android:textSize="16sp" />
 
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:padding="8dp"
-        android:text="@string/back_to_home"
+        android:text="← Back to Home"
         android:textColor="#FFFFFF"
         android:textSize="16sp" />
 
