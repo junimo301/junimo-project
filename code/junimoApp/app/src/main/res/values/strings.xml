@@ -40,15 +40,6 @@
     <string name="event_title_label">Event: </string>
     <string name="user_label">User: </string>
 
-    <!-- These ones might be unnecessary -->
-    <string name="remove_event">Remove Event</string>
-    <string name="are_you_sure">Are you sure you want to delete?</string>
-    <string name="permanent">This action is permanent.</string>
-    <string name="remove">Remove</string>
-    <string name="cancel">Cancel</string>
-    <string name="remove_status">Remove Status</string>
-
-
     <!-- Search/filter stuff -->
     <string name="search_events">Search Events</string>
     <string name="event_tag_prompt">Select Event Tag</string>
@@ -317,6 +308,33 @@
     <string name="browse_remove_organizers_ru">Просмотр/Удаление Организаторов</string>
     <string name="browse_images_ru">Просмотреть Изображения</string>
     <string name="browse_events_ru">Просмотреть Мероприятия</string>
+
+    <!-- Admin notification stuff -->
+    <string name="browse_notification_log_ru">Просмотреть Журнал Уведомлений</string>
+    <string name="notification_log_title_ru">Журнал Уведомлений</string>
+    <string name="sent_by_ru">Отправитель: </string>
+    <string name="no_notifications_found_ru">Уведомлений не найдено.</string>
+
+    <!-- Admin event detail screen (comments) -->
+    <string name="event_details_admin_ru">Подробности Мероприятия</string>
+    <string name="comments_header_ru">Комментарии</string>
+    <string name="remove_comment_ru">Удалить Комментарий</string>
+    <string name="remove_comment_confirm_ru">Вы уверены, что хотите удалить этот комментарий? </string>
+    <string name="no_comments_ru">Комментариев к этому событию нет.</string>
+    <string name="organizer_id_label_ru">Идентификатор Организатора: </string>
+    <string name="description_label_ru">Описание: </string>
+    <string name="location_label_ru">Местоположение: </string>
+    <string name="date_label_ru">Дата: </string>
+
+    <!-- Admin image browsing screen -->
+    <string name="browse_images_title_ru"> Просмотреть Изображения</string>
+    <string name="remove_image_ru">Удалить Изображение</string>
+    <string name="remove_image_confirm_ru">Вы уверены, что хотите удалить это изображение? </string>
+    <string name="no_image_ru">Изображение Отсутствует</string>
+    <string name="image_type_poster_ru">Плакат</string>
+    <string name="image_type_profile_ru">Фото Профиля</string>
+    <string name="event_title_label_ru">Мероприятие: </string>
+    <string name="user_label_ru">Пользователь: </string>
 
     <!-- Search/filter stuff -->
     <string name="search_events_ru">Поиск Мероприятий</string>
