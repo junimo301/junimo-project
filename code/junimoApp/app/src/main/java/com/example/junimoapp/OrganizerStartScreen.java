@@ -27,6 +27,7 @@ import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
+import com.example.junimoapp.utils.BaseActivity;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -40,7 +41,7 @@ import java.util.List;
  *  - view my events
  *  - edit events
  * */
-public class OrganizerStartScreen extends AppCompatActivity {
+public class OrganizerStartScreen extends BaseActivity {
     //Create and edit event
     ImageButton createEventButton;
     Button viewEntrantsButton, mapButton;

@@ -4,13 +4,15 @@ import android.os.Bundle;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.junimoapp.utils.BaseActivity;
+
 /**
  * displays guidelines for a lottery
  * user stories implemented:
  *  - US 01.05.05: Entrant wants to know the criteria or guidelines for the lottery selection process.
  */
 
-public class GuidelinesActivity extends AppCompatActivity {
+public class GuidelinesActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
