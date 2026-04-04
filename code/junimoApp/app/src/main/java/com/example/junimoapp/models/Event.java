@@ -39,7 +39,7 @@ public class Event {
     private String QRCode = null;
 
     /** the location of the entrants for the event */
-    private boolean geoLocation;
+    private boolean geoLocation = false;
 
     /** the location of the event */
     private String eventLocation;

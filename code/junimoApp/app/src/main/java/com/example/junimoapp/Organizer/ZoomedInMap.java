@@ -97,7 +97,7 @@ public class ZoomedInMap extends AppCompatActivity implements OnMapReadyCallback
                             });
                         }
                     } else {
-                        Log.e("EntrantMap", "Failed to load users location", task.getException());
+                        Log.e("FullMap", "Failed to load users location", task.getException());
                     }
                 });
     }

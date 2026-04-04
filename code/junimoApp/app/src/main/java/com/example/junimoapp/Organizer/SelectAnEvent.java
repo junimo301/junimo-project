@@ -40,8 +40,6 @@ public class SelectAnEvent extends AppCompatActivity {
     List<Event> myEvents = EventData.getEvents();
     TextView backButton;
 
-    String goTo = getIntent().getStringExtra("go to");
-
     /**
      * called when activty is first created
      * displays the events that the organizer has created
@@ -56,6 +54,8 @@ public class SelectAnEvent extends AppCompatActivity {
 
         db = FirebaseManager.getDB();
         eventList = findViewById(R.id.event_list);
+
+        String goTo = getIntent().getStringExtra("go to");
 
         //buttons
         for (Event events: myEvents) {
@@ -73,7 +73,7 @@ public class SelectAnEvent extends AppCompatActivity {
 
                 //got to map info
                 } else if ("map".equals(goTo)) {
-                    Intent viewMap = new Intent(SelectAnEvent.this, Entrants.class);
+                    Intent viewMap = new Intent(SelectAnEvent.this, MapActivity.class);
                     viewMap.putExtra("event_ID", events.getEventID());
                     startActivity(viewMap);
                 }

@@ -1,5 +1,6 @@
 package com.example.junimoapp.Organizer;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.Firebase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -50,6 +52,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         db = FirebaseFirestore.getInstance();
         eventID = getIntent().getStringExtra("eventID");
         backButton = findViewById(R.id.back_button);
+
+        MaterialCardView map = findViewById(R.id.map);
+        map.setOnClickListener(view -> {
+            Intent biggerMap = new Intent(MapActivity.this, ZoomedInMap.class);
+            biggerMap.putExtra("eventID", eventID);
+            startActivity(biggerMap);
+        });
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {

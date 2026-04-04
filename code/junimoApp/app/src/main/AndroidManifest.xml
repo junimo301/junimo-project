@@ -60,6 +60,7 @@
         <activity android:name=".Organizer.Entrants" />
         <activity android:name=".Organizer.SelectAnEvent" />
         <activity android:name=".Organizer.MapActivity" />
+        <activity android:name=".Organizer.ZoomedInMap" />
 
         <!--
             US 02.01.03

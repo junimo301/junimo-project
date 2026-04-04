@@ -135,12 +135,15 @@ public class OrganizerStartScreen extends AppCompatActivity {
         scrollable.setAdapter(myEvents);
     }
     private void loadEvents() {
-        Log.d("organizer browse activity","on load events of browse activity");
-        db.collection("events").get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
+        Log.d("organizer browse activity", "on load events of browse activity");
+        db.collection("events").get().addOnSuccessListener(queryDocumentSnapshots -> {
                     // clear any old data before loading fresh results
                     eventList.clear();
                     User currentUser = UserSession.getCurrentUser(); //get current user
+                    if (currentUser == null) {
+                        Log.d("organizer browse activity", "user was null in event");
+                        return;
+                    }
 
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         //Fields in events
@@ -166,17 +169,16 @@ public class OrganizerStartScreen extends AppCompatActivity {
                         String tag = doc.getString("tag");
 
                         Event event = new Event(title, description, startDate, endDate, dateEvent, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation, organizerID, tag);
-                        if(organizerID != null){
-                            if(event.getOrganizerID().equals(currentUser.getDeviceId())) {
+                        if (organizerID != null) {
+                            if (event.getOrganizerID().equals(currentUser.getDeviceId())) {
                                 eventList.add(event);
                                 EventData.addOrEditEvent(event);
                             }
-                        }
-                        else {
-                            Log.d("organizer browse activity","organizer ID was null in event");
+                        } else {
+                            Log.d("organizer browse activity", "organizer ID was null in event");
                         }
 
-                        Log.d("organizer browse activity",eventList.toString());
+                        Log.d("organizer browse activity", eventList.toString());
                     }
                     myEvents.notifyDataSetChanged();
                 })
@@ -186,6 +188,5 @@ public class OrganizerStartScreen extends AppCompatActivity {
                     // show a brief message to the admin so they know something went wrong
                     Toast.makeText(this, "Failed to load events", Toast.LENGTH_SHORT).show();
                 });
-
     }
 }

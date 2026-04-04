@@ -211,12 +211,8 @@ public class CreateEvent extends AppCompatActivity {
             geoLocation = !geoLocation;
             if (geoLocation) {
                 enableGeoLocationButton.setText(getString(R.string.enabled));
-                //DELETE LATER
-                Toast.makeText(this, "Geo Location Enabled", Toast.LENGTH_SHORT).show();
             } else {
                 enableGeoLocationButton.setText(getString(R.string.disabled));
-                //DELETE LATER
-                Toast.makeText(this, "Geo Location Disabled", Toast.LENGTH_SHORT).show();
             } });
 
         /**
@@ -472,8 +468,8 @@ public class CreateEvent extends AppCompatActivity {
                 Log.e("createEvent", "upload failed", e);
             });
 
-        } else {
-            finalTag = null;  //If an image isn't uploaded, use the default image
+        } else { //If an image isn't uploaded, use the default image
+            finalTag = tag;
             String poster = (createdEvent != null) ? createdEvent.getPoster() : "";
 
             Event saveEvent = new Event(
