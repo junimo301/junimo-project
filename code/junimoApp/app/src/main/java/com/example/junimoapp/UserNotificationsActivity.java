@@ -31,8 +31,10 @@ import java.util.List;
  * Ordered newest first. Each notification is marked as read after loading.
  *
  * Layout: activity_notifications.xml
+ *
+ * Treya
  */
-public class NotificationsActivity extends AppCompatActivity {
+public class UserNotificationsActivity extends AppCompatActivity {
 
     private NotifAdapter adapter;
     private final List<String> messages = new ArrayList<>();
@@ -42,7 +44,7 @@ public class NotificationsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notifications);
+        setContentView(R.layout.activity_notification);
 
         deviceId = DeviceUtils.getDeviceId(this);
         db = FirebaseFirestore.getInstance();

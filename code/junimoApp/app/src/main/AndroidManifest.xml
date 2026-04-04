@@ -36,7 +36,7 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".GuidelinesActivity"/>
         <activity android:name=".EventDetailsActivity"/>
-        <activity android:name=".NotificationsActivity" />
+        <activity android:name=".UserNotificationsActivity" />
         <activity android:name=".EventSearchActivity" />
         <activity android:name=".EventHistory" />
 
@@ -52,7 +52,7 @@
         <activity android:name=".Organizer.CreateEvent" />
         <activity android:name=".Organizer.EventPreview" />
         <activity android:name=".Organizer.Entrants" />
-        <activity android:name=".Organizer.notifications" />
+        <activity android:name=".Organizer.organizerNotifications" />
         <activity android:name=".Organizer.SelectAnEvent" />
 
         <!--
