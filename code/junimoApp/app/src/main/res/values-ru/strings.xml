@@ -162,6 +162,14 @@
     <string name="remove_profile">Удалить Профиль</string>
     <string name="remove_profile_message">Профиль « »?</string>
 
+    <string name="upload">Загрузить</string>
+    <string name="enable">Включить</string>
+    <string name="enabled">Включено</string>
+    <string name="disabled">Отключено</string>
+    <string name="close">Закрыть</string>
+    <string name="map_of_entrants">Карта Участников</string>
+    <string name="click_to_enlarge">Нажмите, Чтобы Увеличить</string>
+
     <!-- settings -->
     <string name="select_language">Выберите Язык</string>
     <string name="select_language_description">Выберите желаемый язык приложения:</string>
