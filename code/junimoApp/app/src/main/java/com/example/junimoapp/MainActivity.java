@@ -21,9 +21,11 @@ import com.example.junimoapp.admin.AdminHomeActivity;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
+import com.example.junimoapp.utils.BaseActivity;
 import com.example.junimoapp.utils.DeviceUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.FirebaseApp;
 
 import java.util.HashMap;
@@ -40,7 +42,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     String deviceId;
     private FirebaseManager firebase = new FirebaseManager();
 
@@ -140,8 +142,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, UserHomeActivity.class);
             startActivity(intent);
         });
-
-
 
     }
 

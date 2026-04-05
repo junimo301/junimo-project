@@ -47,7 +47,7 @@ public class Entrants extends AppCompatActivity {
     TextView eventName;
     TextView backButton;
     Button lotteryButton;
-
+    Button inviteEntrantsButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,6 +178,17 @@ public class Entrants extends AppCompatActivity {
                     }
                 }
             }
+        });
+// US 02.01.03
+// Opens PrivateInviteActivity so the organizer can invite entrants
+// to this private event's waiting list at any time after creation.
+// ─────────────────────────────────────────────────────────────────────
+        inviteEntrantsButton = findViewById(R.id.inviteEntrantsButton);
+        inviteEntrantsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Entrants.this, PrivateInviteActivity.class);
+            intent.putExtra("eventId", eventID);
+            intent.putExtra("eventTitle", selectEvent.getTitle());
+            startActivity(intent);
         });
 
         backButton.setOnClickListener(new View.OnClickListener() {

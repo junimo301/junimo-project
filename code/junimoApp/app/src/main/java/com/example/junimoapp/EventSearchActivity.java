@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.junimoapp.adapters.EventSearchAdapter;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
+import com.example.junimoapp.utils.BaseActivity;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -35,7 +36,7 @@ import java.util.Locale;
  * US 01.01.05: Search by tag/category
  * US 01.01.06: Search by date/capacity range
  */
-public class EventSearchActivity extends AppCompatActivity {
+public class EventSearchActivity extends BaseActivity {
     private EditText keywordInput, startDateInput, endDateInput;
     private EditText minCapacityInput, maxCapacityInput; //capacity ranges
     private Spinner tagSpinner;
