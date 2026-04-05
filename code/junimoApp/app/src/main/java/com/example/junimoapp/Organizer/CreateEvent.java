@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import com.example.junimoapp.OrganizerStartScreen;
 import com.example.junimoapp.R;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
@@ -32,13 +32,11 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -50,6 +48,7 @@ import java.util.UUID;
  * User stories implemented here:
  *  - US 02.01.01 Create a new event and generate a unique promotional QR code
  *  - US 02.01.02 Create a private event (no public listing, no QR code)
+ *  - US 02.01.03 Open invite screen after creating private event
  *  - US 02.01.04 Set a registration period
  *  - US 02.03.01 Optionally limit the number of entrants on the waiting list
  */
@@ -78,15 +77,12 @@ public class CreateEvent extends AppCompatActivity {
     private String eventID;
     private String organizerID;
 
-    //Event poster
     private ImageView eventPoster;
     private Uri imageUri;
     private Button pickImageButton;
 
-
-    //visual QRcode
     private Bitmap generateQRCode(String content, int size) {
-        try{
+        try {
             BitMatrix matrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, size, size);
             BarcodeEncoder encoder = new BarcodeEncoder();
             return encoder.createBitmap(matrix);
@@ -96,37 +92,26 @@ public class CreateEvent extends AppCompatActivity {
         }
     }
 
-
-    //pick an image
     private final ActivityResultLauncher<String>
             pickImage = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
         if (uri != null) {
             imageUri = uri;
-
-            //get the file name for button
             String imageFile = uri.getLastPathSegment();
             if (imageFile != null && imageFile.contains("/")) {
-                imageFile = imageFile.substring(imageFile.lastIndexOf("/") +1);
+                imageFile = imageFile.substring(imageFile.lastIndexOf("/") + 1);
             }
             pickImageButton.setText(imageFile);
-
             Glide.with(this).load(uri)
                     .placeholder(R.drawable.bg_event_tile)
                     .into(eventPoster);
         }
     });
 
-    /**
-     * when activity is first created
-     * listeners for QR code button and upload event button
-     * @param savedInstanceState
-     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
-        // Wire up all existing form fields
         editTitle               = findViewById(R.id.edit_title);
         editDescription         = findViewById(R.id.edit_description);
         editStartDate           = findViewById(R.id.edit_start_date);
@@ -145,7 +130,8 @@ public class CreateEvent extends AppCompatActivity {
         editTagSpinner          = findViewById(R.id.edit_tag_spinner);
         pickImageButton         = findViewById(R.id.pick_image_button);
         eventPoster             = findViewById(R.id.event_poster);
-        Glide.with(this).load((String)null)
+
+        Glide.with(this).load((String) null)
                 .placeholder(R.drawable.bg_event_tile)
                 .into(eventPoster);
 
@@ -153,7 +139,6 @@ public class CreateEvent extends AppCompatActivity {
         editDateEvent.setFocusableInTouchMode(false);
         editDateEvent.setClickable(true);
         editDateEvent.setOnClickListener(view -> SelectDate(editDateEvent));
-
 
         editStartDate.setFocusable(false);
         editStartDate.setFocusableInTouchMode(false);
@@ -171,10 +156,9 @@ public class CreateEvent extends AppCompatActivity {
         // ─────────────────────────────────────────────────────────────────
         checkPrivate = findViewById(R.id.check_private_event);
         checkPrivate.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // Private events must not have a promotional QR code
             QRCodeButton.setEnabled(!isChecked);
             if (isChecked) {
-                QRCodeString = null; // clear any already-generated QR
+                QRCodeString = null;
                 Toast.makeText(this,
                         "Private event: no QR code will be generated.",
                         Toast.LENGTH_SHORT).show();
@@ -188,7 +172,7 @@ public class CreateEvent extends AppCompatActivity {
             if (createdEvent != null) {
                 if (createdEvent.getQRCode() != null) {
                     QRCodeString = createdEvent.getQRCode();
-            }
+                }
                 editTitle.setText(createdEvent.getTitle());
                 editDescription.setText(createdEvent.getDescription());
                 editStartDate.setText(createdEvent.getStartDate());
@@ -204,89 +188,59 @@ public class CreateEvent extends AppCompatActivity {
                             .error(R.drawable.bg_event_tile)
                             .into(eventPoster);
                 }
-
-                // US 01.01.05 and 01.01.06: set spinner selection based on existing tag
                 if (createdEvent.getTag() != null && !createdEvent.getTag().isEmpty()) {
-                    android.widget.ArrayAdapter<CharSequence> adapter = (android.widget.ArrayAdapter<CharSequence>) editTagSpinner.getAdapter();
+                    android.widget.ArrayAdapter<CharSequence> adapter =
+                            (android.widget.ArrayAdapter<CharSequence>) editTagSpinner.getAdapter();
                     if (adapter != null) {
                         int position = adapter.getPosition(createdEvent.getTag());
-                        if (position >=0) {
-                            editTagSpinner.setSelection(position);
-                        }
+                        if (position >= 0) editTagSpinner.setSelection(position);
                     }
                 }
                 // ─────────────────────────────────────────────────────────
-                // US 02.01.02
-                // Restore the private flag when editing an existing event
+                // US 02.01.02 — restore private flag when editing
                 // ─────────────────────────────────────────────────────────
                 checkPrivate.setChecked(createdEvent.isPrivate());
-
-                //geolocation
                 geoLocation = createdEvent.isGeoLocation();
-                enableGeoLocationButton.setText(geoLocation ? getString(R.string.enabled) : getString(R.string.disabled));
+                enableGeoLocationButton.setText(geoLocation
+                        ? getString(R.string.enabled)
+                        : getString(R.string.disabled));
             }
         }
 
-        /**
-         * Enable geo location for the event
-         * */
         enableGeoLocationButton.setOnClickListener(view -> {
             geoLocation = !geoLocation;
-            if (geoLocation) {
-                enableGeoLocationButton.setText(getString(R.string.enabled));
-            } else {
-                enableGeoLocationButton.setText(getString(R.string.disabled));
-            } });
-
-        /**
-         * Upload an event poster
-         * */
-        pickImageButton.setOnClickListener(view -> {
-            pickImage.launch("image/*");
+            enableGeoLocationButton.setText(geoLocation
+                    ? getString(R.string.enabled)
+                    : getString(R.string.disabled));
         });
 
-        /**
-         * US 02.01.01 / US 02.01.02
-         * Generates a QR code when creating a public event.
-         * Blocked entirely for private events.
-         */
-        QRCodeButton.setOnClickListener(view -> {
+        pickImageButton.setOnClickListener(view -> pickImage.launch("image/*"));
 
-            // ─────────────────────────────────────────────────────────────
-            // US 02.01.02
-            // Guard: do not generate a QR code for private events
-            // ─────────────────────────────────────────────────────────────
+        // ─────────────────────────────────────────────────────────────────
+        // US 02.01.01 / US 02.01.02 — QR code generation
+        // ─────────────────────────────────────────────────────────────────
+        QRCodeButton.setOnClickListener(view -> {
             if (checkPrivate.isChecked()) {
-                Toast.makeText(this,
-                        "Private events do not use a QR code.",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Private events do not use a QR code.", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (QRCodeString == null) {
-                if (eventID == null) {
-                    eventID = UUID.randomUUID().toString();
-                }
+                if (eventID == null) eventID = UUID.randomUUID().toString();
                 QRCodeString = "https://junimo.app/event?id=" + eventID;
-                if (createdEvent != null) {
-                    createdEvent.setQRCode(QRCodeString);
-                }
+                if (createdEvent != null) createdEvent.setQRCode(QRCodeString);
                 Toast.makeText(this, "QR code generated", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "QR already exists", Toast.LENGTH_SHORT).show(); }
+                Toast.makeText(this, "QR already exists", Toast.LENGTH_SHORT).show();
+            }
 
             Bitmap QRBitmap = generateQRCode(QRCodeString, 600);
             if (QRBitmap == null) return;
 
             View dialogView = getLayoutInflater().inflate(R.layout.pop_up_qr_code, null);
-            ImageView QRImage = dialogView.findViewById(R.id.QR_image);
-            TextView eventTitle = dialogView.findViewById(R.id.event_title);
+            ((ImageView) dialogView.findViewById(R.id.QR_image)).setImageBitmap(QRBitmap);
+            ((TextView) dialogView.findViewById(R.id.event_title)).setText(editTitle.getText().toString());
 
-            QRImage.setImageBitmap(QRBitmap);
-            eventTitle.setText(editTitle.getText().toString());
-
-            AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setView(dialogView)
-                    .create();
+            AlertDialog dialog = new AlertDialog.Builder(this).setView(dialogView).create();
             if (dialog.getWindow() != null) {
                 dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                 dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
@@ -296,30 +250,17 @@ public class CreateEvent extends AppCompatActivity {
             dialog.show();
         });
 
-        /**
-         * Allows a preview of the event before uploading
-         */
         previewButton.setOnClickListener(view -> {
-            String title              = editTitle.getText().toString();
-            String description        = editDescription.getText().toString();
-            String startDate          = editStartDate.getText().toString();
-            String endDate            = editEndDate.getText().toString();
-            String waitingListLimit   = editWaitingList.getText().toString();
-            String dateEvent          = editDateEvent.getText().toString();
-            String eventLocation      = editEventLocation.getText().toString();
-            String maxCapacity        = editMaxCapacity.getText().toString();
-            String price              = editPrice.getText().toString();
-
             Intent previewEvent = new Intent(CreateEvent.this, EventPreview.class);
-            previewEvent.putExtra("title", title);
-            previewEvent.putExtra("description", description);
-            previewEvent.putExtra("startDate", startDate);
-            previewEvent.putExtra("endDate", endDate);
-            previewEvent.putExtra("waitingListLimit", waitingListLimit);
-            previewEvent.putExtra("dateEvent", dateEvent);
-            previewEvent.putExtra("eventLocation", eventLocation);
-            previewEvent.putExtra("maxCapacity", maxCapacity);
-            previewEvent.putExtra("price", price);
+            previewEvent.putExtra("title", editTitle.getText().toString());
+            previewEvent.putExtra("description", editDescription.getText().toString());
+            previewEvent.putExtra("startDate", editStartDate.getText().toString());
+            previewEvent.putExtra("endDate", editEndDate.getText().toString());
+            previewEvent.putExtra("waitingListLimit", editWaitingList.getText().toString());
+            previewEvent.putExtra("dateEvent", editDateEvent.getText().toString());
+            previewEvent.putExtra("eventLocation", editEventLocation.getText().toString());
+            previewEvent.putExtra("maxCapacity", editMaxCapacity.getText().toString());
+            previewEvent.putExtra("price", editPrice.getText().toString());
             if (createdEvent != null && createdEvent.getPoster() != null && !createdEvent.getPoster().isEmpty()) {
                 previewEvent.putExtra("poster", createdEvent.getPoster());
             } else if (imageUri != null) {
@@ -329,14 +270,10 @@ public class CreateEvent extends AppCompatActivity {
         });
 
         uploadNewEvent.setOnClickListener(v -> uploadNewEvent());
-
         backButton.setOnClickListener(view -> finish());
         cancelButton.setOnClickListener(view -> finish());
     }
 
-    /**
-     * Helper method to check date formats
-     * */
     private void SelectDate(EditText target) {
         Calendar calendar = Calendar.getInstance();
         String dateExists = target.getText().toString();
@@ -346,21 +283,20 @@ public class CreateEvent extends AppCompatActivity {
                 calendar.set(Integer.parseInt(separators[0]),
                         Integer.parseInt(separators[1]) - 1,
                         Integer.parseInt(separators[2]));
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
         new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
-            String date = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth);
-            target.setText(date);
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+            target.setText(String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth));
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
     /**
-     * Validates all required fields then uploads the event to Firebase.
-     * US 02.01.02: saves isPrivate flag and skips QR code for private events.
+     * Validates all fields then uploads the event to Firebase.
+     * US 02.01.02: saves private flag, skips QR for private events.
+     * US 02.01.03: navigates to PrivateInviteActivity for private events.
      */
     private void uploadNewEvent() {
-        // Event ID
         if (createdEvent != null) {
             eventID = createdEvent.getEventID();
         } else if (eventID == null) {
@@ -373,193 +309,150 @@ public class CreateEvent extends AppCompatActivity {
             return;
         }
 
-        //optional fields
         String description = editDescription.getText().toString();
-        String startDate = editStartDate.getText().toString();
-        String endDate = editEndDate.getText().toString();
+        String startDate   = editStartDate.getText().toString();
+        String endDate     = editEndDate.getText().toString();
 
-        // US 02.01.04 — validate registration period dates
         if (!startDate.equals("") && !endDate.equals("")) {
             try {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 Date start = format.parse(startDate);
-                Date end = format.parse(endDate);
+                Date end   = format.parse(endDate);
                 if (start.after(end)) {
                     editStartDate.setError("Start date must be before end date");
                     editStartDate.requestFocus();
-                    return; }
+                    return;
+                }
             } catch (Exception e) {
-                Toast.makeText(CreateEvent.this, "Invalid date format", Toast.LENGTH_SHORT).show();
-                return;  }
+                Toast.makeText(this, "Invalid date format", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
 
-        // US 02.03.01 — optional waiting list limit
         final Integer finalWaitingListLimit;
         String waitingListLimit = editWaitingList.getText().toString();
         if (!waitingListLimit.equals("")) {
             int parsedLimit = Integer.parseInt(waitingListLimit);
             if (parsedLimit < 0) {
-                editWaitingList.setError("Waiting list limit must be a positive integer");
+                editWaitingList.setError("Must be a positive integer");
                 editWaitingList.requestFocus();
-                return; }
+                return;
+            }
             finalWaitingListLimit = parsedLimit;
         } else {
             finalWaitingListLimit = null;
         }
 
-        // Required fields
         String title = editTitle.getText().toString();
-        if (title.equals("")) {
-            editTitle.setError("*Field Required");
-            editTitle.requestFocus();
-            return;
-        }
+        if (title.equals("")) { editTitle.setError("*Field Required"); editTitle.requestFocus(); return; }
 
         String dateEvent = editDateEvent.getText().toString();
-        if (dateEvent.equals("")) {
-            editDateEvent.setError("*Field Required");
-            editDateEvent.requestFocus();
-            return;
-        }
+        if (dateEvent.equals("")) { editDateEvent.setError("*Field Required"); editDateEvent.requestFocus(); return; }
 
         String eventLocation = editEventLocation.getText().toString();
-        if (eventLocation.equals("")) {
-            editEventLocation.setError("*Field Required");
-            editEventLocation.requestFocus();
-            return;
-        }
+        if (eventLocation.equals("")) { editEventLocation.setError("*Field Required"); editEventLocation.requestFocus(); return; }
 
-        if (editMaxCapacity.getText().toString().equals("")) {
-            editMaxCapacity.setError("*Field Required");
-            editMaxCapacity.requestFocus();
-            return;
-        }
+        if (editMaxCapacity.getText().toString().equals("")) { editMaxCapacity.setError("*Field Required"); editMaxCapacity.requestFocus(); return; }
         int maxCapacity = Integer.parseInt(editMaxCapacity.getText().toString());
 
-        if (editPrice.getText().toString().equals("")) {
-            editPrice.setError("*Field Required");
-            editPrice.requestFocus();
-            return;
-        }
+        if (editPrice.getText().toString().equals("")) { editPrice.setError("*Field Required"); editPrice.requestFocus(); return; }
         double price = Double.parseDouble(editPrice.getText().toString());
 
-        // Organizer role check
         User currentUser = UserSession.getCurrentUser();
         if (currentUser != null) {
             organizerID = currentUser.getDeviceId();
         } else {
-            Toast.makeText(CreateEvent.this, "User not logged in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        //Get selected tag from spinner
         String tag = editTagSpinner.getSelectedItem().toString();
-        if (tag.equals("None")) {
-            tag = ""; //empty string for no tag
-        }
+        if (tag.equals("None")) tag = "";
 
-        //Upload image before creating event
-        String finalTag;
+        boolean isPrivate = checkPrivate.isChecked();
+        String finalTag = tag;
+        boolean finalIsPrivate = isPrivate;
+        String finalEventID = eventID;
+        String finalTitle = title;
+
         if (imageUri != null) {
             StorageReference storageRef = FirebaseStorage.getInstance()
                     .getReference("event_poster/" + eventID + ".jpg");
 
-            Log.d("createEvent", "Uploading image: " + imageUri.toString());
-            Log.d("createEvent", "Storage path: " + storageRef.getPath());
-
-
-            finalTag = tag;
             storageRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
                 storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                     String poster = uri.toString();
-
-                    // Build the event object
-                    Event saveEvent = new Event(
-                            title, description, startDate, endDate, dateEvent,
+                    Event saveEvent = new Event(title, description, startDate, endDate, dateEvent,
                             maxCapacity, finalWaitingListLimit, price, geoLocation,
-                            poster, eventID, eventLocation, organizerID, finalTag);
+                            poster, finalEventID, eventLocation, organizerID, finalTag);
 
-                    // ─────────────────────────────────────────────────────────
-                    // US 02.01.02
-                    // Read the private checkbox and apply to the event.
-                    // If private: clear any QR string so it is never saved.
-                    // If public:  attach the QR code if one was generated.
-                    // ─────────────────────────────────────────────────────────
-                    boolean isPrivate = checkPrivate.isChecked();
-                    saveEvent.setPrivate(isPrivate);
+                    saveEvent.setPrivate(finalIsPrivate);
+                    if (!finalIsPrivate && QRCodeString != null) saveEvent.setQRCode(QRCodeString);
 
-                    if (isPrivate) {
-                        // Private events must not store a QR code
-                        QRCodeString = null;
-                    } else if (QRCodeString != null) {
-                        saveEvent.setQRCode(QRCodeString);
-                    }
-
-                    Log.d("QR DEBUG", "Saving Qr: " + QRCodeString);
-                    Log.d("QR DEBUG", "Event QR Code: " + saveEvent.getQRCode());
-
-                    // Upload to Firebase
                     FirebaseManager firebase = new FirebaseManager();
-                    CollectionReference eventsRef = firebase.getDB().collection("events");
-                    firebase.addEvent(saveEvent, eventsRef);
+                    firebase.addEvent(saveEvent, firebase.getDB().collection("events"));
 
                     Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();
+                    Log.d("createEvent", "Event created: " + saveEvent.getTitle());
 
-                    String logMessage = (createdEvent != null)
-                            ? "Event updated: " + saveEvent.getTitle()
-                            : "Event created: " + saveEvent.getTitle();
-                    Log.d("createEvent", logMessage);
-
-                    finish();
+                    navigateAfterSave(finalIsPrivate, finalEventID, finalTitle);
 
                 }).addOnFailureListener(e -> {
-                    Toast.makeText(CreateEvent.this, "Failed to get URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("createEvent", "getDownloadUrl failed", e);
+                    Toast.makeText(this, "Failed to get URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
-
             }).addOnFailureListener(e -> {
-                Toast.makeText(CreateEvent.this, "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.e("createEvent", "upload failed", e);
+                Toast.makeText(this, "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             });
 
-        } else { //If an image isn't uploaded, use the default image
-            finalTag = tag;
+        } else {
             String poster = (createdEvent != null) ? createdEvent.getPoster() : "";
-
-            Event saveEvent = new Event(
-                    title, description, startDate, endDate, dateEvent,
+            Event saveEvent = new Event(title, description, startDate, endDate, dateEvent,
                     maxCapacity, finalWaitingListLimit, price, geoLocation,
-                    poster, eventID, eventLocation, organizerID, finalTag);
+                    poster, eventID, eventLocation, organizerID, tag);
 
-            // ─────────────────────────────────────────────────────────
-            // US 02.01.02
-            // Read the private checkbox and apply to the event.
-            // If private: clear any QR string so it is never saved.
-            // If public:  attach the QR code if one was generated.
-            // ─────────────────────────────────────────────────────────
-            boolean isPrivate = checkPrivate.isChecked();
             saveEvent.setPrivate(isPrivate);
+            if (!isPrivate && QRCodeString != null) saveEvent.setQRCode(QRCodeString);
 
-            if (isPrivate) {
-                // Private events must not store a QR code
-                QRCodeString = null;
-            } else if (QRCodeString != null) {
-                saveEvent.setQRCode(QRCodeString);
-            }
-
-            // Upload to Firebase
             FirebaseManager firebase = new FirebaseManager();
-            CollectionReference eventsRef = firebase.getDB().collection("events");
-            firebase.addEvent(saveEvent, eventsRef);
+            firebase.addEvent(saveEvent, firebase.getDB().collection("events"));
 
-            Toast.makeText(CreateEvent.this, "Event Created", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Event Created", Toast.LENGTH_SHORT).show();
+            Log.d("createEvent", "Event created: " + saveEvent.getTitle());
 
-            String logMessage = (createdEvent != null)
-                    ? "Event updated: " + saveEvent.getTitle()
-                    : "Event created: " + saveEvent.getTitle();
-            Log.d("createEvent", logMessage);
-
-            finish();
+            navigateAfterSave(isPrivate, eventID, title);
         }
+    }
+
+    /**
+     * US 02.01.02 / US 02.01.03
+     * After saving the event:
+     * - If private: open PrivateInviteActivity then clear the back stack
+     *   so returning lands on OrganizerStartScreen (triggers onResume reload).
+     * - If public: go straight back to OrganizerStartScreen.
+     *
+     * FLAG_ACTIVITY_CLEAR_TOP ensures OrganizerStartScreen is brought to
+     * the front and its onResume() fires, which reloads the event list.
+     */
+    private void navigateAfterSave(boolean isPrivate, String savedEventId, String savedTitle) {
+        if (isPrivate) {
+            // ─────────────────────────────────────────────────────────────
+            // US 02.01.03
+            // Open invite screen. When the organizer presses back there,
+            // FLAG_ACTIVITY_CLEAR_TOP brings OrganizerStartScreen to the
+            // front and triggers its onResume() to reload the event list.
+            // ─────────────────────────────────────────────────────────────
+            Intent invite = new Intent(CreateEvent.this, PrivateInviteActivity.class);
+            invite.putExtra("eventId", savedEventId);
+            invite.putExtra("eventTitle", savedTitle);
+            // Clear the stack so PrivateInvite → back → OrganizerStartScreen
+            invite.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(invite);
+        } else {
+            // Public event — go straight back to organizer home
+            Intent home = new Intent(CreateEvent.this, OrganizerStartScreen.class);
+            home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(home);
+        }
+        finish();
     }
 }
