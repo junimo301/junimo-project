@@ -82,6 +82,7 @@ public class Entrants extends AppCompatActivity {
         WaitlistUsers(selectEvent);
         lotteryButton.setOnClickListener(v -> startLottery());
 
+        String[] deviceIDs=selectEvent.getWaitList().split(",");
         // US 02.01.03
         // Opens PrivateInviteActivity so the organizer can invite entrants
         // to this private event's waiting list at any time after creation.
@@ -264,7 +265,7 @@ public class Entrants extends AppCompatActivity {
             cancelledEntrants.removeAllViews();
             enrolledEntrants.removeAllViews();
 
-            loadInvitedEntrants(users, eventID);
+            loadInvitedEntrants(users, eventID,selectEvent);
             loadCancelledEntrants(users, eventID);
             loadEnrolledEntrants(users);
         });
@@ -327,7 +328,7 @@ public class Entrants extends AppCompatActivity {
     /**
      * Loads invited entrants — users whose invitedEvents contains this eventID
      */
-    private void loadInvitedEntrants(ArrayList<User> usersArray, String eventID, Event selectEvent) {
+    private void loadInvitedEntrants(List<User> usersArray, String eventID, Event selectEvent) {
         boolean noneInvited = true;
         if (!usersArray.isEmpty()) {
             for (User user : usersArray) {
