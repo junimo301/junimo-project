@@ -9,9 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.junimoapp.R;
+import com.example.junimoapp.admin.AdminUserAdapter;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
@@ -94,7 +96,7 @@ public class Entrants extends AppCompatActivity {
                                                     document.getString("waitlistedEvents")
                                             );
                                             users.add(user);
-                                            loadInvitedEntrants(users, eventID);
+                                            loadInvitedEntrants(users, eventID,selectEvent);
                                             loadCancelledEntrants(users, eventID);
                                             loadEnrolledEntrants(users);
                                         } else {
@@ -202,7 +204,7 @@ public class Entrants extends AppCompatActivity {
     /**
      * Loads invited entrants — users whose invitedEvents contains this eventID
      */
-    private void loadInvitedEntrants(ArrayList<User> usersArray, String eventID) {
+    private void loadInvitedEntrants(ArrayList<User> usersArray, String eventID, Event selectEvent) {
         boolean noneInvited = true;
         if (!usersArray.isEmpty()) {
             for (User user : usersArray) {
@@ -211,6 +213,7 @@ public class Entrants extends AppCompatActivity {
                     TextView textView = new TextView(Entrants.this);
                     textView.setText(user.getName());
                     invitedEntrants.addView(textView);
+                    textView.setOnClickListener(v->{cancelEntrantDialogue(user,selectEvent,textView);});
                     noneInvited = false;
                 }
             }
@@ -221,6 +224,18 @@ public class Entrants extends AppCompatActivity {
             invitedEntrants.addView(textView);
         }
     }
+
+    private void cancelEntrantDialogue(User user, Event event,TextView textView) {
+        new AlertDialog.Builder(this)
+                .setTitle(this.getString(R.string.remove))
+                .setMessage(this.getString(R.string.cancel) + " \"" + user.getName() + "\"" + this.getString(R.string.invite))
+                //delete the user
+                .setPositiveButton(this.getString(R.string.remove), (dialog, which) -> {user.cancelUser(event); invitedEntrants.removeView(textView);})
+                //don't delete (dismiss dialog)
+                .setNegativeButton(this.getString(R.string.cancel), null)
+                .show();
+    }
+
 
     /**
      * Loads cancelled entrants
