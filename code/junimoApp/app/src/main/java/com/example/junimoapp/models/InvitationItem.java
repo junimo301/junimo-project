@@ -9,6 +9,11 @@ public class InvitationItem {
     String eventID;
     String title;
 
+    private boolean coOrganizerInvite;
+
+    public boolean isCoOrganizerInvite() { return coOrganizerInvite; }
+    public void setCoOrganizerInvite(boolean coOrganizerInvite) { this.coOrganizerInvite = coOrganizerInvite; }
+
     /**
      * constructs a new InvitationItem with the given event ID and title
      * @param eventID
