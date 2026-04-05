@@ -31,6 +31,7 @@ public class User {
     private ArrayList<Event> organizedEventsList;
     private ArrayList<Event> waitlistedEventsList;
     private ArrayList<Event> invitedEventsList;
+    private String coOrganizerInvites;
 
     // ─────────────────────────────────────────────────────────────────────
     // US 01.04.03
@@ -56,6 +57,7 @@ public class User {
         this.invitedEvents = invited;
         this.waitlistedEvents = waitlisted;
         this.cancelledEvents = "";
+        this.coOrganizerInvites = "";
 
         try {
             firebase = new FirebaseManager();
@@ -278,6 +280,38 @@ public class User {
                                 }
                             });
                 }
+            }
+        }
+    }
+
+    public String getCoOrganizerInvites() {
+        return coOrganizerInvites;
+    }
+
+    public void setCoOrganizerInvites(String coOrganizerInvites) {
+        this.coOrganizerInvites = coOrganizerInvites;
+    }
+
+    public void addCoOrganizerInvite(String eventId) {
+        if (coOrganizerInvites == null) coOrganizerInvites = "";
+
+        if (!coOrganizerInvites.contains(eventId)) {
+            coOrganizerInvites = coOrganizerInvites + eventId + ",";
+
+            if (db != null) {
+                db.collection("users").document(deviceId)
+                        .update("coOrganizerInvites", coOrganizerInvites);
+            }
+        }
+    }
+
+    public void removeCoOrganizerInvite(String eventId) {
+        if (coOrganizerInvites != null && coOrganizerInvites.contains(eventId)) {
+            coOrganizerInvites = coOrganizerInvites.replace(eventId + ",", "");
+
+            if (db != null) {
+                db.collection("users").document(deviceId)
+                        .update("coOrganizerInvites", coOrganizerInvites);
             }
         }
     }

@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.junimoapp.OrganizerStartScreen;
@@ -83,10 +85,8 @@ public class Entrants extends AppCompatActivity {
         db.collection("events").document(eventID).get()
                 .addOnSuccessListener(doc -> {
                     if (doc.exists()) {
-                        // Try "waitList" first (EventDetailsActivity uses this)
                         String waitlist = doc.getString("waitList");
                         if (waitlist == null || waitlist.equals("")) {
-                            // Fall back to "waitlist" (Event.enrollInWaitList uses this)
                             waitlist = doc.getString("waitlist");
                         }
                         if (waitlist != null && !waitlist.equals("")) {
@@ -176,7 +176,7 @@ public class Entrants extends AppCompatActivity {
             invitedEntrants.removeAllViews();
             cancelledEntrants.removeAllViews();
             enrolledEntrants.removeAllViews();
-            loadInvitedEntrants(users, eventID);
+            loadInvitedEntrants(users, eventID, selectEvent);
             loadCancelledEntrants(users, eventID);
             loadEnrolledEntrants(users);
         });
@@ -233,15 +233,22 @@ public class Entrants extends AppCompatActivity {
         refreshUI();
     }
 
-    private void loadInvitedEntrants(List<User> usersArray, String eventID) {
+    /**
+     * Loads invited entrants — users whose invitedEvents contains this eventID.
+     * Tapping an invited entrant opens a dialog to cancel their invite.
+     */
+    private void loadInvitedEntrants(List<User> usersArray, String eventID, Event selectEvent) {
         boolean noneInvited = true;
-        for (User user : usersArray) {
-            Log.d("invited entrants", user.getName() + " invited: " + user.isInvited(eventID));
-            if (user.isInvited(eventID)) {
-                TextView textView = new TextView(Entrants.this);
-                textView.setText(user.getName());
-                invitedEntrants.addView(textView);
-                noneInvited = false;
+        if (!usersArray.isEmpty()) {
+            for (User user : usersArray) {
+                Log.d("invited entrants", user.getName() + " invited: " + user.isInvited(eventID));
+                if (user.isInvited(eventID)) {
+                    TextView textView = new TextView(Entrants.this);
+                    textView.setText(user.getName());
+                    invitedEntrants.addView(textView);
+                    textView.setOnClickListener(v -> cancelEntrantDialogue(user, selectEvent, textView));
+                    noneInvited = false;
+                }
             }
         }
         if (noneInvited) {
@@ -249,6 +256,22 @@ public class Entrants extends AppCompatActivity {
             textView.setText("No users have been invited");
             invitedEntrants.addView(textView);
         }
+    }
+
+    /**
+     * Shows a dialog to cancel an entrant's invite.
+     * Added by teammate — allows organizer to remove an invited entrant.
+     */
+    private void cancelEntrantDialogue(User user, Event event, TextView textView) {
+        new AlertDialog.Builder(this)
+                .setTitle(this.getString(R.string.remove))
+                .setMessage(this.getString(R.string.cancel) + " \"" + user.getName() + "\"" + this.getString(R.string.invite))
+                .setPositiveButton(this.getString(R.string.remove), (dialog, which) -> {
+                    user.cancelUser(event);
+                    invitedEntrants.removeView(textView);
+                })
+                .setNegativeButton(this.getString(R.string.cancel), null)
+                .show();
     }
 
     private void loadCancelledEntrants(List<User> usersArray, String eventID) {

@@ -67,20 +67,28 @@ public class InvitationsActivity extends BaseActivity {
 
         adapter = new InvitationAdapter(invitations, new InvitationAdapter.InvitationListener() {
             @Override
-            public void onAccept(String eventID) {
-                acceptInvite(eventID);
+            public void onAccept(String eventID, boolean isCoOrganizerInvite) {
+                if (isCoOrganizerInvite) {
+                    acceptCoOrganizerInvite(eventID);
+                } else {
+                    acceptInvite(eventID);
+                }
             }
 
             @Override
-            public void onDecline(String eventID) {
-                declineInvite(eventID);
+            public void onDecline(String eventID, boolean isCoOrganizerInvite) {
+                if (isCoOrganizerInvite) {
+                    declineCoOrganizerInvite(eventID);
+                } else {
+                    declineInvite(eventID);
+                }
             }
         });
 
         recyclerView.setAdapter(adapter);
 
         loadInvitations();
-        loadPrivateInvitations();
+        loadCoOrganizerInvitations();
     }
 
     /**
@@ -90,13 +98,35 @@ public class InvitationsActivity extends BaseActivity {
     private void loadInvitations() {
         db.collection("users").document(deviceId).get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        Object invitationsObj = documentSnapshot.get("invitations");
-                        if (invitationsObj instanceof List) {
-                            List<?> eventIdsRaw = (List<?>) invitationsObj;
-                            for (Object idObj : eventIdsRaw) {
-                                if (idObj instanceof String) {
-                                    loadEventIntoList((String) idObj);
+                    if (!documentSnapshot.exists()) return;
+
+                    //load standard invitations
+                    Object invitationsObj = documentSnapshot.get("invitations");
+                    if (invitationsObj instanceof List) {
+                        List<?> eventIdsRaw = (List<?>) invitationsObj;
+                        for (Object idObj : eventIdsRaw) {
+                            if (idObj instanceof String) {
+                                loadEventIntoList((String) idObj, false);
+                            }
+                        }
+                    }
+
+                    //load private invitations from invitedEvents string
+                    String invitedEvents = documentSnapshot.getString("invitedEvents");
+                    if (invitedEvents != null && !invitedEvents.isEmpty()) {
+                        String[] privateEventIds = invitedEvents.split(",");
+                        for (String eventID : privateEventIds) {
+                            if (!eventID.isEmpty()) {
+                                //skip dupes
+                                boolean alreadyLoaded = false;
+                                for (InvitationItem item : invitations) {
+                                    if (item.getEventId().equals(eventID)) {
+                                        alreadyLoaded = true;
+                                        break;
+                                    }
+                                }
+                                if (!alreadyLoaded) {
+                                    loadEventIntoList(eventID, false);
                                 }
                             }
                         }
@@ -109,50 +139,31 @@ public class InvitationsActivity extends BaseActivity {
      * Loads private event invitations from the "invitedEvents" comma-String field.
      * Skips any eventID already loaded from the regular invitations list.
      */
-    private void loadPrivateInvitations() {
-        db.collection("users").document(deviceId).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (!documentSnapshot.exists()) return;
-
-                    String invitedEvents = documentSnapshot.getString("invitedEvents");
-                    if (invitedEvents == null || invitedEvents.equals("")) return;
-
-                    String[] eventIds = invitedEvents.split(",");
-                    for (String eventID : eventIds) {
-                        if (eventID == null || eventID.equals("")) continue;
-
-                        boolean alreadyLoaded = false;
-                        for (InvitationItem item : invitations) {
-                            if (item.getEventId().equals(eventID)) {
-                                alreadyLoaded = true;
-                                break;
-                            }
-                        }
-                        if (!alreadyLoaded) {
-                            loadEventIntoList(eventID);
-                        }
-                    }
-                });
-    }
-
     /**
      * Fetches event title from Firestore and adds it to the invitations list.
      * Shared by both loadInvitations() and loadPrivateInvitations().
      */
-    private void loadEventIntoList(String eventID) {
+    //new for co-organizer invites
+    private void loadEventIntoList(String eventID, boolean isCoOrganizerInvite) {
         db.collection("events").document(eventID).get()
                 .addOnSuccessListener(eventSnap -> {
                     if (eventSnap.exists()) {
                         String title = eventSnap.getString("title");
 
-                        // US 01.05.07 — label private event invites
                         Boolean isPrivate = eventSnap.getBoolean("private");
                         String displayTitle = Boolean.TRUE.equals(isPrivate)
                                 ? title + " [Private]"
                                 : title;
 
+                        if (isCoOrganizerInvite) {
+                            displayTitle = displayTitle + " [Co-Organizer]";
+                        }
+
+                        InvitationItem item = new InvitationItem(eventID, displayTitle);
+                        item.setCoOrganizerInvite(isCoOrganizerInvite);
+
                         int position = invitations.size();
-                        invitations.add(new InvitationItem(eventID, displayTitle));
+                        invitations.add(item);
                         adapter.notifyItemInserted(position);
                     }
                 });
@@ -244,5 +255,87 @@ public class InvitationsActivity extends BaseActivity {
                 break;
             }
         }
+    }
+
+    /**
+     * loads co-organizer invitations from the user's coOrganizerInvites string
+     */
+    private void loadCoOrganizerInvitations() {
+        db.collection("users").document(deviceId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (!documentSnapshot.exists()) return;
+
+                    String coOrganizerInvites = documentSnapshot.getString("coOrganizerInvites");
+                    if (coOrganizerInvites == null || coOrganizerInvites.equals("")) return;
+
+                    String[] eventIds = coOrganizerInvites.split(",");
+                    for (String eventID : eventIds) {
+                        if (eventID == null || eventID.equals("")) continue;
+
+                        boolean alreadyLoaded = false;
+                        for (InvitationItem item : invitations) {
+                            if (item.getEventId().equals(eventID)) {
+                                alreadyLoaded = true;
+                                break;
+                            }
+                        }
+                        if (!alreadyLoaded) {
+                            loadEventIntoList(eventID, true);
+                        }
+                    }
+                });
+    }
+
+    /**
+     * accept a co-organizer invitation
+     */
+    private void acceptCoOrganizerInvite(String eventId) {
+        //add user to the event's co-organizers
+        db.collection("events").document(eventId)
+                .collection("coOrganizers").document(deviceId)
+                .set(new HashMap<String, Object>() {{
+                    put("deviceId", deviceId);
+                    put("status", "accepted");
+                }});
+
+        //remove invite from user's coOrganizerInvites
+        db.collection("users").document(deviceId).get()
+                .addOnSuccessListener(snap -> {
+                    if (!snap.exists()) return;
+                    String coOrganizerInvites = snap.getString("coOrganizerInvites");
+                    if (coOrganizerInvites != null && coOrganizerInvites.contains(eventId)) {
+                        String updated = coOrganizerInvites.replace(eventId + ",", "");
+                        db.collection("users").document(deviceId)
+                                .update("coOrganizerInvites", updated);
+                    }
+                });
+
+        removeFromList(eventId);
+    }
+
+    /**
+     * decline a co-organizer invitation
+     */
+    private void declineCoOrganizerInvite(String eventId) {
+        db.collection("events").document(eventId)
+                .collection("declinedCoOrganizers").document(deviceId)
+                .set(new HashMap<String, Object>() {{
+                    put("deviceId", deviceId);
+                    put("status", "declined");
+                }});
+
+        //remove invite from user's coOrganizerInvites
+        db.collection("users").document(deviceId).get()
+                .addOnSuccessListener(snap -> {
+                    if (!snap.exists()) return;
+                    String coOrganizerInvites = snap.getString("coOrganizerInvites");
+                    if (coOrganizerInvites != null && coOrganizerInvites.contains(eventId)) {
+                        String updated = coOrganizerInvites.replace(eventId + ",", "");
+                        db.collection("users").document(deviceId)
+                                .update("coOrganizerInvites", updated);
+                    }
+                });
+
+        removeFromList(eventId);
     }
 }
