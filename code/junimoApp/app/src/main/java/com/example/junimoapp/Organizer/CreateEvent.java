@@ -244,6 +244,9 @@ public class CreateEvent extends AppCompatActivity {
 
             AlertDialog dialog = new AlertDialog.Builder(this).setView(dialogView).create();
 
+            dialogView.findViewById(R.id.close_button).setOnClickListener(v -> dialog.dismiss());
+            dialog.show();
+
             Window window = dialog.getWindow();
             if (window != null) {
                 window.setBackgroundDrawableResource(android.R.color.transparent);
@@ -261,8 +264,6 @@ public class CreateEvent extends AppCompatActivity {
                 QRCodeImageView.getLayoutParams().height = QRCodeSize;
                 QRCodeImageView.requestLayout();
             }
-            dialogView.findViewById(R.id.close_button).setOnClickListener(v -> dialog.dismiss());
-            dialog.show();
         });
 
         previewButton.setOnClickListener(view -> {

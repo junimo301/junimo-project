@@ -127,6 +127,9 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
                         .setView(dialogView)
                         .create();
 
+                dialogView.findViewById(R.id.close_button).setOnClickListener(v -> dialog.dismiss());
+                dialog.show();
+
                 Window window = dialog.getWindow();
                 if (window != null) {
                     window.setBackgroundDrawableResource(android.R.color.transparent);
@@ -144,8 +147,7 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
                     QRCodeImageView.getLayoutParams().height = QRCodeSize;
                     QRCodeImageView.requestLayout();
                 }
-                dialogView.findViewById(R.id.close_button).setOnClickListener(v -> dialog.dismiss());
-                dialog.show();
+
             } catch (Exception ignored) {}
         });
     }
