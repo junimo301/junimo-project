@@ -158,7 +158,11 @@ public class CreateEvent extends AppCompatActivity {
                             userIds.add(deviceId);
                         }
                     }
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, userNames);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                            this,
+                            R.layout.spinner_item_light,
+                            userNames
+                    );
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinner_coorganizer.setAdapter(adapter);
                     spinner_coorganizer.setTag(userIds); //store IDs for later
