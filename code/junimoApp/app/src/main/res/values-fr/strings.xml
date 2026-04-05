@@ -13,34 +13,34 @@
     <string name="browse_remove_organizers">Naviguer/supprimer les organisateurs</string>
     <string name="browse_images">Naviguer les images</string>
     <string name="browse_events">Naviguer les événements</string>
-    <string name="search_events_label">Search Events</string>
+    <string name="search_events_label">Feuilléter les événements</string>
 
     <!-- Admin notification stuff -->
-    <string name="browse_notification_log">Browse Notification Log</string>
-    <string name="notification_log_title">Notification Log</string>
-    <string name="sent_by">Sent by: </string>
-    <string name="no_notifications_found">No notifications found.</string>
+    <string name="browse_notification_log">Naviguer les notifications</string>
+    <string name="notification_log_title">Liste des notifications</string>
+    <string name="sent_by">Envoyer par: </string>
+    <string name="no_notifications_found">Na pas trouver une notification.</string>
 
     <!-- Admin event detail screen (comments) -->
-    <string name="event_details_admin">Event Details</string>
-    <string name="comments_header">Comments</string>
-    <string name="remove_comment">Remove Comment</string>
-    <string name="remove_comment_confirm">Are you sure you want to remove this comment? </string>
-    <string name="no_comments">No comments on this event.</string>
-    <string name="organizer_id_label">Organizer ID: </string>
+    <string name="event_details_admin">Details dévénement</string>
+    <string name="comments_header">Commentaires</string>
+    <string name="remove_comment">Enlever une commentaire</string>
+    <string name="remove_comment_confirm">Vous êtes certain vous voulez enlever cette commentaire? </string>
+    <string name="no_comments">Il ny a pas de commentaires pour cette événement.</string>
+    <string name="organizer_id_label">ID dorganisateur: </string>
     <string name="description_label">Description: </string>
-    <string name="location_label">Location: </string>
+    <string name="location_label">Endroit: </string>
     <string name="date_label">Date: </string>
 
     <!-- Admin image browsing screen -->
-    <string name="browse_images_title"> Browse Images</string>
-    <string name="remove_image">Remove Image</string>
-    <string name="remove_image_confirm">Are you sure you want to remove this image? </string>
-    <string name="no_image">No image</string>
-    <string name="image_type_poster">Poster</string>
-    <string name="image_type_profile">Profile Photo</string>
-    <string name="event_title_label">Event: </string>
-    <string name="user_label">User: </string>
+    <string name="browse_images_title"> Naviguer les images</string>
+    <string name="remove_image">Enlever image</string>
+    <string name="remove_image_confirm">Vous êtes certain vous voulez enlever cette image? </string>
+    <string name="no_image">Pas de image</string>
+    <string name="image_type_poster">Affiche</string>
+    <string name="image_type_profile">Image de profil</string>
+    <string name="event_title_label">Événement: </string>
+    <string name="user_label">Utilisateur: </string>
 
     <!-- Search/filter stuff -->
     <string name="search_events">Chercher les événements</string>
@@ -77,7 +77,7 @@
     <string name="preview">Aperçu</string>
     <string name="publish">Publier</string>
     <string name="cancel">Annuler</string>
-    <string name="organizer">Organiser</string>
+    <string name="organizer">Organisateur</string>
     <string name="event">Événement</string>
     <string name="start_lottery">Commence loterie</string>
     <string name="entrants_invited_to_apply">• Concurrent invité</string>
@@ -92,7 +92,7 @@
     <string name="price">Prix</string>
     <string name="geo_location">Endroit géographique</string>
     <string name="back">Retourner</string>
-    <string name="_1_purpose_of_the_app_10_10_the_event_lottery_system_helps_people_register_for_popular_community_events_in_a_fair_way_instead_of_spots_being_taken_by_whoever_clicks_first_users_can_join_a_waiting_list_and_are_selected_randomly_10_10_this_system_gives_everyone_a_fair_chance_to_participate_even_if_they_cannot_register_immediately_when_an_event_opens_10_10_2_general_rules_10_10_to_keep_the_platform_fair_and_enjoyable_for_everyone_please_follow_these_rules_10_10_each_user_may_join_the_waiting_list_once_per_event_10_users_should_provide_accurate_personal_information_when_registering_10_if_selected_for_an_event_users_must_accept_or_decline_the_invitation_within_the_given_time_10_if_there_is_no_response_the_spot_may_be_offered_to_another_entrant_10_10_3_how_the_lottery_works_10_10_users_join_the_waiting_list_during_the_event_registration_period_10_when_registration_closes_the_system_randomly_selects_participants_10_selected_users_receive_a_notification_inviting_them_to_register_10_if_someone_declines_or_does_not_respond_another_person_from_the_waiting_list_may_be_selected_10_this_process_continues_until_all_available_spots_are_filled_10_10_4_responsibilities_of_entrants_10_10_join_waiting_lists_only_for_events_they_plan_to_attend_10_respond_to_invitations_as_soon_as_possible_10_follow_any_rules_set_by_the_event_organizer_10_keep_their_profile_information_up_to_date_10_entrants_can_leave_a_waiting_list_at_any_time_before_the_lottery_draw_10_10_5_responsibilities_of_organizers_10_10_provide_clear_and_accurate_event_details_date_time_location_capacity_10_set_registration_start_and_end_dates_10_use_the_lottery_system_fairly_10_communicate_updates_to_entrants_through_the_app_10_organizers_may_update_or_cancel_events_if_necessary_10_10_6_qr_code_access_10_10_events_may_include_a_qr_code_to_make_registration_easier_scanning_a_qr_code_takes_users_directly_to_the_event_page_where_they_can_view_details_and_join_the_waiting_list_qr_codes_should_only_be_used_for_legitimate_event_promotion_10_10_7_location_verification_10_10_some_events_may_require_location_verification_if_enabled_the_app_may_check_device_location_when_users_join_the_waiting_list_location_data_is_used_only_for_this_purpose_10_10_8_notifications_10_10_the_app_may_send_notifications_when_10_a_user_is_selected_for_an_event_10_a_user_is_not_selected_10_an_event_is_updated_or_cancelled_10_organizers_send_important_announcements_10_10_users_can_choose_to_disable_notifications_in_settings_10_10_9_privacy_and_data_10_10_personal_information_is_stored_securely_using_firebase_and_only_used_for_event_registration_and_communication_users_can_delete_their_profile_at_any_time_10_10_10_administrative_oversight_10_10_administrators_help_manage_the_platform_by_removing_inappropriate_events_removing_abusive_profiles_managing_uploaded_images_and_reviewing_notification_logs_10_10_11_fair_use_10_10_users_who_misuse_the_platform_may_be_removed_examples_include_creating_multiple_accounts_to_increase_lottery_chances_uploading_inappropriate_offensive_content_or_violating_platform_guidelines">1. Raison pour application\n\nLe système de loterie aide avec enregistrement pour les événements populaire dans un façon juste. Au lieu de les positions qui vas a la personne qui a cliquer en premier, les utilisateur peux joindre a liste d\'attente et son selectioner au hazard.\n\nCe système donne un chance juste a tout le monde pour participe, même s\'ils ne peuvent pas enregistrer immediament quand l\'événement est ouvert.\n\n2. Règles générale\n\nPour garder la platforme juste et divertissent pour tout, s\ils vous plait garde a ces règles:\n\n- Chaques utilisateurs peuvent joindre une liste d\'attente une foix par événement.\n- Utilisateurs doivent donner l\'information personnelle avant votre enregistrement\n- Si vous ètes sélectioner pour un événement, utilisateurs doivent accepter où rejecter l\'invitation avec la temp donner.\n- Si il n\'y a pas de réponse, la place peut être offrir a un different concurrent.\n\n3. Comment la loterie fonctionne\n\n- Utilisateurs joint la liste d\'attente durant la période de enregistration.\n- Quand la période est fini, la système selection les participants.\n- Les utilisateurs recoivent une notification qui les invitent à enregistrer.\n- Si quelqun ne répond pas, un autre personne est choisi de liste d\'attente peuvent être sélectioner.\n- Ce processu continue jusquà tout les position sont rempli.\n\n4. Les responsibilitiés des concurrents\n\n- Joindre les liste dattente pour seulement les événements quils veut attendre.\n- Réponder à les invitations vitements.\n- Garde tous les règles créer par lorganisateur.\n- Garde linformation sur votre profil précis.\n- Les concurrents peuvent quitter une liste dattente avant la loterie.\n\n5. Responsibilité d\'organisateurs\n\n- Donne les détails précis pour lévénement.\n- Done les dates pour la début et fin du période denregistration.\n- Utilise la système de loterie justement.\n- Communiquer les tenir avec les concurrents dans lapplication.\n- Loganisateurs peuvent modifier où annuler les événements si nécessaire.\n\n6. Laccès de code QR\n\nLes événements peuvent incluir un code QR pour enregistrer plus facilement. Scanner un code QR prend directment au page des détails pour lévénement ou utilisateur peux joindre une liste dattente. Les codes QR devrait être seulement pour la promotion des vrais événements.\n\n7. Verifier lendroit\n\nQuelque événement peut réquiser la verification dendroit des concurrents. Si activer, lapplication peut chercher lendroit de lutilisateurs qui sont sur liste dattente. Information dendroit est utiliser seulement pour cette raison.\n\n8. Notifications\n\nLapplication peut envoyer les notifications quand:\n- Un utilisateur est séléctioner pour un événement\n- Un utilisateur nest pas sélectioner\n- Un événement est modifier ou annuler\n- Les organisateurs envoient des annonces\n\nLes utilisateurs peuvent désactiver les notifications.\n\n9. Politique de confidentialité\n\nLinformation personnel est gardé sécurement avec Firebase et est utiliser seulement pour enregistrement pour les événements et communication. Les utilisateur peuvent supprimer leur profil a aucun temp.\n\n10. Supervision administrative\n\nLes administrateurs enlève les événements inapproprié, les profils offensives, les images inapproprié et les notifications si necessaire.\n\n11. Utilisation équitable\n\nLes utilisateurs qui abuse lapplication peuvent être annuler. Les exemples sont créer beaucoups de compte pour améliorer leur chance a gagner loterie, la poste de content inapproprié ou offensif ou la violation des règles lister.</string>
+    <string name="platform_guidelines">1. Raison pour application\n\nLe système de loterie aide avec enregistrement pour les événements populaire dans un façon juste. Au lieu de les positions qui vas a la personne qui a cliquer en premier, les utilisateur peux joindre a liste d\'attente et son selectioner au hazard.\n\nCe système donne un chance juste a tout le monde pour participe, même s\'ils ne peuvent pas enregistrer immediament quand l\'événement est ouvert.\n\n2. Règles générale\n\nPour garder la platforme juste et divertissent pour tout, s\ils vous plait garde a ces règles:\n\n- Chaques utilisateurs peuvent joindre une liste d\'attente une foix par événement.\n- Utilisateurs doivent donner l\'information personnelle avant votre enregistrement\n- Si vous ètes sélectioner pour un événement, utilisateurs doivent accepter où rejecter l\'invitation avec la temp donner.\n- Si il n\'y a pas de réponse, la place peut être offrir a un different concurrent.\n\n3. Comment la loterie fonctionne\n\n- Utilisateurs joint la liste d\'attente durant la période de enregistration.\n- Quand la période est fini, la système selection les participants.\n- Les utilisateurs recoivent une notification qui les invitent à enregistrer.\n- Si quelqun ne répond pas, un autre personne est choisi de liste d\'attente peuvent être sélectioner.\n- Ce processu continue jusquà tout les position sont rempli.\n\n4. Les responsibilitiés des concurrents\n\n- Joindre les liste dattente pour seulement les événements quils veut attendre.\n- Réponder à les invitations vitements.\n- Garde tous les règles créer par lorganisateur.\n- Garde linformation sur votre profil précis.\n- Les concurrents peuvent quitter une liste dattente avant la loterie.\n\n5. Responsibilité d\'organisateurs\n\n- Donne les détails précis pour lévénement.\n- Done les dates pour la début et fin du période denregistration.\n- Utilise la système de loterie justement.\n- Communiquer les tenir avec les concurrents dans lapplication.\n- Loganisateurs peuvent modifier où annuler les événements si nécessaire.\n\n6. Laccès de code QR\n\nLes événements peuvent incluir un code QR pour enregistrer plus facilement. Scanner un code QR prend directment au page des détails pour lévénement ou utilisateur peux joindre une liste dattente. Les codes QR devrait être seulement pour la promotion des vrais événements.\n\n7. Verifier lendroit\n\nQuelque événement peut réquiser la verification dendroit des concurrents. Si activer, lapplication peut chercher lendroit de lutilisateurs qui sont sur liste dattente. Information dendroit est utiliser seulement pour cette raison.\n\n8. Notifications\n\nLapplication peut envoyer les notifications quand:\n- Un utilisateur est séléctioner pour un événement\n- Un utilisateur nest pas sélectioner\n- Un événement est modifier ou annuler\n- Les organisateurs envoient des annonces\n\nLes utilisateurs peuvent désactiver les notifications.\n\n9. Politique de confidentialité\n\nLinformation personnel est gardé sécurement avec Firebase et est utiliser seulement pour enregistrement pour les événements et communication. Les utilisateur peuvent supprimer leur profil a aucun temp.\n\n10. Supervision administrative\n\nLes administrateurs enlève les événements inapproprié, les profils offensives, les images inapproprié et les notifications si necessaire.\n\n11. Utilisation équitable\n\nLes utilisateurs qui abuse lapplication peuvent être annuler. Les exemples sont créer beaucoups de compte pour améliorer leur chance a gagner loterie, la poste de content inapproprié ou offensif ou la violation des règles lister.</string>
     <string name="choose_your_role">Choisir votre role</string>
     <string name="user">Utilisateur</string>
     <string name="notifications">Notifications</string>
@@ -162,17 +162,17 @@
     <string name="remove_profile">Enlever profil</string>
     <string name="remove_profile_message">"'s profil?</string>
 
-    <string name="upload">Upload</string>
-    <string name="enable">Enable</string>
-    <string name="enabled">Enabled</string>
-    <string name="disabled">Disabled</string>
-    <string name="close">Close</string>
-    <string name="map_of_entrants">Map of Entrants</string>
-    <string name="click_to_enlarge">Click To Enlarge</string>
+    <string name="upload">Uploader</string>
+    <string name="enable">Activer</string>
+    <string name="enabled">Activé</string>
+    <string name="disabled">Désactivé</string>
+    <string name="close">Ferme</string>
+    <string name="map_of_entrants">Carte de concurrents</string>
+    <string name="click_to_enlarge">Clic pour agrandir</string>
 
     <!-- settings -->
-    <string name="select_language">Select Language</string>
-    <string name="select_language_description">Choose your preferred app language:</string>
-    <string name="language">Language</string>
-    <string name="back_sett">Back</string>
+    <string name="select_language">Selectioner une langue</string>
+    <string name="select_language_description">Choisir votre langue préférée:</string>
+    <string name="language">Langue</string>
+    <string name="back_sett">Retourner</string>
 </resources>

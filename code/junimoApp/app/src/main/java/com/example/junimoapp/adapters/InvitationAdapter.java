@@ -15,18 +15,20 @@ import com.example.junimoapp.models.InvitationItem;
 import java.util.List;
 
 /**
- * adapter for the invitation stuff
+ * adapter for displaying a list of invitations (normal, private, co-organizer)
  */
-
 public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.ViewHolder> {
-
-    public interface InvitationListener {
-        void onAccept(String eventID);
-        void onDecline(String eventID);
-    }
 
     private final List<InvitationItem> invitations;
     private final InvitationListener listener;
+
+    /**
+     *listener interface for accept/decline actions
+     */
+    public interface InvitationListener {
+        void onAccept(String eventID, boolean isCoOrganizerInvite);
+        void onDecline(String eventID, boolean isCoOrganizerInvite);
+    }
 
     public InvitationAdapter(List<InvitationItem> invitations, InvitationListener listener) {
         this.invitations = invitations;
@@ -44,19 +46,20 @@ public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         InvitationItem item = invitations.get(position);
+
         holder.titleText.setText(item.getTitle());
 
+        //accept button
         holder.acceptButton.setOnClickListener(v -> {
-            int pos = holder.getBindingAdapterPosition();
-            if (pos != RecyclerView.NO_POSITION) {
-                listener.onAccept(invitations.get(pos).getEventId());
+            if (listener != null) {
+                listener.onAccept(item.getEventId(), item.isCoOrganizerInvite());
             }
         });
 
+        //decline button
         holder.declineButton.setOnClickListener(v -> {
-            int pos = holder.getBindingAdapterPosition();
-            if (pos != RecyclerView.NO_POSITION) {
-                listener.onDecline(invitations.get(pos).getEventId());
+            if (listener != null) {
+                listener.onDecline(item.getEventId(), item.isCoOrganizerInvite());
             }
         });
     }
@@ -66,13 +69,15 @@ public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.Vi
         return invitations.size();
     }
 
-    //static nested ViewHolder class
+    /**
+     * viewholder for each invitation row
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView titleText;
         Button acceptButton;
         Button declineButton;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
             titleText = itemView.findViewById(R.id.invitationTitle);
             acceptButton = itemView.findViewById(R.id.acceptButton);

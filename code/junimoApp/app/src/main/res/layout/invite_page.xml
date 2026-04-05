@@ -7,6 +7,7 @@
     android:orientation="vertical"
     android:padding="12dp">
 
+    <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,6 +39,7 @@
         android:layout_marginBottom="10dp"
         android:background="#2A2A2A" />
 
+    <!-- Back button -->
     <TextView
         android:id="@+id/backToHomeText"
         android:layout_width="wrap_content"
@@ -47,74 +49,29 @@
         android:textColor="#FFFFFF"
         android:textSize="16sp" />
 
+    <!-- Page title -->
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
-        android:text="@string/congratulations_you_ve_been_selected_accept_your_invite_and_secure_a_spot"
+        android:text="Invitations"
         android:textColor="#FFFFFF"
-        android:textSize="14sp"
-        android:lineSpacingExtra="2dp"
+        android:textSize="22sp"
         android:textStyle="bold" />
 
-    <LinearLayout
+    <!--
+        US 01.05.02 / 01.05.03 / 01.05.07
+        RecyclerView showing all invitations.
+        Each row is inflated from item_invitation.xml and shows
+        the event title with Accept and Decline buttons.
+    -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/invitationsRecycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="#3A3A3A"
-        android:orientation="vertical"
-        android:padding="12dp">
-
-        <TextView
-            android:id="@+id/invitationTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/event_name"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/acceptButton"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="6dp"
-                android:layout_weight="1"
-                android:backgroundTint="#EAEAEA"
-                android:text="@string/accept"
-                android:textAllCaps="false"
-                android:textColor="#000000"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/declineButton"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="6dp"
-                android:layout_weight="1"
-                android:backgroundTint="#555555"
-                android:text="@string/decline"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/invitationsRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginTop="14dp"
-            android:clipToPadding="false"
-            android:paddingBottom="12dp" />
-
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="14dp"
+        android:clipToPadding="false"
+        android:paddingBottom="12dp" />
 
 </LinearLayout>
