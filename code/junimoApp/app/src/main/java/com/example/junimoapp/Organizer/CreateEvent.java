@@ -6,7 +6,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -241,10 +243,23 @@ public class CreateEvent extends AppCompatActivity {
             ((TextView) dialogView.findViewById(R.id.event_title)).setText(editTitle.getText().toString());
 
             AlertDialog dialog = new AlertDialog.Builder(this).setView(dialogView).create();
-            if (dialog.getWindow() != null) {
-                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                dialog.getWindow().setDimAmount(0.5f);
+
+            Window window = dialog.getWindow();
+            if (window != null) {
+                window.setBackgroundDrawableResource(android.R.color.transparent);
+                window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                window.setDimAmount(0.5f);
+
+                window.setGravity(Gravity.CENTER);
+                int screenWidth = view.getResources().getDisplayMetrics().widthPixels;
+                int dialogWidth = (int) (screenWidth * 0.75);
+                window.setLayout(dialogWidth, WindowManager.LayoutParams.WRAP_CONTENT);
+
+                ImageView QRCodeImageView = dialogView.findViewById(R.id.QR_image);
+                int QRCodeSize = (int) (dialogWidth * 0.90);
+                QRCodeImageView.getLayoutParams().width = QRCodeSize;
+                QRCodeImageView.getLayoutParams().height = QRCodeSize;
+                QRCodeImageView.requestLayout();
             }
             dialogView.findViewById(R.id.close_button).setOnClickListener(v -> dialog.dismiss());
             dialog.show();
