@@ -116,8 +116,11 @@ public class User {
         if (!invitedEvents.contains(event.getEventID())) {
             invitedEvents = invitedEvents + (event.getEventID()) + ",";
             firebase.updateUser(db.collection("users"), this, "invitedEvents", invitedEvents);
-            invitedEventsList.add(event);
-
+            // Guard against null list — invitedEventsList is only initialized
+            // by initializeEvents() which may not have been called on this User object
+            if (invitedEventsList != null) {
+                invitedEventsList.add(event);
+            }
             event.Invite(deviceId);
         }
     }
