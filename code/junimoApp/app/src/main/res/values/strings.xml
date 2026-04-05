@@ -117,7 +117,7 @@
     <string name="scan_qr_code">Scan QR Code</string>
     <string name="receive_notifications">Receive notifications</string>
     <string name="event_name">Event Name</string>
-    <string name="organized_by_host">Organized by [Host].</string>
+    <string name="organized_by">Organized by %1$s</string>
     <string name="add_a_description_develop_the_ultimate_core_strength_and_coordination_with_pilates_movement">Add a description: Develop the ultimate core strength and coordination with Pilates movement...</string>
     <string name="event_details">Event Details</string>
     <string name="event_location_address">Event location address</string>

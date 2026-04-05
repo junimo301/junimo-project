@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -54,11 +55,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         backButton = findViewById(R.id.back_button);
 
         MaterialCardView mapCard = findViewById(R.id.mapCard);
-        mapCard.setOnClickListener(view -> {
-            Intent biggerMap = new Intent(MapActivity.this, ZoomedInMap.class);
-            biggerMap.putExtra("eventID", eventID);
-            startActivity(biggerMap);
-        });
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
@@ -71,10 +67,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(@NonNull GoogleMap map) {
         googleMap = map;
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        if (mapFragment != null && mapFragment.getView() != null) {
-            mapFragment.getView().setClickable(true);
-        }
+        //enlarge map when clicked to full screen version
+        googleMap.setOnMapClickListener(latLng -> {
+            Intent biggerMap = new Intent(MapActivity.this, ZoomedInMap.class);
+            biggerMap.putExtra("eventID", eventID);
+            startActivity(biggerMap);
+        });
+
         loadUsersLocation();
     }
 
