@@ -21,6 +21,7 @@ import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
+import com.example.junimoapp.utils.BaseActivity;
 import com.example.junimoapp.utils.DeviceUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -52,7 +53,7 @@ import java.util.HashMap;
  * Displays comments
  */
 
-public class EventDetailsActivity extends AppCompatActivity {
+public class EventDetailsActivity extends BaseActivity {
 
     FirebaseFirestore db;
     String deviceId;

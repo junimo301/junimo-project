@@ -19,6 +19,7 @@ import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
+import com.example.junimoapp.utils.BaseActivity;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -32,7 +33,7 @@ import java.util.ArrayList;
  *  - US 01.04.03: Switch to enable/disable receiving notifications
  *  - US 02.01.02: Private events are filtered out of the public browse list
  */
-public class UserHomeActivity extends AppCompatActivity {
+public class UserHomeActivity extends BaseActivity {
 
     // Existing fields — unchanged
     ListView eventsList;
