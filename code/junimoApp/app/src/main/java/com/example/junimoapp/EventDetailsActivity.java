@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
@@ -69,6 +71,7 @@ public class EventDetailsActivity extends BaseActivity {
     TextView registrationDetails;
     TextView capacity;
     TextView countOnList;
+    ImageView backgroundPoster;
 
     TextView backButton;
     Button joinWaitlistButton;
@@ -137,6 +140,12 @@ public class EventDetailsActivity extends BaseActivity {
                             eventLocation, organizerID, tag));
                     Log.d("Firebase",selectedEvent.toString());
 
+                    if (poster != null && !poster.equals("")) {
+                        Glide.with(EventDetailsActivity.this).load(poster)
+                                .placeholder(R.drawable.bg_event_tile)
+                                .into(backgroundPoster);
+                    }
+
                     isOrganizer = deviceId.equals(organizerID);
 
                     eventTitle.setText(selectedEvent.getTitle());
@@ -164,6 +173,7 @@ public class EventDetailsActivity extends BaseActivity {
         backButton = findViewById(R.id.backToInvitesText);
         joinWaitlistButton = findViewById(R.id.joinWaitlistButton);
         declineButton = findViewById(R.id.declineButton);
+        backgroundPoster = findViewById(R.id.background_poster);
 
         eventTitle = findViewById(R.id.eventTitle);
         descriptionText = findViewById(R.id.descriptionText);
