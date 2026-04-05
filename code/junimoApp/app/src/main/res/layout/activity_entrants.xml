@@ -65,6 +65,21 @@
             android:layout_width="220dp"
             android:layout_height="2dp"
             android:background="#D6D6D6" />
+        <!--
+            US 02.01.03
+            Button to open PrivateInviteActivity so the organizer can
+            invite entrants to a private event at any time after creation.
+        -->
+        <Button
+            android:id="@+id/inviteEntrantsButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#EAEAEA"
+            android:text="Invite Entrants"
+            android:textAllCaps="false"
+            android:textColor="#000000"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
