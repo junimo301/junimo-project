@@ -74,10 +74,7 @@ public class OrganizerStartScreen extends BaseActivity {
         });
         /** back button*/
         backButton = findViewById(R.id.backToHomeText);
-        backButton.setOnClickListener(v->{
-            Intent intent = new Intent(OrganizerStartScreen.this,MainActivity.class);
-            startActivity(intent);
-        });
+        backButton.setOnClickListener(v-> finish());
 
         //----------CREATE EVENTS-------------------
         createEventButton = findViewById(R.id.create_event_button);

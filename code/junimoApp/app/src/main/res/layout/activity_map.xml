@@ -46,7 +46,7 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/add"
                 android:src="@android:drawable/ic_input_add"
-                android:tint="#FFFFFF" />
+                app:tint="#FFFFFF" />
 
             <ImageButton
                 android:layout_width="40dp"
@@ -54,7 +54,7 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/settings"
                 android:src="@android:drawable/ic_menu_manage"
-                android:tint="#FFFFFF" />
+                app:tint="#FFFFFF" />
         </LinearLayout>
 
         <View
@@ -104,10 +104,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        app:cardCornerRadius="200dp"
         android:layout_marginStart="25dp"
+        app:cardCornerRadius="200dp"
         android:layout_marginEnd="25dp"
-        app:cardElevation="4dp"
+        app:cardElevation="10dp"
         android:id="@+id/mapCard">
 
         <androidx.fragment.app.FragmentContainerView

@@ -48,7 +48,7 @@ public class Entrants extends AppCompatActivity {
     private String eventID;
     FirebaseFirestore db;
     private TextView eventName, backButton;
-    private Button lotteryButton,inviteEntrantsButton;
+    private Button lotteryButton, inviteEntrantsButton;
 
     private List<User> users = Collections.synchronizedList(new ArrayList<>());
 
