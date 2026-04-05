@@ -126,7 +126,7 @@ public class QRScanActivity extends BaseActivity {
      * Returns null if the string is not in the expected format.
      */
     private String parseEventId(String raw) {
-        String prefix = "junimo://event?id=";
+        String prefix = "https://junimo.app/event?id=";
         if (raw != null && raw.startsWith(prefix)) {
             String id = raw.substring(prefix.length()).trim();
             return id.equals("") ? null : id;

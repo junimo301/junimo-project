@@ -59,7 +59,7 @@
             android:padding="12dp">
 
             <ImageView
-                android:id="@+id/eventImage"
+                android:id="@+id/background_poster"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:scaleType="centerCrop"
@@ -80,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="@string/organized_by_host"
+                android:text="@string/organized_by"
                 android:textColor="#D9D9D9"
                 android:textSize="18sp" />
 

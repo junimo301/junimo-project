@@ -1,5 +1,6 @@
 package com.example.junimoapp.Organizer;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.junimoapp.MainActivity;
+import com.example.junimoapp.OrganizerStartScreen;
 import com.example.junimoapp.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,6 +28,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 /**
@@ -35,7 +40,7 @@ public class ZoomedInMap extends AppCompatActivity implements OnMapReadyCallback
     GoogleMap googleMap;
     String eventID;
     String userID;
-    ImageButton closeButton;
+    TextView backButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,13 +49,13 @@ public class ZoomedInMap extends AppCompatActivity implements OnMapReadyCallback
 
         db = FirebaseFirestore.getInstance();
         eventID = getIntent().getStringExtra("eventID");
-        closeButton = findViewById(R.id.close_button);
+        backButton = findViewById(R.id.back_button);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
-        closeButton.setOnClickListener(view -> finish());
+        backButton.setOnClickListener(v-> finish());
     }
 
     @Override
