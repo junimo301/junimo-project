@@ -37,6 +37,7 @@ public class Event {
     private double price;
 
     /** unique QR code for the event */
+    @PropertyName("qrcode")
     private String qrcode;
 
     /** the location of the entrants for the event */
@@ -70,6 +71,10 @@ public class Event {
 
     FirebaseManager firebase;
     FirebaseFirestore db;
+
+    private String cancelledUsers;
+    private String invitedUsers;
+    private String enrolledUsers;
 
     public Event() {}
 
@@ -109,6 +114,9 @@ public class Event {
         this.waitList = "";
         this.organizerID = organizerID;
         this.tag = tag;
+        this.cancelledUsers = "";
+        this.invitedUsers = "";
+        this.enrolledUsers = "";
 
         try {
             firebase = new FirebaseManager();
@@ -135,6 +143,9 @@ public class Event {
         if (db != null) {
             db.collection("events").document(eventID).update("private", aPrivate);
         }
+    }
+    public void restorePrivate(boolean aPrivate) {
+        this.isPrivate = aPrivate;
     }
 
     // ── Existing getters / setters (unchanged) ────────────────────────────
@@ -263,6 +274,17 @@ public class Event {
     }
 
     // ── Existing methods (unchanged) ──────────────────────────────────────
+    /**
+     * Add user ID to invitedUsers
+     * @param deviceID
+     */
+    public void Invite(String deviceID) {
+        if (!invitedUsers.contains(deviceID)) {
+            invitedUsers = invitedUsers + deviceID + ",";
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("events").document(eventID).update("invitedUsers", invitedUsers);
+        }
+    }
 
     /**
      * Add user ID to waitList

@@ -74,9 +74,12 @@ public class OrganizerStartScreen extends BaseActivity {
         });
         /** back button*/
         backButton = findViewById(R.id.backToHomeText);
-        backButton.setOnClickListener(v->{
-            Intent intent = new Intent(OrganizerStartScreen.this,MainActivity.class);
-            startActivity(intent);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent createNewEvent = new Intent(OrganizerStartScreen.this, MainActivity.class);
+                startActivity(createNewEvent);
+            }
         });
 
         //----------CREATE EVENTS-------------------
@@ -180,6 +183,12 @@ public class OrganizerStartScreen extends BaseActivity {
                         Event event = new Event(title, description, startDate, endDate, dateEvent,
                                 maxCapacity, waitingListLimit, price, geoLocation,
                                 poster, eventID, eventLocation, organizerID, tag);
+
+                        String QRCodeString = doc.getString("qrcode");
+                        event.setQRCode(QRCodeString);
+
+                        Boolean isPrivate = doc.getBoolean("private");
+                        event.restorePrivate(Boolean.TRUE.equals(isPrivate));
 
                         if (organizerID != null &&
                                 event.getOrganizerID().equals(currentUser.getDeviceId())) {

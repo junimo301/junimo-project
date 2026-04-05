@@ -82,10 +82,6 @@ public class SelectAnEvent extends AppCompatActivity {
         }
 
         // returns to select organizer home screen
-        backButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(SelectAnEvent.this, OrganizerStartScreen.class);
-                startActivity(intent);            }
-        });
+        backButton.setOnClickListener(view -> finish());
     }
 }

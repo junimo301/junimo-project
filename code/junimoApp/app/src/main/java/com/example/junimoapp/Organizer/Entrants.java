@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.junimoapp.OrganizerStartScreen;
 import com.example.junimoapp.R;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
@@ -23,6 +24,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Entrants names who have joined, cancelled, enrolled, or joined the waiting list of an event.
@@ -35,19 +39,21 @@ import java.util.ArrayList;
  *  - US 02.02.01: View the list of entrants who joined the waiting list
  *  - US 01.04.01: Notify entrant when they are selected by the lottery (added here)
  *  - US 01.04.02: Notify entrant when they are NOT selected by the lottery (added here)
+ *  - US 02.05.02: Set the system to sample a specified number of attendees to register for the event
  */
 public class Entrants extends AppCompatActivity {
 
-    LinearLayout invitedEntrants;
-    LinearLayout cancelledEntrants;
-    LinearLayout enrolledEntrants;
+    private LinearLayout invitedEntrants, cancelledEntrants, enrolledEntrants;
 
-    String eventID;
+    private String eventID;
     FirebaseFirestore db;
-    TextView eventName;
-    TextView backButton;
-    Button lotteryButton;
-    Button inviteEntrantsButton;
+    private TextView eventName, backButton;
+    private Button lotteryButton, inviteEntrantsButton;
+
+    private List<User> users = Collections.synchronizedList(new ArrayList<>());
+
+    Event selectEvent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,127 +68,22 @@ public class Entrants extends AppCompatActivity {
 
         eventID = getIntent().getStringExtra("eventID");
 
-        Event selectEvent = EventData.searchEventID(eventID);
+        lotteryButton.setEnabled(false);
+
+        selectEvent = EventData.searchEventID(eventID);
         if (selectEvent != null) {
             eventName.setText(selectEvent.getTitle());
         }
 
         db = FirebaseManager.getDB();
 
-        ArrayList<User> users = new ArrayList<User>();
-        String[] deviceIDs = selectEvent.getWaitList().split(",");
+        WaitlistUsers(selectEvent);
+        lotteryButton.setOnClickListener(v -> startLottery());
 
-        if (deviceIDs.length >= 1) {
-            CollectionReference usersRef = db.collection("users");
-            for (String deviceID : deviceIDs) {
-                if (deviceID != null && !deviceID.equals("")) {
-                    Log.d("waitlist populating", deviceID);
-                    usersRef.document(deviceID).get()
-                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        DocumentSnapshot document = task.getResult();
-                                        if (document.exists()) {
-                                            User user = new User(
-                                                    deviceID,
-                                                    document.getString("name"),
-                                                    document.getString("email"),
-                                                    document.getString("phone"),
-                                                    document.getString("organizedEvents"),
-                                                    document.getString("invitedEvents"),
-                                                    document.getString("waitlistedEvents")
-                                            );
-                                            users.add(user);
-                                            loadInvitedEntrants(users, eventID);
-                                            loadCancelledEntrants(users, eventID);
-                                            loadEnrolledEntrants(users);
-                                        } else {
-                                            Log.d("Firestore", "No such document");
-                                        }
-                                    } else {
-                                        Log.d("Firestore", "get failed with ", task.getException());
-                                    }
-                                }
-                            });
-                }
-            }
-        }
-
-        lotteryButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Log.d("lottery button", "button was pressed");
-                int max = selectEvent.getMaxCapacity();
-
-                if (users.size() > max) {
-                    // More entrants than capacity — randomly select up to max
-                    ArrayList<User> selectedUsers = new ArrayList<>();
-                    int i = 0;
-                    while (i < max) {
-                        int index = (int) (Math.random() * (users.size()));
-                        User selected = users.get(index);
-                        selected.initializeEvents();
-                        if (!selected.isInvited(eventID)) {
-                            selected.inviteUser(selectEvent);
-
-                            // ─────────────────────────────────────────────
-                            // US 01.04.01
-                            // Notify this user they were selected by the lottery.
-                            // NotificationHelper checks their opt-out preference
-                            // (US 01.04.03) before writing anything.
-                            // ─────────────────────────────────────────────
-                            NotificationHelper.notifyInvited(
-                                    selected.getDeviceId(),
-                                    eventID,
-                                    selectEvent.getTitle()
-                            );
-
-                            selectedUsers.add(selected);
-                            i += 1;
-                        }
-                    }
-
-                    // ─────────────────────────────────────────────────────
-                    // US 01.04.02
-                    // Notify users who were NOT selected by the lottery.
-                    // Anyone in the waitlist who was not added to selectedUsers
-                    // receives a "not chosen" notification.
-                    // ─────────────────────────────────────────────────────
-                    for (User user : users) {
-                        if (!selectedUsers.contains(user)) {
-                            NotificationHelper.notifyNotChosen(
-                                    user.getDeviceId(),
-                                    eventID,
-                                    selectEvent.getTitle()
-                            );
-                        }
-                    }
-
-                } else {
-                    // Fewer entrants than capacity — invite everyone
-                    for (User user : users) {
-                        user.initializeEvents();
-                        user.inviteUser(selectEvent);
-                        Log.d("lottery button", "user was invited");
-
-                        // ─────────────────────────────────────────────────
-                        // US 01.04.01
-                        // Everyone gets invited so everyone gets the invited
-                        // notification. Opt-out is still respected.
-                        // ─────────────────────────────────────────────────
-                        NotificationHelper.notifyInvited(
-                                user.getDeviceId(),
-                                eventID,
-                                selectEvent.getTitle()
-                        );
-                    }
-                }
-            }
-        });
-// US 02.01.03
-// Opens PrivateInviteActivity so the organizer can invite entrants
-// to this private event's waiting list at any time after creation.
-// ─────────────────────────────────────────────────────────────────────
+        // US 02.01.03
+        // Opens PrivateInviteActivity so the organizer can invite entrants
+        // to this private event's waiting list at any time after creation.
+        // ─────────────────────────────────────────────────────────────────────
         inviteEntrantsButton = findViewById(R.id.inviteEntrantsButton);
         inviteEntrantsButton.setOnClickListener(v -> {
             Intent intent = new Intent(Entrants.this, PrivateInviteActivity.class);
@@ -191,18 +92,129 @@ public class Entrants extends AppCompatActivity {
             startActivity(intent);
         });
 
-        backButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(Entrants.this, SelectAnEvent.class);
-                startActivity(intent);
+        backButton.setOnClickListener(view -> finish());
+    }
+
+
+    private void WaitlistUsers(Event selectEvent) {
+        String[] deviceIDs = selectEvent.getWaitList().split(",");
+
+        if (deviceIDs.length == 0 || (deviceIDs.length == 1 && deviceIDs[0].equals(""))) {
+            Log.d("waitlist", "no users in waitlist");
+            lotteryButton.setEnabled(false);
+            return;
+        }
+        CollectionReference usersRef = db.collection("users");
+
+        final int total = deviceIDs.length;
+        final int[] count = {0};
+
+        for (String deviceID : deviceIDs) {
+            if (deviceID == null && !deviceID.equals("")) {
+                count[0]++;
+                continue;
             }
+            Log.d("waitlist populating", deviceID);
+            usersRef.document(deviceID).get()
+                    .addOnCompleteListener(task -> {
+                        count[0]++;
+                        if (task.isSuccessful() && task.getResult().exists()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                User user = new User(
+                                        deviceID,
+                                        document.getString("name"),
+                                        document.getString("email"),
+                                        document.getString("phone"),
+                                        document.getString("organizedEvents"),
+                                        document.getString("invitedEvents"),
+                                        document.getString("waitlistedEvents")
+                                );
+                                users.add(user);
+                            } else {
+                                Log.d("Firestore", "No such document");
+                            }
+                        } else {
+                            Log.d("Firestore", "get failed with ", task.getException());
+                        }
+                        if (count[0] == total) {
+                            lotteryButton.setEnabled(true);
+                            refreshUI();
+                        }
+                    });
+        }
+    }
+
+    private void refreshUI() {
+        runOnUiThread(() -> {
+            invitedEntrants.removeAllViews();
+            cancelledEntrants.removeAllViews();
+            enrolledEntrants.removeAllViews();
+
+            loadInvitedEntrants(users, eventID);
+            loadCancelledEntrants(users, eventID);
+            loadEnrolledEntrants(users);
         });
     }
+    private void startLottery() {
+        lotteryButton.setEnabled(false);
+
+        Log.d("lottery button", "button was pressed");
+
+        // Shuffle users
+        Collections.shuffle(users);
+
+        // Get max capacity
+        int max = selectEvent.getMaxCapacity();
+        // More entrants than capacity — randomly select up to max
+        ArrayList<User> selectedUsers = new ArrayList<>();
+        int index = Math.min(max, users.size());
+
+        for (int i = 0; i < index; i++) {
+            User selected = users.get(i);
+
+            // ─────────────────────────────────────────────
+            // US 01.04.01
+            // Notify this user they were selected by the lottery.
+            // NotificationHelper checks their opt-out preference
+            // (US 01.04.03) before writing anything.
+            // ─────────────────────────────────────────────
+            if(!selected.isInvited(eventID)) {
+                selected.inviteUser(selectEvent);
+                NotificationHelper.notifyInvited(
+                        selected.getDeviceId(),
+                        eventID,
+                        selectEvent.getTitle()
+                );
+            }
+            selectedUsers.add(selected);
+
+            Log.d("lottery", "selected users: " + selected.getName());
+        }
+
+        // ─────────────────────────────────────────────────────
+        // US 01.04.02
+        // Notify users who were NOT selected by the lottery.
+        // Anyone in the waitlist who was not added to selectedUsers
+        // receives a "not chosen" notification.
+        // ─────────────────────────────────────────────────────
+        for (User user : users) {
+            if (!selectedUsers.contains(user)) {
+                NotificationHelper.notifyNotChosen(
+                        user.getDeviceId(),
+                        eventID,
+                        selectEvent.getTitle()
+                );
+            }
+        }
+        refreshUI();
+    }
+
 
     /**
      * Loads invited entrants — users whose invitedEvents contains this eventID
      */
-    private void loadInvitedEntrants(ArrayList<User> usersArray, String eventID) {
+    private void loadInvitedEntrants(List<User> usersArray, String eventID) {
         boolean noneInvited = true;
         if (!usersArray.isEmpty()) {
             for (User user : usersArray) {
@@ -225,7 +237,7 @@ public class Entrants extends AppCompatActivity {
     /**
      * Loads cancelled entrants
      */
-    private void loadCancelledEntrants(ArrayList<User> usersArray, String eventID) {
+    private void loadCancelledEntrants(List<User> usersArray, String eventID) {
         boolean noneCancelled = true;
         if (!usersArray.isEmpty()) {
             for (User user : usersArray) {
@@ -247,7 +259,7 @@ public class Entrants extends AppCompatActivity {
     /**
      * Loads enrolled entrants
      */
-    private void loadEnrolledEntrants(ArrayList<User> usersArray) {
+    private void loadEnrolledEntrants(List<User> usersArray) {
         Log.d("entrants view added", usersArray.toString());
         if (!usersArray.isEmpty()) {
             for (User user : usersArray) {

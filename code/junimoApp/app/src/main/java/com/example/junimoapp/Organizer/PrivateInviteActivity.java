@@ -83,7 +83,7 @@ public class PrivateInviteActivity extends AppCompatActivity {
         // to the front — this triggers onResume() which reloads the
         // event list so the new private event appears immediately.
         // ─────────────────────────────────────────────────────────────────
-        findViewById(R.id.back_button_private).setOnClickListener(v -> goToOrganizerHome());
+        findViewById(R.id.back_button_private).setOnClickListener(v -> finish());
     }
 
     /**
