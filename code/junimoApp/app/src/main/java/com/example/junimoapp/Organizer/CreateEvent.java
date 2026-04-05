@@ -8,10 +8,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,8 +25,11 @@ import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
 
+import com.google.firebase.Firebase;
 import com.google.firebase.firestore.CollectionReference;
 import com.example.junimoapp.firebase.FirebaseManager;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.zxing.BarcodeFormat;
@@ -38,8 +43,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -70,6 +77,9 @@ public class CreateEvent extends AppCompatActivity {
     //   - the event will NOT appear in the public event listing
     // ─────────────────────────────────────────────────────────────────────
     CheckBox checkPrivate;
+
+    CheckBox check_coorganizer;
+    Spinner spinner_coorganizer;
 
     private boolean geoLocation = false;
     private Event createdEvent = null;
@@ -130,6 +140,37 @@ public class CreateEvent extends AppCompatActivity {
         editTagSpinner          = findViewById(R.id.edit_tag_spinner);
         pickImageButton         = findViewById(R.id.pick_image_button);
         eventPoster             = findViewById(R.id.event_poster);
+        CheckBox check_coorganizer = findViewById(R.id.check_coorganizer);
+        Spinner spinner_coorganizer = findViewById(R.id.spinner_coorganizer);
+
+        FirebaseManager firebase = new FirebaseManager();
+        firebase.getDB().collection("users")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    List<String> userNames = new ArrayList<>();
+                    List<String> userIds = new ArrayList<>();
+                    User currentUser = UserSession.getCurrentUser();
+                    for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                        String name = doc.getString("name");
+                        String deviceId = doc.getString("deviceId");
+                        if (!deviceId.equals(currentUser.getDeviceId())) {
+                            userNames.add(name);
+                            userIds.add(deviceId);
+                        }
+                    }
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                            this,
+                            R.layout.spinner_item_light,
+                            userNames
+                    );
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinner_coorganizer.setAdapter(adapter);
+                    spinner_coorganizer.setTag(userIds); //store IDs for later
+                });
+
+        check_coorganizer.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            spinner_coorganizer.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        });
 
         Glide.with(this).load((String) null)
                 .placeholder(R.drawable.bg_event_tile)
@@ -412,6 +453,19 @@ public class CreateEvent extends AppCompatActivity {
 
             saveEvent.setPrivate(isPrivate);
             if (!isPrivate && QRCodeString != null) saveEvent.setQRCode(QRCodeString);
+
+            if (check_coorganizer.isChecked() && spinner_coorganizer.getSelectedItem() != null) {
+                int position = spinner_coorganizer.getSelectedItemPosition();
+                List<String> userIds = (List<String>) spinner_coorganizer.getTag();
+                String coOrganizerId = userIds.get(position);
+
+                //mark the event as pending co-organizer invite for that user
+                FirebaseManager firebase = new FirebaseManager();
+                firebase.getDB().collection("users").document(coOrganizerId)
+                        .update("coOrganizerInvites", FieldValue.arrayUnion(eventID))
+                        .addOnSuccessListener(aVoid -> Log.d("CreateEvent", "Co-organizer invite sent"))
+                        .addOnFailureListener(e -> Log.e("CreateEvent", "Failed to send co-organizer invite", e));
+            }
 
             FirebaseManager firebase = new FirebaseManager();
             firebase.addEvent(saveEvent, firebase.getDB().collection("events"));
