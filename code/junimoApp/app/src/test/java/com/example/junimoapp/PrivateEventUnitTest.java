@@ -2,7 +2,6 @@ package com.example.junimoapp;
 
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
-import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +28,7 @@ public class PrivateEventUnitTest {
         testEvent = new Event(
                 "Test Event", "desc", "2025-01-01", "2025-01-10",
                 "2025-02-01", 50, 20, 10.0,
-                new GeoPoint(0, 0), "", "event-test-id",
+                true, "", "event-test-id",
                 "Test Location", "organizer-test-id", ""
         );
         // Real User object using the same constructor as the rest of the app

@@ -31,6 +31,8 @@ public class AdminHomeActivity extends AppCompatActivity {
         Button browseEventsButton = findViewById(R.id.adminBrowseEventsButton);
         Button browseProfilesButton = findViewById(R.id.adminBrowseProfilesButton);
         Button browseOrganizersButton = findViewById(R.id.adminBrowseOrganizersButton);
+        Button browseImagesButton = findViewById(R.id.adminBrowseImagesButton);
+        Button notifLogButton = findViewById(R.id.browseNotifLogButton);
         TextView backButton = findViewById(R.id.backToHomeText);
 
         //navigation for the event browsing button (click listener)
@@ -42,6 +44,9 @@ public class AdminHomeActivity extends AppCompatActivity {
         //navigation for the organizers browsing button (click listener)
         browseOrganizersButton.setOnClickListener(v -> startActivity(new Intent(this, AdminBrowseOrganizersActivity.class)));
 
+        browseImagesButton.setOnClickListener(v -> startActivity(new Intent(this, AdminBrowseImagesActivity.class)));
+
+        notifLogButton.setOnClickListener(v -> startActivity(new Intent(this, AdminNotificationLogActivity.class)));
         backButton.setOnClickListener(v->{
             Intent intent = new Intent(AdminHomeActivity.this, MainActivity.class);
             startActivity(intent);

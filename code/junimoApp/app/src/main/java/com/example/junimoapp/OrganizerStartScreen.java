@@ -8,27 +8,27 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.junimoapp.Organizer.MapActivity;
 import com.example.junimoapp.R;
-//import com.example.junimoapp.TestData.EventTestData;
 
 import com.example.junimoapp.Organizer.CreateEvent;
 import com.example.junimoapp.Organizer.EventData;
 import com.example.junimoapp.Organizer.ListOfMyEvents;
 import com.example.junimoapp.Organizer.SelectAnEvent;
-import com.example.junimoapp.Organizer.notifications;
+import com.example.junimoapp.Organizer.organizerNotifications;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,9 @@ import java.util.List;
 public class OrganizerStartScreen extends AppCompatActivity {
     //Create and edit event
     ImageButton createEventButton;
-    Button viewEntrantsButton;
+    Button viewEntrantsButton, mapButton;
+    TextView backButton;
+    ImageButton settingsButton;
     Button notificationsButton;
     //view my events
     private RecyclerView scrollable;
@@ -61,8 +63,21 @@ public class OrganizerStartScreen extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer_start_screen);
+        /** settings button */
+        settingsButton = findViewById(R.id.settingsButton);
+        settingsButton.setOnClickListener(v->{
+            Intent intent = new Intent(OrganizerStartScreen.this, ProfileActivity.class);
+            intent.putExtra("new", false);
+            intent.putExtra("organizer",true);
+            startActivity(intent);
+        });
+        /** back button*/
+        backButton = findViewById(R.id.backToHomeText);
+        backButton.setOnClickListener(v->{
+            Intent intent = new Intent(OrganizerStartScreen.this,MainActivity.class);
+            startActivity(intent);
+        });
 
-        /** create events */
         //----------CREATE EVENTS-------------------
         createEventButton = findViewById(R.id.create_event_button);
         createEventButton.setOnClickListener(new View.OnClickListener() {
@@ -73,11 +88,22 @@ public class OrganizerStartScreen extends AppCompatActivity {
             }
         });
 
+        //----------MAP OF ENTRANTS----------------------------
+        mapButton = findViewById(R.id.map_button);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent viewMap = new Intent(OrganizerStartScreen.this, SelectAnEvent.class);
+                viewMap.putExtra("go to", "map");
+                startActivity(viewMap);
+            }
+        });
+
         notificationsButton = findViewById(R.id.notifications_button);
         notificationsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent viewNotifications = new Intent(OrganizerStartScreen.this, notifications.class);
+                Intent viewNotifications = new Intent(OrganizerStartScreen.this, organizerNotifications.class);
                 startActivity(viewNotifications);
             }
         });
@@ -89,6 +115,7 @@ public class OrganizerStartScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent viewEntrants = new Intent(OrganizerStartScreen.this, SelectAnEvent.class);
+                viewEntrants.putExtra("go to", "entrants");
                 startActivity(viewEntrants);
             }
         });
@@ -121,12 +148,15 @@ public class OrganizerStartScreen extends AppCompatActivity {
         scrollable.setAdapter(myEvents);
     }
     private void loadEvents() {
-        Log.d("organizer browse activity","on load events of browse activity");
-        db.collection("events").get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
+        Log.d("organizer browse activity", "on load events of browse activity");
+        db.collection("events").get().addOnSuccessListener(queryDocumentSnapshots -> {
                     // clear any old data before loading fresh results
                     eventList.clear();
                     User currentUser = UserSession.getCurrentUser(); //get current user
+                    if (currentUser == null) {
+                        Log.d("organizer browse activity", "user was null in event");
+                        return;
+                    }
 
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         //Fields in events
@@ -136,10 +166,15 @@ public class OrganizerStartScreen extends AppCompatActivity {
                         String startDate = doc.getString("startDate");
                         String endDate = doc.getString("endDate");
                         String dateEvent = doc.getString("dateEvent");
-                        int maxCapacity = (doc.getLong("maxCapacity")).intValue();
-                        int waitingListLimit = (doc.getLong("waitingListLimit")).intValue();
-                        double price = doc.getDouble("price");
-                        GeoPoint geoLocation = doc.getGeoPoint("geoLocation"); //geoPoint is a type apparently? seems helpful??
+
+                        Long capacity = (doc.getLong("maxCapacity"));
+                        int maxCapacity = capacity != null ? capacity.intValue() : 0;
+                        Long limit = (doc.getLong("waitingListLimit"));
+                        int waitingListLimit = limit != null ? limit.intValue() : 0;
+                        Double priceObj = doc.getDouble("price");
+                        double price = priceObj != null ? priceObj : 0.0;
+
+                        boolean geoLocation = doc.getBoolean("geoLocation");
                         String poster = doc.getString("poster");
                         String eventID = doc.getString("eventID");
                         String eventLocation = doc.getString("eventLocation");
@@ -147,17 +182,16 @@ public class OrganizerStartScreen extends AppCompatActivity {
                         String tag = doc.getString("tag");
 
                         Event event = new Event(title, description, startDate, endDate, dateEvent, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation, organizerID, tag);
-                        if(organizerID != null){
-                            if(event.getOrganizerID().equals(currentUser.getDeviceId())) {
+                        if (organizerID != null) {
+                            if (event.getOrganizerID().equals(currentUser.getDeviceId())) {
                                 eventList.add(event);
                                 EventData.addOrEditEvent(event);
                             }
-                        }
-                        else {
-                            Log.d("organizer browse activity","organizer ID was null in event");
+                        } else {
+                            Log.d("organizer browse activity", "organizer ID was null in event");
                         }
 
-                        Log.d("organizer browse activity",eventList.toString());
+                        Log.d("organizer browse activity", eventList.toString());
                     }
                     myEvents.notifyDataSetChanged();
                 })
@@ -167,6 +201,5 @@ public class OrganizerStartScreen extends AppCompatActivity {
                     // show a brief message to the admin so they know something went wrong
                     Toast.makeText(this, "Failed to load events", Toast.LENGTH_SHORT).show();
                 });
-
     }
 }

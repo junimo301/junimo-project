@@ -34,7 +34,7 @@ public class EventPreview extends AppCompatActivity {
      */
     Button backButton;
     /** Views the event info */
-    TextView title, description, startDate, endDate, dateEvent, eventLocation, maxCapacity, waitingList, price, geoLocation;
+    TextView title, description, startDate, endDate, dateEvent, eventLocation, maxCapacity, waitingList, price;
     private ImageView eventPoster;
     private FirebaseFirestore db;
 
@@ -59,7 +59,6 @@ public class EventPreview extends AppCompatActivity {
         maxCapacity   = findViewById(R.id.preview_max_capacity);
         waitingList   = findViewById(R.id.preview_waiting_list);
         price         = findViewById(R.id.preview_price);
-        geoLocation   = findViewById(R.id.preview_geo_location);
         eventPoster   = findViewById(R.id.event_poster);
         backButton    = findViewById(R.id.back_button);
 
@@ -75,7 +74,6 @@ public class EventPreview extends AppCompatActivity {
         String eMaxCapacity      = createEventData.getStringExtra("maxCapacity");
         String eWaitingList   = createEventData.getStringExtra("waitingListLimit");
         String ePrice         = createEventData.getStringExtra("price");
-        String eGeoLocation   = createEventData.getStringExtra("geoLocation_string");
         String ePoster        = createEventData.getStringExtra("poster");
         String ePosterURI     = createEventData.getStringExtra("posterURI");
 
@@ -106,7 +104,6 @@ public class EventPreview extends AppCompatActivity {
         maxCapacity.setText(eMaxCapacity);
         waitingList.setText(eWaitingList);
         price.setText(ePrice);
-        geoLocation.setText(eGeoLocation);
         //poster.setText(ePoster);
 
 

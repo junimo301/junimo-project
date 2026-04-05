@@ -60,7 +60,7 @@ public class Entrants extends AppCompatActivity {
         backButton        = findViewById(R.id.backButton);
         lotteryButton     = findViewById(R.id.startLotteryButton);
 
-        eventID = getIntent().getStringExtra("event_ID");
+        eventID = getIntent().getStringExtra("eventID");
 
         Event selectEvent = EventData.searchEventID(eventID);
         if (selectEvent != null) {

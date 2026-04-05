@@ -5,7 +5,6 @@ import com.example.junimoapp.models.User;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 
@@ -78,7 +77,7 @@ public class FirebaseManager {
     }
 
     public void updateEvent(CollectionReference eventsRef, Event event,
-                            String field, GeoPoint newValue) {
+                            String field, boolean newValue) {
         eventsRef.document(event.getEventID()).update(field, newValue);
     }
 

@@ -9,11 +9,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.google.firebase.firestore.PropertyName;
 
 /**
  * Event specific information
@@ -41,10 +37,10 @@ public class Event {
     private double price;
 
     /** unique QR code for the event */
-    private String QRCode = null;
+    private String qrcode;
 
     /** the location of the entrants for the event */
-    private GeoPoint geoLocation;
+    private boolean geoLocation = false;
 
     /** the location of the event */
     private String eventLocation;
@@ -75,6 +71,7 @@ public class Event {
     FirebaseManager firebase;
     FirebaseFirestore db;
 
+    public Event() {}
 
     /**
      * Constructs event with all the details
@@ -95,7 +92,7 @@ public class Event {
      */
     public Event(String title, String description, String startDate, String endDate,
                  String dateEvent, int maxCapacity, int waitingListLimit, double price,
-                 GeoPoint geoLocation, String poster, String eventID,
+                 boolean geoLocation, String poster, String eventID,
                  String eventLocation, String organizerID, String tag) {
         this.title = title;
         this.description = description;
@@ -136,12 +133,11 @@ public class Event {
         isPrivate = aPrivate;
         // Persist to Firestore so all screens that load events see the flag
         if (db != null) {
-            db.collection("events").document(eventID).update("isPrivate", aPrivate);
+            db.collection("events").document(eventID).update("private", aPrivate);
         }
     }
 
     // ── Existing getters / setters (unchanged) ────────────────────────────
-
     public String getTag() { return tag; }
 
     public void setTag(String tag) { this.tag = tag; }
@@ -162,12 +158,13 @@ public class Event {
         this.organizerID = organizerID;
     }
 
+    @PropertyName("qrcode")
     public String getQRCode() {
-        return QRCode;
+        return qrcode;
     }
-
+    @PropertyName("qrcode")
     public void setQRCode(String QRCode) {
-        this.QRCode = QRCode;
+        this.qrcode = QRCode;
     }
 
     public String getDateEvent() {
@@ -242,12 +239,11 @@ public class Event {
         this.price = price;
     }
 
-    public GeoPoint getGeoLocation() {
-        return geoLocation;
-    }
-
-    public void setGeoLocation(GeoPoint geoLocation) {
+    public void setGeoLocation(boolean geoLocation) {
         this.geoLocation = geoLocation;
+    }
+    public boolean isGeoLocation() {
+        return geoLocation;
     }
 
     public String getEventLocation() {
