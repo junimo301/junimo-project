@@ -71,6 +71,10 @@ public class Event {
     FirebaseManager firebase;
     FirebaseFirestore db;
 
+    private String cancelledUsers;
+    private String invitedUsers;
+    private String enrolledUsers;
+
     public Event() {}
 
     /**
@@ -109,6 +113,9 @@ public class Event {
         this.waitList = "";
         this.organizerID = organizerID;
         this.tag = tag;
+        this.cancelledUsers = "";
+        this.invitedUsers = "";
+        this.enrolledUsers = "";
 
         try {
             firebase = new FirebaseManager();
@@ -263,6 +270,17 @@ public class Event {
     }
 
     // ── Existing methods (unchanged) ──────────────────────────────────────
+    /**
+     * Add user ID to invitedUsers
+     * @param deviceID
+     */
+    public void Invite(String deviceID) {
+        if (!invitedUsers.contains(deviceID)) {
+            invitedUsers = invitedUsers + deviceID + ",";
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("events").document(eventID).update("invitedUsers", invitedUsers);
+        }
+    }
 
     /**
      * Add user ID to waitList

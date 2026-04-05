@@ -117,6 +117,8 @@ public class User {
             invitedEvents = invitedEvents + (event.getEventID()) + ",";
             firebase.updateUser(db.collection("users"), this, "invitedEvents", invitedEvents);
             invitedEventsList.add(event);
+
+            event.Invite(deviceId);
         }
     }
 
@@ -257,9 +259,12 @@ public class User {
                                             String eventLocation = doc.getString("eventLocation");
                                             String organizerID   = doc.getString("organizerID");
                                             String tag           = doc.getString("tag");
+
                                             Event event = new Event(title, description, startDate, endDate,
                                                     dateEvent, maxCapacity, waitingListLimit, price,
-                                                    geoLocation, poster, eventID2, eventLocation, organizerID, tag);
+                                                    geoLocation, poster, eventID2, eventLocation, organizerID,
+                                                    tag);
+
                                             eventList.add(event);
                                         } else {
                                             Log.d("Firestore", "No such document");
