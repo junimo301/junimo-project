@@ -21,18 +21,16 @@ public class GuidelinesActivity extends BaseActivity {
 
         TextView guidelinesText = findViewById(R.id.guidelinesText);
         TextView backButton = findViewById(R.id.guidelinesBackButton);
+//
+//        String guidelines =
+//              <string name="app_rules">Event Lottery Guidelines\n\n1. Entrance must occur during the registration period.\n\n2. Each user may only enter once per event.\n\n" +
+//        "3. After registration closes, winners are randomly selected.\n\n" +
+//                "4. The number of winners depends on event capacity.\n\n" +
+//                "5. Entrants may be placed on a waitlist.\n\n" +
+//                "6. Selected users will be notified in the app.\n\n" +
+//                "7. Winners must accept before the deadline.";</string>
 
-        String guidelines =
-                "Event Lottery Guidelines\n\n" +
-                        "1. Entrance must occur during the registration period.\n\n" +
-                        "2. Each user may only enter once per event.\n\n" +
-                        "3. After registration closes, winners are randomly selected.\n\n" +
-                        "4. The number of winners depends on event capacity.\n\n" +
-                        "5. Entrants may be placed on a waitlist.\n\n" +
-                        "6. Selected users will be notified in the app.\n\n" +
-                        "7. Winners must accept before the deadline.";
 
-        guidelinesText.setText(guidelines);
         backButton.setOnClickListener(v -> finish());
     }
 }
