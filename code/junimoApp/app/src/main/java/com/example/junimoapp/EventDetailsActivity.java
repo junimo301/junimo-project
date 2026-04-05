@@ -150,7 +150,19 @@ public class EventDetailsActivity extends BaseActivity {
 
                     eventTitle.setText(selectedEvent.getTitle());
                     descriptionText.setText(selectedEvent.getDescription());
+
                     organizerText.setText(selectedEvent.getOrganizerID());
+                    db.collection("users").document(organizerID).get().addOnSuccessListener(userDocument -> {
+                        if (userDocument.exists()) {
+                            String organizerName = userDocument.getString("name");
+                            String text = getString(R.string.organized_by, organizerName != null ? organizerName : organizerID);
+                            organizerText.setText(text);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("Firestore", "Error getting organizer name", e);
+                    });
+
                     eventDate.setText(selectedEvent.getDateEvent());
                     eventLocationText.setText(selectedEvent.getEventLocation());
                     priceText.setText(String.valueOf(selectedEvent.getPrice()));
