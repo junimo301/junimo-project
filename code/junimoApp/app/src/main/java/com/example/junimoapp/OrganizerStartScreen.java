@@ -184,6 +184,12 @@ public class OrganizerStartScreen extends BaseActivity {
                                 maxCapacity, waitingListLimit, price, geoLocation,
                                 poster, eventID, eventLocation, organizerID, tag);
 
+                        String QRCodeString = doc.getString("qrcode");
+                        event.setQRCode(QRCodeString);
+
+                        Boolean isPrivate = doc.getBoolean("private");
+                        event.restorePrivate(Boolean.TRUE.equals(isPrivate));
+
                         if (organizerID != null &&
                                 event.getOrganizerID().equals(currentUser.getDeviceId())) {
                             eventList.add(event);

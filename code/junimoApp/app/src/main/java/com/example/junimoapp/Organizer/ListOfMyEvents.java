@@ -34,7 +34,6 @@ import java.util.List;
  * */
 public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventViewHolder> {
 
-    String QRCodeString;
     /** events to display */
     private List<Event> eventList;
 
@@ -105,7 +104,7 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
             holder.backgroundPoster.setImageResource(R.drawable.bg_event_tile);
         }
 
-        QRCodeString = event.getQRCode();
+        String QRCodeString = event.getQRCode();
         Log.d("QR DEBUG", "QR code: " + QRCodeString);
         holder.viewQRCodeButton.setOnClickListener(view -> {
             if (QRCodeString == null || QRCodeString.equals("")) {

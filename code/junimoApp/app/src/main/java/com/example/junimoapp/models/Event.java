@@ -37,6 +37,7 @@ public class Event {
     private double price;
 
     /** unique QR code for the event */
+    @PropertyName("qrcode")
     private String qrcode;
 
     /** the location of the entrants for the event */
@@ -142,6 +143,9 @@ public class Event {
         if (db != null) {
             db.collection("events").document(eventID).update("private", aPrivate);
         }
+    }
+    public void restorePrivate(boolean aPrivate) {
+        this.isPrivate = aPrivate;
     }
 
     // ── Existing getters / setters (unchanged) ────────────────────────────
