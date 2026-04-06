@@ -140,8 +140,8 @@ public class CreateEvent extends AppCompatActivity {
         editTagSpinner          = findViewById(R.id.edit_tag_spinner);
         pickImageButton         = findViewById(R.id.pick_image_button);
         eventPoster             = findViewById(R.id.event_poster);
-        CheckBox check_coorganizer = findViewById(R.id.check_coorganizer);
-        Spinner spinner_coorganizer = findViewById(R.id.spinner_coorganizer);
+         check_coorganizer = findViewById(R.id.check_coorganizer);
+         spinner_coorganizer = findViewById(R.id.spinner_coorganizer);
 
         FirebaseManager firebase = new FirebaseManager();
         firebase.getDB().collection("users")
