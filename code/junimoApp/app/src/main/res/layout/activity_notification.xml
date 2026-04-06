@@ -15,7 +15,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Event Lottery"
+        android:text="@string/event_lottery_noti"
         android:textColor="#FFFFFF"
         android:textSize="28sp"
         android:textStyle="bold" />
@@ -24,8 +24,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Notifications"
+        android:text="@string/notifications_noti"
         android:textColor="#D2D2D2"
+        android:textSize="16sp" />
+
+    <!-- Back navigation -->
+    <TextView
+        android:id="@+id/backToHomeNotif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:padding="8dp"
+        android:text="@string/back_to_home"
+        android:textColor="#FFFFFF"
         android:textSize="16sp" />
 
     <View
@@ -51,16 +62,5 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#2A2A2A" />
-
-    <!-- Back navigation -->
-    <TextView
-        android:id="@+id/backToHomeNotif"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:padding="8dp"
-        android:text="@string/back_to_home"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp" />
 
 </LinearLayout>

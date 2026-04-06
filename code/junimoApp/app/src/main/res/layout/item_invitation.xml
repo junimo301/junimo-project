@@ -28,7 +28,7 @@
             android:layout_marginEnd="6dp"
             android:layout_weight="1"
             android:backgroundTint="#EAEAEA"
-            android:text="Accept"
+            android:text="@string/accept_invite"
             android:textAllCaps="false"
             android:textColor="#000000"
             android:textStyle="bold" />
@@ -40,7 +40,7 @@
             android:layout_marginStart="6dp"
             android:layout_weight="1"
             android:backgroundTint="#555555"
-            android:text="Decline"
+            android:text="@string/decline_invite"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textStyle="bold" />
