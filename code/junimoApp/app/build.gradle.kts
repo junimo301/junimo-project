@@ -57,5 +57,10 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.0.1")
 
     implementation("com.google.android.gms:play-services-maps:18.1.0")
+
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:5.23.0")
+    testImplementation("org.robolectric:robolectric:4.16.1")
+
 }
 

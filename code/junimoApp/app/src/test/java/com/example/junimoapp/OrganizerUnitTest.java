@@ -2,20 +2,35 @@ package com.example.junimoapp;
 
 import com.example.junimoapp.Organizer.EventData;
 import com.example.junimoapp.models.Event;
+import com.example.junimoapp.models.User;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.robolectric.RobolectricTestRunner;
+import org.w3c.dom.Document;
+
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
+import java.nio.file.attribute.UserPrincipalLookupService;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Unit tests for Organizer functionality.
  * Tests cover model and control logic for event creation and management.
  */
+@RunWith(Enclosed.class)
 public class OrganizerUnitTest {
 
     /**
@@ -34,7 +49,7 @@ public class OrganizerUnitTest {
                 20,                    // maxCapacity
                 0,                     // waitingListLimit (0 = no limit)
                 60.0,                  // price
-                null,                  // geoLocation
+                false,                  // geoLocation
                 "",                    // poster
                 "event-uuid-001",      // eventID
                 "Rec Centre",          // eventLocation
@@ -71,7 +86,7 @@ public class OrganizerUnitTest {
         Event event = new Event(
                 "Dance Class", "Beginner dance",
                 "2025-01-01", "2025-01-07", "2025-01-15",
-                30, 0, 0.0, null, "",
+                30, 0, 0.0, false, "",
                 "event-uuid-002", "Studio", "org-id", ""
         );
 
@@ -106,7 +121,7 @@ public class OrganizerUnitTest {
         Event event = new Event(
                 "Test Event", "A test",
                 "2025-01-01", "2025-01-07", "2025-01-15",
-                10, 0, 0.0, null, "",
+                10, 0, 0.0, false, "",
                 "search-test-id", "Location", "org-id", ""
         );
 
@@ -128,14 +143,14 @@ public class OrganizerUnitTest {
     public void testEditEventUpdatesInsteadOfDuplicating() {
         Event original = new Event(
                 "Original Title", "desc",
-                "", "", "", 10, 0, 0.0, null, "",
+                "", "", "", 10, 0, 0.0, false, "",
                 "edit-test-id", "loc", "org", ""
         );
         EventData.addOrEditEvent(original);
 
         Event updated = new Event(
                 "Updated Title", "desc",
-                "", "", "", 10, 0, 0.0, null, "",
+                "", "", "", 10, 0, 0.0, false, "",
                 "edit-test-id", "loc", "org", ""
         );
         EventData.addOrEditEvent(updated);
@@ -162,7 +177,7 @@ public class OrganizerUnitTest {
                 "2025-01-01",  // startDate — registration opens
                 "2025-01-07",  // endDate   — registration closes
                 "2025-01-15",  // dateEvent — actual event date
-                30, 0, 0.0, null, "",
+                30, 0, 0.0, false, "",
                 "event-id-002", "Studio A", "org-id", ""
         );
 
@@ -218,7 +233,7 @@ public class OrganizerUnitTest {
                 "2025-02-01", "2025-02-07", "2025-02-15",
                 50,
                 30,    // waitingListLimit explicitly set to 30
-                15.0, null, "", "event-id-003",
+                15.0, false, "", "event-id-003",
                 "Yoga Studio", "org-id", ""
         );
 
@@ -238,7 +253,7 @@ public class OrganizerUnitTest {
                 "2025-03-01", "2025-03-07", "2025-03-15",
                 20,
                 0,     // 0 = no waiting list limit (field left empty)
-                60.0, null, "", "event-id-004",
+                60.0, false, "", "event-id-004",
                 "Music Room", "org-id", ""
         );
 
@@ -273,7 +288,7 @@ public class OrganizerUnitTest {
                 "Swimming Lessons", "Beginner swim",
                 "2025-01-01", "2025-01-07", "2025-01-15",
                 20,    // maxCapacity — system samples this many attendees
-                0, 60.0, null, "", "event-id-005",
+                0, 60.0, false, "", "event-id-005",
                 "Pool", "org-id", ""
         );
 
@@ -372,4 +387,232 @@ public class OrganizerUnitTest {
         assertTrue(joinedWaitingListNames.contains("Chloe"));
     }
 
-}
+
+    // ─────────────────────────────────────────────────────────────────
+    // PART 4: NEW TESTS
+    // ─────────────────────────────────────────────────────────────────
+
+    /**
+     * UnitTests to test US 02.05.02
+     * */
+    public static class SampleTest {
+        //simulates startLottery() system from Entrants class
+        private List<User> startLottery(List<User> user, int maxCapacity) {
+            List<User> shuffle = new ArrayList<>(user);
+            Collections.shuffle(shuffle);
+            int index = Math.min(maxCapacity, shuffle.size());
+            return new ArrayList<>(shuffle.subList(0, index));
+        }
+        private List<User> getUser(int count) {
+            List<User> userList = new ArrayList<>();
+            for (int i = 0; i < count; i++) {
+                userList.add(new User("deviceID" + i,
+                        "name" + i,
+                        "email" + i + "@gmail.com",
+                        "",
+                        "",
+                        "",
+                        "" ));
+            }
+            return userList;
+        }
+
+        // ----------- TESTS -----------
+
+        /**
+         * Tests that everyone picked is from the waitlist
+         * Returns users from the waitlist
+         * */
+        @Test
+        public void testUsersPickedFromWaitList() {
+            List<User> waitList = getUser(15);
+            int maxCapacity = 10;
+            List<User> selectedUsers = startLottery(waitList, maxCapacity);
+
+            for (User user : selectedUsers) {
+                assertTrue("Should select users from the waitlist", waitList.contains(user));
+            }
+            long count = selectedUsers.stream().map(User::getDeviceId).distinct().count();
+            assertEquals("Should select users from the waitlist", selectedUsers.size(), count);
+        }
+
+        /**
+         * Tests if the selected users is not more than capacity when waitlist has more than capacity
+         * Returns selected users equal to maxCapacity
+         * */
+        @Test
+        public void testSampleSizeNotMoreThanCapacity() {
+            List<User> waitList = getUser(15);
+            int maxCapacity = 10;
+            List<User> selectedUsers = startLottery(waitList, maxCapacity);
+            assertEquals("Should not select more than maxCapacity", maxCapacity, selectedUsers.size());
+        }
+
+        /**
+         * Tests when waitlist and maxCapacity are equal
+         * Returns everyone on the waitlist
+         * */
+        @Test
+        public void testSampleSizeEqualToCapacity() {
+            List<User> waitList = getUser(10);
+            int maxCapacity = 10;
+            List<User> selectedUsers = startLottery(waitList, maxCapacity);
+            assertEquals("Should select everyone on the waitlist", 10, selectedUsers.size());
+        }
+
+        /**
+         * Tests if everyone on the waitlist is selected if waitlist is less than maxCapacity
+         * Returns everyone on the waitlist
+         * */
+        @Test
+        public void testSampleSizeEqualToWaitingList() {
+            List<User> waitList = getUser(5);
+            int maxCapacity = 10;
+            List<User> selectedUsers = startLottery(waitList, maxCapacity);
+            assertEquals("Should select everyone on the waitlist", waitList.size(), selectedUsers.size());
+        }
+
+        /**
+         * Tests when waitList is empty
+         * Returns no selected users
+         * */
+        @Test
+        public void testSampleSizeZero() {
+            List<User> waitList = new ArrayList<>();
+            int maxCapacity = 10;
+            List<User> selectedUsers = startLottery(waitList, maxCapacity);
+            assertEquals("Should not select any users", 0, selectedUsers.isEmpty());
+        }
+    }//US 02.05.03 test class
+
+
+    /**
+     * UnitTests to test US 02.02.02 and 02.02.03
+     * */
+    @RunWith(RobolectricTestRunner.class)
+    public static class GeoLocationTests {
+        @Mock
+        FirebaseFirestore mockFirestore;
+        @Mock
+        CollectionReference mockUserLocation;
+        @Mock
+        DocumentReference mockUserLocationDocument;
+        @Mock
+        CollectionReference mockEvents;
+        @Mock
+        DocumentReference mockEventDocument;
+
+        private Event geoLocationEnbaledEvent;
+
+        @Before
+        public void helper() {
+            when(mockFirestore.collection("events")).thenReturn(mockEvents);
+            when(mockEvents.document(anyString())).thenReturn(mockEventDocument);
+            when(mockEventDocument.collection("usersLocation")).thenReturn(mockUserLocation);
+            when(mockUserLocation.document(anyString())).thenReturn(mockUserLocationDocument);
+            when(mockUserLocationDocument.set(anyMap())).thenReturn(null);
+
+            geoLocationEnbaledEvent = new Event(
+                    "Swimming Lessons",    // title
+                    "Beginner swim class", // description
+                    "2025-01-01",          // startDate
+                    "2025-01-07",          // endDate
+                    "2025-01-10,",         // dateEvent
+                    20,                    // maxCapacity
+                    30,                    // waitingListLimit
+                    0.0,                  // price
+                    true,                  // geoLocation
+                    "",                    // poster
+                    "event-uuid-001",      // eventID
+                    "Rec Centre",          // eventLocation
+                    "organizer-device-id", // organizerID
+                    ""                     // tag (none)
+            );
+        }
+
+        // ----------- TEST 02.02.03 -----------
+
+        /**
+         * Tests if geoLocation is disabled for an event by default
+         * */
+        @Test
+        public void testGeoLocationDisabled() {
+            Event event = new Event("Movie", "Watch movie", "2025-01-01", "2025-01-10",
+                    "2025-01-12", 20, 0, 0.0, false, "",
+                    "event-uuid-001", "Movie Theater", "organizer-device-id", "");
+            assertFalse("GeoLocation should be disabled by default", geoLocationEnbaledEvent.isGeoLocation());
+        }
+
+        /**
+         * Tests enabling geoLocation for an event
+         * */
+        @Test
+        public void testGeoLocationEnabled() {
+            Event event = new Event("Movie", "Watch movie", "2025-01-01", "2025-01-10",
+                    "2025-01-12", 20, 0, 0.0, true, "",
+                    "event-uuid-001", "Movie Theater", "organizer-device-id", "");
+            assertFalse(geoLocationEnbaledEvent.isGeoLocation());
+            geoLocationEnbaledEvent.setGeoLocation(true);
+            assertTrue("GeoLocation should be enabled", geoLocationEnbaledEvent.isGeoLocation());
+        }
+
+        /**
+         * NOT IMPLEMENTED
+         * Tests enabling geoLocation for an event after it has been disabled
+         * */
+        @Test
+        public void testGeoLocationEnabledAfterDisabled() {
+            assertFalse(geoLocationEnbaledEvent.isGeoLocation());
+            geoLocationEnbaledEvent.setGeoLocation(true);
+            assertTrue("GeoLocation should be enabled now", geoLocationEnbaledEvent.isGeoLocation());
+        }
+
+        /**
+         * NOT IMPLEMENTED
+         * Tests disabling geoLocation for an event after it has been enabled
+         * */
+        @Test
+        public void testGeoLocationDisabledAfterEnabled() {
+            assertTrue(geoLocationEnbaledEvent.isGeoLocation());
+            geoLocationEnbaledEvent.setGeoLocation(false);
+            assertFalse("GeoLocation should be disabled now", geoLocationEnbaledEvent.isGeoLocation());
+        }
+
+        /**
+         * Tests when geolocation buttons are couple of times
+         * - enabled
+         * - then disabled
+         * - then enabled
+         * Returns the value it starts as, returns enabled geoLocation
+         * */
+        @Test
+        public void testGeoLocationEnabledThenDisabledThenEnabled() {
+            boolean correct = geoLocationEnbaledEvent.isGeoLocation(); //enabled, true
+            geoLocationEnbaledEvent.setGeoLocation(!correct);
+            geoLocationEnbaledEvent.setGeoLocation(correct);
+            assertEquals("GeoLocation should be enabled now", correct, geoLocationEnbaledEvent.isGeoLocation());
+        }
+    } // US 02.02.02 and 02.02.03 test class
+
+
+    /**
+     * UnitTests to test US 02.04.01 and 02.04.02
+     * */
+    public static class PosterTests {
+
+    } // US 02.04.01 and 02.04.02 test class
+
+
+    /**
+     * UnitTests to test US 02.01.01
+     * - testing creating an event
+     * - testing QR code generation
+     * */
+    public static class CreatePublicEventAndQRCodeTests {
+
+    } // US 02.04.01 and 02.04.02 test class
+
+} //Whole class
+
+
+
