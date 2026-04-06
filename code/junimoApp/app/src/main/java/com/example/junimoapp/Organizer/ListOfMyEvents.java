@@ -36,10 +36,9 @@ import java.util.List;
  *  - description,
  *  - an edit button to edit the event,
  *  - and a QR code button to view the qrcode associated with the event
- *
+ *  Buttons functions:
  *  - edit buttons opens CreateEvent screen
  *  - QR code button opens a qrcode pop up screen
- *
  * */
 public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventViewHolder> {
 

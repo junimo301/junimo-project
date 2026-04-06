@@ -20,7 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 /**
  * Allows organizer to select an event to view entrants or map.
  * Loads events directly from Firestore on every resume so the
- * list is always fresh after returning from Entrants or Map.
+ * list is always freshed after returning from Entrants or Map.
  */
 public class SelectAnEvent extends AppCompatActivity {
 
@@ -29,6 +29,10 @@ public class SelectAnEvent extends AppCompatActivity {
     TextView backButton;
     String goTo;
 
+    /**
+     * starts activity
+     * @param savedInstanceState
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +58,10 @@ public class SelectAnEvent extends AppCompatActivity {
         loadEventsFromFirestore();
     }
 
+    /**
+     * Loads the organizers events from firestore
+     * navigates user to Entrants or Map activity depending on goTo
+     * */
     private void loadEventsFromFirestore() {
         eventList.removeAllViews();
 

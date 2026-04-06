@@ -45,6 +45,16 @@ public class User {
     FirebaseManager firebase;
     FirebaseFirestore db;
 
+    /**
+     * Initializes  user details, personal information, their role, and their events.
+     * @param deviceId
+     * @param name
+     * @param email
+     * @param phone
+     * @param organized events that the user has organized (as organizer)
+     * @param invited events that the user been invited to
+     * @param waitlisted events that the user has waitlisted
+     * */
     public User(String deviceId, String name, String email, String phone,
                 String organized, String invited, String waitlisted) {
         this.deviceId = deviceId;
@@ -104,6 +114,10 @@ public class User {
     // persists to Firestore using FirebaseManager.updateUser() so the
     // preference survives app restarts.
     // ─────────────────────────────────────────────────────────────────────
+    /**
+     * Sets that the user wants notifications and updates the users Firestore data
+     * @param enabled notifications enabled
+     * */
     public void setNotificationsEnabled(boolean enabled) {
         this.notificationsEnabled = enabled;
         if (db != null) {
@@ -114,6 +128,11 @@ public class User {
 
     // ── Existing methods (unchanged) ──────────────────────────────────────
 
+    /**
+     * Invites user to an event
+     * Updates Firestore to add the event to the users invitedEvents
+     * @param event the event to invite the user to
+     * */
     public void inviteUser(Event event) {
         if (!invitedEvents.contains(event.getEventID())) {
             invitedEvents = invitedEvents + (event.getEventID()) + ",";
@@ -131,6 +150,11 @@ public class User {
         return invitedEvents.contains(eventID);
     }
 
+    /**
+     * Removes user from an event
+     * Updates Firestore to remove the event from the users invitedEvents
+     * @param event the event to remove the user from
+     * */
     public void cancelUser(Event event) {
         if (invitedEvents.contains(event.getEventID())) {
             invitedEvents = invitedEvents.replace(event.getEventID() + ",", "");
@@ -144,12 +168,22 @@ public class User {
         return cancelledEvents.contains(eventID);
     }
 
+    /**
+     * States whether the user organizer the event
+     * Updates Firestore to add the event to the users organizedEvents, and local list
+     * @param event the event to add to the users organizedEvents
+     * */
     public void addOrganizedEvent(Event event) {
         organizedEvents = organizedEvents + (event.getEventID()) + ",";
         firebase.updateUser(db.collection("users"), this, "organizedEvents", organizedEvents);
         organizedEventsList.add(event);
     }
 
+    /**
+     * Removes the event from the users organizedEvents
+     * Updates Firestore and local list to remove the event
+     * @param event the event to remove
+     * */
     public void removeOrganizedEvent(Event event) {
         if (organizedEvents.contains(event.getEventID())) {
             organizedEvents = organizedEvents.replace(event.getEventID() + ",", "");
@@ -158,6 +192,11 @@ public class User {
         organizedEventsList.remove(event);
     }
 
+    /**
+     * Adds user to the events waitlist
+     * Updates Firestore to add the event to the users waitlistedEvents, and local list
+     * @param event the event to add to the users waitlistedEvents
+     * */
     public void joinEventWaitList(Event event) {
         boolean check = event.enrollInWaitList(deviceId);
         if (check) {
@@ -167,6 +206,11 @@ public class User {
         }
     }
 
+    /**
+     * Removes user from the events waitlist
+     * Updates Firestore to remove the event from the users waitlistedEvents, and local list
+     * @param event the event to user is leaving the waitList for
+     * */
     public void leaveEventWaitList(Event event) {
         boolean check = event.removeFromWaitList(deviceId);
         if (check) {
@@ -176,6 +220,10 @@ public class User {
         }
     }
 
+    /**
+     * Removes organizer access from a user
+     * Updates Firestore to remove events by this user from the users organizedEvents
+     * */
     public void demoteOrganizer() {
         organizer = false;
         CollectionReference eventsRef = db.collection("events");
@@ -186,6 +234,9 @@ public class User {
         organizedEventsList.clear();
     }
 
+    /**
+     * Initialize events and notifications preference of a user
+     * */
     public void initializeEvents() {
         this.organizedEventsList = new ArrayList<Event>();
         this.invitedEventsList = new ArrayList<Event>();
@@ -237,6 +288,11 @@ public class User {
                 });
     }
 
+    /**
+     * Populates a list of events from an array of eventIDs
+     * @param stringList array of eventIDs
+     * @param eventList list of events
+     * */
     public void readStringList(String[] stringList, ArrayList<Event> eventList) {
         if (stringList.length >= 1) {
             CollectionReference eventsRef = db.collection("events");
@@ -292,6 +348,11 @@ public class User {
         this.coOrganizerInvites = coOrganizerInvites;
     }
 
+    /**
+     * Adds a co-organizer invite to the user
+     * Updates Firestore to add the event to the users coOrganizerInvites
+     * @param eventId the id of the event to add
+     * */
     public void addCoOrganizerInvite(String eventId) {
         if (coOrganizerInvites == null) coOrganizerInvites = "";
 
@@ -305,6 +366,11 @@ public class User {
         }
     }
 
+    /**
+     * Removes a co-organizer invite from the user
+     * Updates Firestore to remove the event from the users coOrganizerInvites
+     * @param eventId the id of the event to remove
+     * */
     public void removeCoOrganizerInvite(String eventId) {
         if (coOrganizerInvites != null && coOrganizerInvites.contains(eventId)) {
             coOrganizerInvites = coOrganizerInvites.replace(eventId + ",", "");

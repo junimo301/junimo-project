@@ -36,7 +36,11 @@ import java.util.Set;
 
 
 /**
- * Ayema
+ * Organizer can send notifications to users
+ * US 02.07.01: Sends notifications to all entrants on the waiting list
+ * US 02.07.02: Sends notifications to all selected entrants
+ * US 02.07.03: Sends a notification to all cancelled entrants
+ * US 02.05.01: Sends a notification to chosen entrants to sign up for events
  * */
 public class organizerNotifications extends AppCompatActivity {
 
@@ -65,18 +69,27 @@ public class organizerNotifications extends AppCompatActivity {
         this.db = db;
     }
 
+    /**
+     * Callback for sending notifications
+     * */
     public interface NotificationCallback {
         void onSuccess(int notifiedCount);
 
         void onFailure(@NonNull Exception exception);
     }
 
+    /**
+     * Internal callback for fetching recipient IDs
+     * */
     private interface RecipientIdsCallback {
         void onSuccess(@NonNull List<String> recipientIds);
 
         void onFailure(@NonNull Exception exception);
     }
 
+    /**
+     * Represents an event option with its ID and title
+     * */
     private static class EventOption {
         final String eventId;
         final String title;
@@ -87,6 +100,10 @@ public class organizerNotifications extends AppCompatActivity {
         }
     }
 
+    /**
+     * Start activity
+     * @param savedInstanceState
+     * */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +124,10 @@ public class organizerNotifications extends AppCompatActivity {
         sendButton.setOnClickListener(v -> sendSelectedNotification());
     }
 
+    /**
+     * Types of notifications to send to users
+     * Organizer selects which type of notification to send to users
+     * */
     private void setupNotificationTypeSpinner() {
         List<String> types = new ArrayList<>();
         types.add("Entrants On Waiting List");

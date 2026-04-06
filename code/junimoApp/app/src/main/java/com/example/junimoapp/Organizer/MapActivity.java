@@ -29,7 +29,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 
 /**
- * GEO LOCATION MAP
+ * Organizer can see location of entrants who joined a specific event waitList
+ * Uses google maps
+ * Displays a mini map of pinned entrants location
+ *  - Clicking mini map navigates to a full screen map of the entrants location
+ * Displays a list of the entrants with their name and coordinates
+ * US 02.02.02 As an organizer I want to see on a map where entrants joined my event waiting list from.
  * */
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     FirebaseFirestore db;
@@ -41,6 +46,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     String userID;
     TextView backButton;
 
+    /**
+     * Starts activity.
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +72,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         backButton.setOnClickListener(view -> finish());
     }
 
+    /**
+     * Initializes map
+     * Navigates to enlarged map when clicked on the mini map
+     * @param map the google map
+     * */
     @Override
     public void onMapReady(@NonNull GoogleMap map) {
         googleMap = map;
@@ -77,6 +91,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         loadUsersLocation();
     }
 
+    /**
+     * Loads the users locations, latitude and longitude
+     * Displays users on the map as a pinned location
+     * Displays a list of the users with their name and coordinates
+     * */
     private void loadUsersLocation() {
         db.collection("events")
                 .document(eventID)

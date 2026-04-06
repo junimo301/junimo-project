@@ -53,13 +53,16 @@ import java.util.UUID;
 
 /**
  * Organizer creates and edits events.
- *
  * User stories implemented here:
  *  - US 02.01.01 Create a new event and generate a unique promotional QR code
  *  - US 02.01.02 Create a private event (no public listing, no QR code)
  *  - US 02.01.03 Open invite screen after creating private event
  *  - US 02.01.04 Set a registration period
+ *  - US 02.02.03 Enable and disable geoLocation
  *  - US 02.03.01 Optionally limit the number of entrants on the waiting list
+ *  - US 02.04.01 Uploads posters
+ *  - US 02.04.02 Updates poster
+ *  - US 02.05.02 sets maxCapacity for event
  */
 public class CreateEvent extends AppCompatActivity {
 
@@ -93,6 +96,12 @@ public class CreateEvent extends AppCompatActivity {
     private Uri imageUri;
     private Button pickImageButton;
 
+    /**
+     * Generates a QR code for the event
+     * @param content the content to encode in the QR code
+     * @param size the size of the QR code
+     * @return the bitmap of the QR code
+     * */
     private Bitmap generateQRCode(String content, int size) {
         try {
             BitMatrix matrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, size, size);
@@ -104,6 +113,11 @@ public class CreateEvent extends AppCompatActivity {
         }
     }
 
+    /**
+     * Setup to pick image from the device
+     * Picks image from gallery, saves the URI to imageUri, and sets the button text to the image name
+     * Loads image to eventPoster
+     * */
     private final ActivityResultLauncher<String>
             pickImage = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
         if (uri != null) {
@@ -119,6 +133,19 @@ public class CreateEvent extends AppCompatActivity {
         }
     });
 
+    /**
+     * Sets up the activity
+     *  - Creating events
+     *  - Editing events, pre-filling existing fields when ediitng
+     *  - Previewing events
+     *  - Uploading events to Firebase
+     *  - QR code generation
+     *  - enable and disable geoLocation
+     *  - Upload event poster
+     *  - co-organizer invite
+     *  - Private event
+     * @param savedInstanceState
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -343,6 +370,11 @@ public class CreateEvent extends AppCompatActivity {
         cancelButton.setOnClickListener(view -> finish());
     }
 
+    /**
+     * Shows DatePickerDialog to select a date
+     * date format is yyyy-MM-dd
+     * @param target the field to set the date in
+     * */
     private void SelectDate(EditText target) {
         Calendar calendar = Calendar.getInstance();
         String dateExists = target.getText().toString();
@@ -362,6 +394,7 @@ public class CreateEvent extends AppCompatActivity {
 
     /**
      * Validates all fields then uploads the event to Firebase.
+     * Goes to PrivateInviteActivity if private event is selected
      * US 02.01.02: saves private flag, skips QR for private events.
      * US 02.01.03: navigates to PrivateInviteActivity for private events.
      */

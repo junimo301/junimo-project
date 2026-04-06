@@ -26,13 +26,10 @@ public class Event {
     private String startDate;
     private String endDate;
 
-    /** the date of the event */
     private String dateEvent;
 
-    /** the max capacity of entrants for the event */
     private int maxCapacity;
 
-    /** the waiting list limit of entrants for the event */
     private int waitingListLimit;
     private double price;
 
@@ -40,19 +37,17 @@ public class Event {
     @PropertyName("qrcode")
     private String qrcode;
 
-    /** the location of the entrants for the event */
+    /** the location of the entrants on the waitList for the event */
     private boolean geoLocation = false;
 
-    /** the location of the event */
     private String eventLocation;
 
-    /** the poster/image for the event saved as a url */
+    /** the poster/image for the event */
     private String poster;  //event images
 
     /** list of the user id who are on the waiting list */
     private String waitList;
 
-    /** the organizer id */
     private String organizerID;
 
     private String coOrganizers;
@@ -68,7 +63,7 @@ public class Event {
     // ─────────────────────────────────────────────────────────────────────
     private boolean isPrivate = false;
 
-    //tag for filtering events: US 01.01.05 and 01.01.06
+    /**tag for filtering events: US 01.01.05 and 01.01.06*/
     private String tag;
 
     FirebaseManager firebase;
@@ -140,7 +135,11 @@ public class Event {
     public boolean isPrivate() {
         return isPrivate;
     }
-
+    /**
+     * Sets if the event is private or not
+     * updates the private flag in the Firestore database immeditly so private events can be filtered properly
+     * @param aPrivate if the event is private or not
+     * */
     public void setPrivate(boolean aPrivate) {
         isPrivate = aPrivate;
         // Persist to Firestore so all screens that load events see the flag
@@ -330,6 +329,9 @@ public class Event {
         }
     }
 
+    /**
+     * Initialize waitlist from Firestore
+     * */
     public void initializeWaitlist() {
         db.collection("events").document(eventID).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -357,6 +359,12 @@ public class Event {
                 });
     }
 
+    /**
+     * Adds a user as a co organizer to a event
+     * If user is on waitlist, they are removed and added to co-organizers
+     * Added to firestore as such
+     * @param userId user device id to add as coorganizer
+     * */
     public void addCoOrganizer(String userId) {
         if (coOrganizers == null) coOrganizers = "";
 
@@ -373,6 +381,11 @@ public class Event {
         }
     }
 
+    /**
+     * Removes a user as a co organizer from an event
+     * Updates firestore coOrganizer list
+     * @param userId user device id to remove as coorganizer
+     * */
     public void removeCoOrganizer(String userId) {
         if (coOrganizers != null && coOrganizers.contains(userId)) {
             coOrganizers = coOrganizers.replace(userId + ",", "");
@@ -384,10 +397,18 @@ public class Event {
         }
     }
 
+    /**
+     * Checks whether a user is a co-organizer for an event
+     * @param userId user device id to check if a user is a coorganizer
+     * @return true if user is a coorganizer, false otherwise
+     * */
     public boolean isCoOrganizer(String userId) {
         return coOrganizers != null && coOrganizers.contains(userId);
     }
 
+    /**
+     * Initializes co-organizers from Firestore
+     * */
     public void initializeCoOrganizers() {
         db.collection("events").document(eventID).get()
                 .addOnCompleteListener(task -> {

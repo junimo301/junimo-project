@@ -37,6 +37,7 @@ import java.util.List;
  *  - US 01.04.01: Notify entrant when they are selected by the lottery
  *  - US 01.04.02: Notify entrant when they are NOT selected by the lottery
  *  - US 02.05.02: Sample a specified number of attendees to register for the event
+ *  - US 02.05.03: Draws a replacement applicant from the pooling system when a previously selected applicant cancels/rejects invitation
  */
 public class Entrants extends AppCompatActivity {
 
@@ -51,6 +52,11 @@ public class Entrants extends AppCompatActivity {
 
     Event selectEvent;
 
+    /**
+     * starts the activity
+     * Loads event details (cancelled, enrolled, waitList)
+     * @param savedInstanceState
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,6 +132,10 @@ public class Entrants extends AppCompatActivity {
         });
     }
 
+    /**
+     * Gets the users in the events waitList
+     * @param selectEvent the waitLists event
+     * */
     private void WaitlistUsers(Event selectEvent) {
         String[] deviceIDs = selectEvent.getWaitList().split(",");
 
@@ -171,6 +181,9 @@ public class Entrants extends AppCompatActivity {
         }
     }
 
+    /**
+     * Refreshes the UI with the new users lists
+     * */
     private void refreshUI() {
         runOnUiThread(() -> {
             invitedEntrants.removeAllViews();
@@ -182,6 +195,11 @@ public class Entrants extends AppCompatActivity {
         });
     }
 
+    /**
+     * Lottery function to randomly invite users in waitList to the event
+     * Selects user's up to the maxCapacity of the event
+     * Sends notifications of results
+     * */
     private void startLottery() {
         lotteryButton.setEnabled(false);
         Log.d("lottery button", "button was pressed");
@@ -274,6 +292,11 @@ public class Entrants extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * Loads a list of users who were cancelled for the event, if exists
+     * @param eventID
+     * @param usersArray list of users
+     * */
     private void loadCancelledEntrants(List<User> usersArray, String eventID) {
         boolean noneCancelled = true;
         for (User user : usersArray) {
@@ -291,6 +314,10 @@ public class Entrants extends AppCompatActivity {
         }
     }
 
+    /**
+     * Loads a list of users who are in the waitList, if exists
+     * @param usersArray list of users
+     * */
     private void loadEnrolledEntrants(List<User> usersArray) {
         if (!usersArray.isEmpty()) {
             for (User user : usersArray) {
