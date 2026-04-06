@@ -55,6 +55,8 @@ public class Event {
     /** the organizer id */
     private String organizerID;
 
+    private String coOrganizers;
+
     // ─────────────────────────────────────────────────────────────────────
     // US 02.01.02
     // Flag that marks this event as private (invite-only).
@@ -117,11 +119,13 @@ public class Event {
         this.cancelledUsers = "";
         this.invitedUsers = "";
         this.enrolledUsers = "";
+        this.coOrganizers = "";
 
         try {
             firebase = new FirebaseManager();
             db = firebase.getDB();
             initializeWaitlist();
+            initializeCoOrganizers();
         } catch (Exception e) {
             //unit testing environment, we don't need or want firebase
         }
@@ -292,6 +296,12 @@ public class Event {
      * @return true on success, false if already enrolled
      */
     public boolean enrollInWaitList(String accountId) {
+
+        //block co-orgs
+        if (isCoOrganizer(accountId)) {
+            return false;
+        }
+
         if (waitList.contains(accountId)) {
             return false;
         } else {
@@ -342,6 +352,52 @@ public class Event {
                             }
                         } else {
                             Log.d("Firestore", "get failed with ", task.getException());
+                        }
+                    }
+                });
+    }
+
+    public void addCoOrganizer(String userId) {
+        if (coOrganizers == null) coOrganizers = "";
+
+        if (!coOrganizers.contains(userId)) {
+
+            removeFromWaitList(userId);
+
+            coOrganizers = coOrganizers + userId + ",";
+
+            if (db != null) {
+                db.collection("events").document(eventID)
+                        .update("coOrganizers", coOrganizers);
+            }
+        }
+    }
+
+    public void removeCoOrganizer(String userId) {
+        if (coOrganizers != null && coOrganizers.contains(userId)) {
+            coOrganizers = coOrganizers.replace(userId + ",", "");
+
+            if (db != null) {
+                db.collection("events").document(eventID)
+                        .update("coOrganizers", coOrganizers);
+            }
+        }
+    }
+
+    public boolean isCoOrganizer(String userId) {
+        return coOrganizers != null && coOrganizers.contains(userId);
+    }
+
+    public void initializeCoOrganizers() {
+        db.collection("events").document(eventID).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            String data = document.getString("coOrganizers");
+                            if (data != null) {
+                                coOrganizers = data;
+                            }
                         }
                     }
                 });
