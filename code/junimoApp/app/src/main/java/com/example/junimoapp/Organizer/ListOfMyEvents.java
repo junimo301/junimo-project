@@ -31,8 +31,15 @@ import java.util.List;
 
 /**
  * Views list of the organizers events
- * shows event title, descrition and an edit button to edit the event
+ * Shows:
+ *  - event title
+ *  - description,
+ *  - an edit button to edit the event,
+ *  - and a QR code button to view the qrcode associated with the event
+ *
  *  - edit buttons opens CreateEvent screen
+ *  - QR code button opens a qrcode pop up screen
+ *
  * */
 public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventViewHolder> {
 
