@@ -29,15 +29,15 @@ public class SearchUnitTest {
         allEvents = new ArrayList<>();
         dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Event event1 = new Event("Concert", "Music outdoors", "2026-05-01", "2026-05-10",
-                "2026-06-15", 500, 50, 25.0, null, null,
+                "2026-06-15", 500, 50, 25.0, false, "",
                 "e1", "Park", "org1", "Entertainment");
 
         Event event2 = new Event("Hackathon", "Coding competition", "2026-04-01", "2026-05-10",
-                "2026-04-10", 30, 10, 0.0, null, null,
+                "2026-04-10", 30, 10, 0.0, true, "",
                 "e2", "Library", "org2", "Professional");
 
         Event event3 = new Event("Wrestling Tournament", "Local competition", "2026-07-01", "2026-07-15",
-                "2026-07-20", 100, 20, 5.0, null, null,
+                "2026-07-20", 100, 20, 5.0, false, "",
                 "e3", "Stadium", "org3", "Athletics");
 
         allEvents.add(event1);

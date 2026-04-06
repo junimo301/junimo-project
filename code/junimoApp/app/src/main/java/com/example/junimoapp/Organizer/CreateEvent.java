@@ -6,7 +6,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -51,13 +53,16 @@ import java.util.UUID;
 
 /**
  * Organizer creates and edits events.
- *
  * User stories implemented here:
  *  - US 02.01.01 Create a new event and generate a unique promotional QR code
  *  - US 02.01.02 Create a private event (no public listing, no QR code)
  *  - US 02.01.03 Open invite screen after creating private event
  *  - US 02.01.04 Set a registration period
+ *  - US 02.02.03 Enable and disable geoLocation
  *  - US 02.03.01 Optionally limit the number of entrants on the waiting list
+ *  - US 02.04.01 Uploads posters
+ *  - US 02.04.02 Updates poster
+ *  - US 02.05.02 sets maxCapacity for event
  */
 public class CreateEvent extends AppCompatActivity {
 
@@ -65,7 +70,7 @@ public class CreateEvent extends AppCompatActivity {
             editEventLocation, editMaxCapacity, editWaitingList, editPrice;
 
     android.widget.Spinner editTagSpinner;
-    Button uploadNewEvent, previewButton, QRCodeButton, cancelButton, enableGeoLocationButton;
+    Button uploadNewEvent, previewButton, QRCodeButton, cancelButton, enableGeoLocationButton, disableGeoLocationButton;
     TextView backButton;
 
     // ─────────────────────────────────────────────────────────────────────
@@ -91,6 +96,12 @@ public class CreateEvent extends AppCompatActivity {
     private Uri imageUri;
     private Button pickImageButton;
 
+    /**
+     * Generates a QR code for the event
+     * @param content the content to encode in the QR code
+     * @param size the size of the QR code
+     * @return the bitmap of the QR code
+     * */
     private Bitmap generateQRCode(String content, int size) {
         try {
             BitMatrix matrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, size, size);
@@ -102,6 +113,11 @@ public class CreateEvent extends AppCompatActivity {
         }
     }
 
+    /**
+     * Setup to pick image from the device
+     * Picks image from gallery, saves the URI to imageUri, and sets the button text to the image name
+     * Loads image to eventPoster
+     * */
     private final ActivityResultLauncher<String>
             pickImage = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
         if (uri != null) {
@@ -117,6 +133,19 @@ public class CreateEvent extends AppCompatActivity {
         }
     });
 
+    /**
+     * Sets up the activity
+     *  - Creating events
+     *  - Editing events, pre-filling existing fields when ediitng
+     *  - Previewing events
+     *  - Uploading events to Firebase
+     *  - QR code generation
+     *  - enable and disable geoLocation
+     *  - Upload event poster
+     *  - co-organizer invite
+     *  - Private event
+     * @param savedInstanceState saved instance state
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,14 +163,15 @@ public class CreateEvent extends AppCompatActivity {
         uploadNewEvent          = findViewById(R.id.upload_event_button);
         QRCodeButton            = findViewById(R.id.QR_code_button);
         enableGeoLocationButton = findViewById(R.id.enable_geoLocation_button);
+        disableGeoLocationButton = findViewById(R.id.disable_geoLocation_button);
         backButton              = findViewById(R.id.backButton);
         cancelButton            = findViewById(R.id.cancel_button);
         previewButton           = findViewById(R.id.preview_event_button);
         editTagSpinner          = findViewById(R.id.edit_tag_spinner);
         pickImageButton         = findViewById(R.id.pick_image_button);
         eventPoster             = findViewById(R.id.event_poster);
-         check_coorganizer = findViewById(R.id.check_coorganizer);
-         spinner_coorganizer = findViewById(R.id.spinner_coorganizer);
+        check_coorganizer       = findViewById(R.id.check_coorganizer);
+        spinner_coorganizer     = findViewById(R.id.spinner_coorganizer);
 
         FirebaseManager firebase = new FirebaseManager();
         firebase.getDB().collection("users")
@@ -242,18 +272,29 @@ public class CreateEvent extends AppCompatActivity {
                 // ─────────────────────────────────────────────────────────
                 checkPrivate.setChecked(createdEvent.isPrivate());
                 geoLocation = createdEvent.isGeoLocation();
-                enableGeoLocationButton.setText(geoLocation
-                        ? getString(R.string.enabled)
-                        : getString(R.string.disabled));
+
+                enableGeoLocationButton.setEnabled(!geoLocation);
+                enableGeoLocationButton.setAlpha(geoLocation ? 0.5f : 1.0f);
+                disableGeoLocationButton.setEnabled(geoLocation);
+                disableGeoLocationButton.setAlpha(geoLocation ? 1.0f : 0.5f);
             }
         }
 
         enableGeoLocationButton.setOnClickListener(view -> {
-            geoLocation = !geoLocation;
-            enableGeoLocationButton.setText(geoLocation
-                    ? getString(R.string.enabled)
-                    : getString(R.string.disabled));
+            geoLocation = true;
+            enableGeoLocationButton.setEnabled(false);
+            enableGeoLocationButton.setAlpha(0.5f);
+            disableGeoLocationButton.setEnabled(true);
+            disableGeoLocationButton.setAlpha(1.0f);
         });
+        disableGeoLocationButton.setOnClickListener(view -> {
+            geoLocation = false;
+            enableGeoLocationButton.setEnabled(true);
+            enableGeoLocationButton.setAlpha(1.0f);
+            disableGeoLocationButton.setEnabled(false);
+            disableGeoLocationButton.setAlpha(0.5f);
+        });
+
 
         pickImageButton.setOnClickListener(view -> pickImage.launch("image/*"));
 
@@ -282,13 +323,27 @@ public class CreateEvent extends AppCompatActivity {
             ((TextView) dialogView.findViewById(R.id.event_title)).setText(editTitle.getText().toString());
 
             AlertDialog dialog = new AlertDialog.Builder(this).setView(dialogView).create();
-            if (dialog.getWindow() != null) {
-                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                dialog.getWindow().setDimAmount(0.5f);
-            }
+
             dialogView.findViewById(R.id.close_button).setOnClickListener(v -> dialog.dismiss());
             dialog.show();
+
+            Window window = dialog.getWindow();
+            if (window != null) {
+                window.setBackgroundDrawableResource(android.R.color.transparent);
+                window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                window.setDimAmount(0.5f);
+
+                window.setGravity(Gravity.CENTER);
+                int screenWidth = view.getResources().getDisplayMetrics().widthPixels;
+                int dialogWidth = (int) (screenWidth * 0.75);
+                window.setLayout(dialogWidth, WindowManager.LayoutParams.WRAP_CONTENT);
+
+                ImageView QRCodeImageView = dialogView.findViewById(R.id.QR_image);
+                int QRCodeSize = (int) (dialogWidth * 0.90);
+                QRCodeImageView.getLayoutParams().width = QRCodeSize;
+                QRCodeImageView.getLayoutParams().height = QRCodeSize;
+                QRCodeImageView.requestLayout();
+            }
         });
 
         previewButton.setOnClickListener(view -> {
@@ -315,6 +370,11 @@ public class CreateEvent extends AppCompatActivity {
         cancelButton.setOnClickListener(view -> finish());
     }
 
+    /**
+     * Shows DatePickerDialog to select a date
+     * date format is yyyy-MM-dd
+     * @param target the field to set the date in
+     * */
     private void SelectDate(EditText target) {
         Calendar calendar = Calendar.getInstance();
         String dateExists = target.getText().toString();
@@ -334,6 +394,7 @@ public class CreateEvent extends AppCompatActivity {
 
     /**
      * Validates all fields then uploads the event to Firebase.
+     * Goes to PrivateInviteActivity if private event is selected
      * US 02.01.02: saves private flag, skips QR for private events.
      * US 02.01.03: navigates to PrivateInviteActivity for private events.
      */

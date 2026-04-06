@@ -42,6 +42,14 @@ public class ProfileActivity extends BaseActivity {
     private FirebaseFirestore db;
     private FirebaseManager firebase;
     private User user;
+
+    /**
+     * Start activity
+     * Filed empty if new user, filled in if not
+     * Listens for save button click
+     * Delete profile button
+     * @param savedInstanceState saved instance state
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,7 +23,6 @@ import java.util.List;
 /**
  * US 01.06.01
  * Entrant wants to be able to view event details by scanning a QR code.
- *
  * How it works:
  *  1. This activity opens the camera using the ZXing library
  *     (already in the project — BarcodeEncoder is used in CreateEvent).
@@ -48,12 +48,21 @@ public class QRScanActivity extends BaseActivity {
     // Guard so we only navigate once even if multiple frames decode
     private boolean scanned = false;
 
+    /**
+     * Start activity
+     * @param savedInstanceState saved instance state
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_scan);
 
         barcodeView = findViewById(R.id.barcode_scanner);
+        TextView backButton = findViewById(R.id.backToHomeText);
+        backButton.setOnClickListener(v->{
+            Intent intent = new Intent(this,UserHomeActivity.class);
+            startActivity(intent);
+        });
 
         // ─────────────────────────────────────────────────────────────────
         // US 01.06.01

@@ -340,15 +340,30 @@
                 android:text="@string/spec_geo_location"
                 android:textColor="#E6E6E6"
                 android:textSize="16sp" />
-            <Button
-                android:id="@+id/enable_geoLocation_button"
-                android:layout_width="120dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="8dp"
-                android:backgroundTint="#D9D9D9"
-                android:text="@string/enable"
-                android:textAllCaps="false"
-                android:textColor="#000000" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+                <Button
+                    android:id="@+id/enable_geoLocation_button"
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="#D9D9D9"
+                    android:text="@string/enable"
+                    android:textAllCaps="false"
+                    android:textColor="#000000" />
+                <Button
+                    android:id="@+id/disable_geoLocation_button"
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="#D9D9D9"
+                    android:text="@string/disabled"
+                    android:textAllCaps="false"
+                    android:textColor="#000000"
+                    android:layout_marginStart="12dp" />
+
+            </LinearLayout>
 
             <!-- POSTER -->
             <TextView

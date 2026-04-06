@@ -33,7 +33,8 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 
 /**
- * GEO LOCATION MAP
+ * Displays an enlarged map of the entrants location
+ * Shows user as a pinned location on the map
  * */
 public class ZoomedInMap extends AppCompatActivity implements OnMapReadyCallback {
     FirebaseFirestore db;
@@ -42,6 +43,10 @@ public class ZoomedInMap extends AppCompatActivity implements OnMapReadyCallback
     String userID;
     TextView backButton;
 
+    /**
+     * Starts activity
+     * @param savedInstanceState saved instance state
+     * */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +63,10 @@ public class ZoomedInMap extends AppCompatActivity implements OnMapReadyCallback
         backButton.setOnClickListener(v-> finish());
     }
 
+    /**
+     * Initializes map with interactive controls
+     * @param map the google map
+     * */
     @Override
     public void onMapReady(@NonNull GoogleMap map) {
         googleMap = map;
@@ -69,6 +78,10 @@ public class ZoomedInMap extends AppCompatActivity implements OnMapReadyCallback
         loadUsersLocation();
     }
 
+    /**
+     * Loads the users locations, latitude and longitude
+     * Displays users on the map as a pinned location
+     * */
     private void loadUsersLocation() {
         db.collection("events")
                 .document(eventID)

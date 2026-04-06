@@ -41,7 +41,7 @@ public class EventPreview extends AppCompatActivity {
     /**
      * called when activty is first created
      * displays the event data from CreateEvent as a "preview" before upload
-     * @param savedInstanceState
+     * @param savedInstanceState saved instance state
      * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
