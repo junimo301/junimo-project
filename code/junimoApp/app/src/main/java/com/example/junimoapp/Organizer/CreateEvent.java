@@ -67,7 +67,7 @@ public class CreateEvent extends AppCompatActivity {
             editEventLocation, editMaxCapacity, editWaitingList, editPrice;
 
     android.widget.Spinner editTagSpinner;
-    Button uploadNewEvent, previewButton, QRCodeButton, cancelButton, enableGeoLocationButton;
+    Button uploadNewEvent, previewButton, QRCodeButton, cancelButton, enableGeoLocationButton, disableGeoLocationButton;
     TextView backButton;
 
     // ─────────────────────────────────────────────────────────────────────
@@ -136,14 +136,15 @@ public class CreateEvent extends AppCompatActivity {
         uploadNewEvent          = findViewById(R.id.upload_event_button);
         QRCodeButton            = findViewById(R.id.QR_code_button);
         enableGeoLocationButton = findViewById(R.id.enable_geoLocation_button);
+        disableGeoLocationButton = findViewById(R.id.disable_geoLocation_button);
         backButton              = findViewById(R.id.backButton);
         cancelButton            = findViewById(R.id.cancel_button);
         previewButton           = findViewById(R.id.preview_event_button);
         editTagSpinner          = findViewById(R.id.edit_tag_spinner);
         pickImageButton         = findViewById(R.id.pick_image_button);
         eventPoster             = findViewById(R.id.event_poster);
-         check_coorganizer = findViewById(R.id.check_coorganizer);
-         spinner_coorganizer = findViewById(R.id.spinner_coorganizer);
+        check_coorganizer       = findViewById(R.id.check_coorganizer);
+        spinner_coorganizer     = findViewById(R.id.spinner_coorganizer);
 
         FirebaseManager firebase = new FirebaseManager();
         firebase.getDB().collection("users")
@@ -244,18 +245,26 @@ public class CreateEvent extends AppCompatActivity {
                 // ─────────────────────────────────────────────────────────
                 checkPrivate.setChecked(createdEvent.isPrivate());
                 geoLocation = createdEvent.isGeoLocation();
-                enableGeoLocationButton.setText(geoLocation
+                /* enableGeoLocationButton.setText(geoLocation
                         ? getString(R.string.enabled)
                         : getString(R.string.disabled));
+                 */
+                enableGeoLocationButton.setEnabled(!geoLocation);
+                disableGeoLocationButton.setEnabled(geoLocation);
             }
         }
 
         enableGeoLocationButton.setOnClickListener(view -> {
-            geoLocation = !geoLocation;
-            enableGeoLocationButton.setText(geoLocation
-                    ? getString(R.string.enabled)
-                    : getString(R.string.disabled));
+            geoLocation = true;
+            enableGeoLocationButton.setEnabled(false);
+            disableGeoLocationButton.setEnabled(true);
         });
+        disableGeoLocationButton.setOnClickListener(view -> {
+            geoLocation = false;
+            enableGeoLocationButton.setEnabled(true);
+            disableGeoLocationButton.setEnabled(false);
+        });
+
 
         pickImageButton.setOnClickListener(view -> pickImage.launch("image/*"));
 
