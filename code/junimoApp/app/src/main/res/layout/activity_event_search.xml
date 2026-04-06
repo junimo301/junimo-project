@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:background="@android:color/transparent"
-            android:hint="Search by keyword (optional)"
+            android:hint="@string/search_by_keyword_optional"
             android:textColor="#FFFFFF"
             android:textColorHint="#AFAFAF" />
 
@@ -75,7 +75,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Date Range (optional)"
+            android:text="@string/date_range_optional"
             android:textColor="#E6E6E6"
             android:textSize="14sp" />
 
@@ -91,7 +91,7 @@
                 android:layout_height="44dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:hint="Start Date"
+                android:hint="@string/start_date"
                 android:focusable="false"
                 android:clickable="true"
                 android:textColor="#FFFFFF"
@@ -100,7 +100,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" to "
+                android:text="@string/to"
                 android:textColor="#FFFFFF"
                 android:layout_gravity="center_vertical"/>
 
@@ -110,7 +110,7 @@
                 android:layout_height="44dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:hint="End Date"
+                android:hint="@string/end_date"
                 android:focusable="false"
                 android:clickable="true"
                 android:textColor="#FFFFFF"
@@ -128,7 +128,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Capacity Range (optional)"
+            android:text="@string/capacity_range_optional"
             android:textColor="#E6E6E6"
             android:textSize="14sp" />
 
@@ -144,7 +144,7 @@
                 android:layout_height="44dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:hint="Min"
+                android:hint="@string/min"
                 android:inputType="number"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#AFAFAF" />
@@ -152,7 +152,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" to "
+                android:text="@string/to_cap"
                 android:textColor="#FFFFFF"
                 android:layout_gravity="center_vertical"/>
 
@@ -162,7 +162,7 @@
                 android:layout_height="44dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:hint="Max"
+                android:hint="@string/max_search"
                 android:inputType="number"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#AFAFAF"
@@ -188,7 +188,7 @@
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
                 android:backgroundTint="#555555"
-                android:text="Clear"
+                android:text="@string/clear"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"/>
 
@@ -210,7 +210,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Results"
+        android:text="@string/results"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:textStyle="bold"/>
