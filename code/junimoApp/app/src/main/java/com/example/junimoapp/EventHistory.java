@@ -25,6 +25,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
+/**
+ * Shows users history of events they have interacted in
+ * Allows user to view details of events they have interacted in
+ * Accessed from profile
+ * */
 public class EventHistory extends BaseActivity {
     private TextView backButton;
     private ListView eventListView;
@@ -34,6 +39,10 @@ public class EventHistory extends BaseActivity {
     private ArrayList<Event> eventList;
 
 
+    /**
+     * Start activity
+     * @param savedInstanceState saved instance state
+     * */
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -76,6 +85,10 @@ public class EventHistory extends BaseActivity {
 
     }
 
+    /**
+     * Loads events from Firestore
+     * @param deviceID deviceID of user
+     * */
     private void loadEvents(String deviceID) {
         db.collection("users").document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override

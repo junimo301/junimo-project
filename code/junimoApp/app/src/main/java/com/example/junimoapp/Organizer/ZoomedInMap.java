@@ -45,7 +45,7 @@ public class ZoomedInMap extends AppCompatActivity implements OnMapReadyCallback
 
     /**
      * Starts activity
-     * @param savedInstanceState
+     * @param savedInstanceState saved instance state
      * */
     @Override
     public void onCreate(Bundle savedInstanceState) {

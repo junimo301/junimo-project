@@ -102,7 +102,7 @@ public class organizerNotifications extends AppCompatActivity {
 
     /**
      * Start activity
-     * @param savedInstanceState
+     * @param savedInstanceState saved instance state
      * */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -140,6 +140,9 @@ public class organizerNotifications extends AppCompatActivity {
         notificationTypeSpinner.setAdapter(adapter);
     }
 
+    /**
+     * Loads all organizer's events
+     * */
     private void loadOrganizerEvents() {
         User currentUser = UserSession.getCurrentUser();
         List<com.example.junimoapp.models.Event> cachedEvents = EventData.listOfEvents();
@@ -173,6 +176,11 @@ public class organizerNotifications extends AppCompatActivity {
                 .addOnFailureListener(e -> Toast.makeText(this, "Failed to load events", Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Populates the event options list with the organizer's events
+     * @param events list of events
+     * @param currentUser current user
+     * */
     private void populateEventOptions(@NonNull List<com.example.junimoapp.models.Event> events,
                                       @Nullable User currentUser) {
         eventOptions.clear();
@@ -189,6 +197,11 @@ public class organizerNotifications extends AppCompatActivity {
         }
     }
 
+    /**
+     * Adds an event option to the event options list
+     * @param eventId event ID
+     * @param title event name
+     * */
     private void addEventOption(@NonNull String eventId, @NonNull String title) {
         RadioButton radioButton = new RadioButton(this);
         radioButton.setId(View.generateViewId());
@@ -213,6 +226,11 @@ public class organizerNotifications extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sends out the selected notification for a event to users
+     * Checks for notification type and a selected event before sending
+     * Prevents duplicate notifications by disabling button while sending
+     * */
     private void sendSelectedNotification() {
         int selectedButtonId = eventGroup.getCheckedRadioButtonId();
         if (selectedButtonId == -1) {
@@ -245,6 +263,14 @@ public class organizerNotifications extends AppCompatActivity {
         });
     }
 
+    /**
+     * Sends notifications to users based on notification type
+     * @param eventId event Id
+     * @param eventTitle events title
+     * @param notificationType the type of notification to send
+     * @param customMessage optional custom message
+     * @param callback result callback
+     * */
     private void sendNotificationByType(@NonNull String eventId,
                                         @NonNull String eventTitle,
                                         @NonNull String notificationType,
@@ -308,6 +334,15 @@ public class organizerNotifications extends AppCompatActivity {
                 ));
     }
 
+    /**
+     * Handles the loaded event data
+     * Sends notifications to every user id stored in the event's waitlist
+     * @param task Firebase task
+     * @param eventId event ID
+     * @param notificationTitle notification title
+     * @param notificationMessage notification message
+     * @param callback result callback
+     */
     private void handleEventLoaded(@NonNull Task<DocumentSnapshot> task,
                                    @NonNull String eventId,
                                    @Nullable String notificationTitle,
@@ -348,6 +383,12 @@ public class organizerNotifications extends AppCompatActivity {
         );
     }
 
+    /**
+     * Get the users ID to send notifications
+     * @param eventId event ID
+     * @param notificationType notification type
+     * @param callback result callback
+     * */
     private void fetchRecipientIds(@NonNull String eventId,
                                    @NonNull String notificationType,
                                    @NonNull RecipientIdsCallback callback) {
@@ -384,6 +425,16 @@ public class organizerNotifications extends AppCompatActivity {
         callback.onSuccess(new ArrayList<>());
     }
 
+    /**
+     * Sends notifications to users for the specific event
+     * @param recipientIds list of user IDs
+     * @param eventId event ID
+     * @param eventTitle event title
+     * @param notificationTitle notification title
+     * @param notificationMessage notification message
+     * @param notificationType notification type
+     * @param callback result callback
+     * */
     private void sendNotificationToUsers(@NonNull List<String> recipientIds,
                                          @NonNull String eventId,
                                          @NonNull String eventTitle,
@@ -415,6 +466,14 @@ public class organizerNotifications extends AppCompatActivity {
                 .addOnFailureListener(exception -> dispatchFailure(exception, callback));
     }
 
+    /**
+     * Creates notification object to be stored database
+     * @param eventId event ID
+     * @param eventTitle event title
+     * @param notificationTitle notification title
+     * @param notificationMessage notification message
+     * @param notificationType notification type
+     * */
     private Map<String, Object> buildNotificationPayload(@NonNull String eventId,
                                                          @NonNull String eventTitle,
                                                          @NonNull String notificationTitle,
@@ -432,6 +491,11 @@ public class organizerNotifications extends AppCompatActivity {
         return notification;
     }
 
+    /**
+     * Default notification messages to send out to users by notification type
+     * @param eventTitle event title
+     * @param notificationType notification type
+     * */
     @NonNull
     private String buildDefaultMessage(@NonNull String notificationType, @NonNull String eventTitle) {
         if ("Cancelled Entrants".equals(notificationType)) {
@@ -446,6 +510,11 @@ public class organizerNotifications extends AppCompatActivity {
         return "There is an update for entrants on the waiting list of " + eventTitle + ".";
     }
 
+    /**
+     * Parses the waitlist string into a list of user IDs
+     * @param rawWaitlist waitlist string
+     * @return list of user IDs
+     * */
     @NonNull
     private List<String> parseWaitlist(@Nullable String rawWaitlist) {
         Set<String> userIds = new LinkedHashSet<>();
@@ -468,11 +537,21 @@ public class organizerNotifications extends AppCompatActivity {
         return new ArrayList<>(userIds);
     }
 
+    /**
+     * Gets waitlist string from event document
+     * @param document Firestore document for the event
+     * @return raw waitlist string if exists, null if not
+     * */
     @Nullable
     private String resolveWaitlistValue(@NonNull DocumentSnapshot document) {
         return resolveWaitlistValue(document.getData());
     }
 
+    /**
+     * Gets waitlist string from event data
+     * @param eventData event data
+     * @return raw waitlist string if exists, null if not
+     * */
     @Nullable
     String resolveWaitlistValue(@Nullable Map<String, Object> eventData) {
         if (eventData == null) {
@@ -487,6 +566,12 @@ public class organizerNotifications extends AppCompatActivity {
         return readStringField(eventData, LEGACY_WAITLIST_FIELD);
     }
 
+    /**
+     * Returns a safe value from a string
+     * @param value value to check
+     * @param fallback string to use if value is null or empty
+     * @return the original value if not null or empty, fallback otherwise
+     * */
     @NonNull
     private String safeValue(@Nullable String value, @NonNull String fallback) {
         if (value == null || value.trim().isEmpty()) {
@@ -495,18 +580,32 @@ public class organizerNotifications extends AppCompatActivity {
         return value.trim();
     }
 
+    /**
+     * Reports a successfull notifcation
+     * @param notifiedCount number of notified users
+     * @param callback result callback
+     * */
     private void dispatchSuccess(int notifiedCount, @Nullable NotificationCallback callback) {
         if (callback != null) {
             callback.onSuccess(notifiedCount);
         }
     }
 
+    /**
+     * reports a failed notification
+     * @param exception exception to report
+     * @param callback result callback
+     * */
     private void dispatchFailure(@Nullable Exception exception, @Nullable NotificationCallback callback) {
         if (callback != null) {
             callback.onFailure(exception != null ? exception : new RuntimeException("Notification send failed"));
         }
     }
 
+    /**
+     * returns Firestore instance
+     * @return Firestore instance
+     * */
     @NonNull
     private FirebaseFirestore getFirestore() {
         if (db != null) {
@@ -515,6 +614,12 @@ public class organizerNotifications extends AppCompatActivity {
         return FirebaseFirestore.getInstance();
     }
 
+    /**
+     * Read string value from map for field name
+     * @param eventData map with event data
+     * @param fieldName key of field to read
+     * @return value of field if exists, null otherwise
+     * */
     @Nullable
     private String readStringField(@NonNull Map<String, Object> eventData, @NonNull String fieldName) {
         Object value = eventData.get(fieldName);

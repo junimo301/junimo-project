@@ -11,8 +11,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.junimoapp.utils.LanguageHelper;
 
+/**
+ * Settings activity for the app
+ * Allows the user to change the language of the app
+ * Options: English (default), french, russian
+ * */
 public class SettingsActivity extends AppCompatActivity {
 
+    /**
+     * Start activity
+     * @param savedInstanceState saved instance state
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

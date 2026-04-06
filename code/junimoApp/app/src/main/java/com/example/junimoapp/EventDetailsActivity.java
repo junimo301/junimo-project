@@ -88,18 +88,21 @@ public class EventDetailsActivity extends BaseActivity {
     //for locations
     private FusedLocationProviderClient fusedLocationClient;
 
-    //geo location
+    /**
+     * Requests geoLocation permission from users joining an events waitList if events geoLocation is enabled
+     * */
     private final ActivityResultLauncher<String> requestLocationPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
                     saveUserLocation(selectedEvent,UserSession.getCurrentUser());
-                } else {
-                    //DELETE LATER
-                    Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
                 }
             });
     boolean isOrganizer;
 
+    /**
+     * Start activity
+     * @param savedInstanceState saved instance state
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -256,6 +259,11 @@ public class EventDetailsActivity extends BaseActivity {
         });
     }
 
+    /**
+     * Goes to previous screen, either history if fromHistory is true or home
+     * @param fromHistory true if coming from history, false otherwise
+     * @param organizer true if organizer, false otherwise
+     * */
     private void back(boolean fromHistory,boolean organizer) {
         if(fromHistory) {
             Intent intent = new Intent(EventDetailsActivity.this, EventHistory.class);
@@ -268,6 +276,11 @@ public class EventDetailsActivity extends BaseActivity {
 
     }
 
+    /**
+     * requests user location if events geoLocation is enabled
+     * @param event event to request location for
+     * @param user user to request location for
+     * */
     private void requestUserLocation(Event event, User user) {
         if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestLocationPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION);
@@ -276,6 +289,11 @@ public class EventDetailsActivity extends BaseActivity {
         saveUserLocation(event,user);
     }
 
+    /**
+     * Save user location to Firestore
+     * @param event event to save location for
+     * @param user user to save location for
+     * */
     @SuppressLint("MissingPermission")
     private void saveUserLocation(Event event,User user) {
         fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
@@ -299,6 +317,11 @@ public class EventDetailsActivity extends BaseActivity {
         });
     }
 
+    /**
+     * Joining waitlist for an event
+     * @param event event to join waitlist for
+     * @param user user to join waitlist for
+     * */
     private void JoinWaitlist(Event event, User user){
         Log.d("button click","waitlist button clicked");
         String startDate= event.getStartDate();
@@ -322,7 +345,13 @@ public class EventDetailsActivity extends BaseActivity {
             joinWaitlistButton.setText("WAITLIST FULL");
         }
     }
-    //check if registration period is open
+
+    /**
+     * check if registration period is open
+     * @param startDate start date of event
+     * @param endDate end date of event
+     * @return true if registration period is open, false otherwise
+     * */
     public boolean registrationPeriod(String startDate, String endDate) {
         if (startDate != null && !startDate.equals("")) {
             try {
@@ -341,6 +370,12 @@ public class EventDetailsActivity extends BaseActivity {
         }
 
     }
+
+    /**
+     * User leaving waitlist for an event
+     * @param event event to leave waitlist for
+     * @param user user to leave waitlist for
+     * */
     private void LeaveWaitlist(Event event,User user){
         user.leaveEventWaitList(event);
         String updatedList = event.getWaitList();
@@ -349,7 +384,9 @@ public class EventDetailsActivity extends BaseActivity {
 
     }
 
-    //loads comments on an event
+    /**
+     * loads comments on an event
+     * */
     private void loadComments() {
         commentIds.clear();
         db.collection("events")

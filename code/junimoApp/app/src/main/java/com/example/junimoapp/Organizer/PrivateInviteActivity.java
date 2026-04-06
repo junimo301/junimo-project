@@ -53,7 +53,7 @@ public class PrivateInviteActivity extends AppCompatActivity {
 
     /**
      * Starts activity.
-     * @param savedInstanceState
+     * @param savedInstanceState saved instance state
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +135,7 @@ public class PrivateInviteActivity extends AppCompatActivity {
     /**
      * Merges Firestore results into local results list
      * Prevents duplicate user results
-     * @param docs
+     * @param docs the Firestore results
      * */
     private void mergeResults(List<DocumentSnapshot> docs) {
         for (DocumentSnapshot doc : docs) {

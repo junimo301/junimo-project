@@ -46,7 +46,7 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
     private List<Event> eventList;
 
     /** constructor
-     * @param eventList
+     * @param eventList event list to display
      */
     public ListOfMyEvents(List<Event> eventList) {
         this.eventList = eventList;
@@ -64,7 +64,7 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
 
         /**
          * initializes the view for each event
-         * @param itemView
+         * @param itemView view for each event
          * */
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,8 +78,8 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
 
     /**
      * creates a new view holder when needed
-     * @param parent
-     * @param viewType
+     * @param parent view group
+     * @param viewType view type
      * @return new view holder
      * */
     @NonNull
@@ -91,8 +91,8 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
 
     /**
      * binds event data to view holder
-     * @param holder
-     * @param position
+     * @param holder view holder
+     * @param position position of event in list
      * */
     @Override
     public void onBindViewHolder(@NonNull ListOfMyEvents.EventViewHolder holder, int position) {

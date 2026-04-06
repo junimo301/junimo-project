@@ -47,10 +47,10 @@ public class User {
 
     /**
      * Initializes  user details, personal information, their role, and their events.
-     * @param deviceId
-     * @param name
-     * @param email
-     * @param phone
+     * @param deviceId device id of the user
+     * @param name use rename
+     * @param email email
+     * @param phone phone number
      * @param organized events that the user has organized (as organizer)
      * @param invited events that the user been invited to
      * @param waitlisted events that the user has waitlisted

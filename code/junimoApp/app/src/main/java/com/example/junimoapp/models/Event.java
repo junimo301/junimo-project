@@ -77,20 +77,20 @@ public class Event {
 
     /**
      * Constructs event with all the details
-     * @param title
-     * @param description
-     * @param startDate
-     * @param endDate
-     * @param dateEvent
-     * @param maxCapacity
-     * @param waitingListLimit
-     * @param price
-     * @param geoLocation
-     * @param eventLocation
-     * @param poster
-     * @param eventID
-     * @param organizerID
-     * @param tag
+     * @param title event title
+     * @param description event description
+     * @param startDate event start date
+     * @param endDate event end date
+     * @param dateEvent event date
+     * @param maxCapacity event max capacity
+     * @param waitingListLimit event waiting list limit
+     * @param price event price
+     * @param geoLocation event geo location
+     * @param eventLocation event location
+     * @param poster event poster
+     * @param eventID event id
+     * @param organizerID organizer id
+     * @param tag event tag
      */
     public Event(String title, String description, String startDate, String endDate,
                  String dateEvent, int maxCapacity, int waitingListLimit, double price,
@@ -279,7 +279,7 @@ public class Event {
     // ── Existing methods (unchanged) ──────────────────────────────────────
     /**
      * Add user ID to invitedUsers
-     * @param deviceID
+     * @param deviceID device id of user
      */
     public void Invite(String deviceID) {
         if (!invitedUsers.contains(deviceID)) {

@@ -55,7 +55,7 @@ public class Entrants extends AppCompatActivity {
     /**
      * starts the activity
      * Loads event details (cancelled, enrolled, waitList)
-     * @param savedInstanceState
+     * @param savedInstanceState saved instance state
      * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -294,7 +294,7 @@ public class Entrants extends AppCompatActivity {
 
     /**
      * Loads a list of users who were cancelled for the event, if exists
-     * @param eventID
+     * @param eventID event ID
      * @param usersArray list of users
      * */
     private void loadCancelledEntrants(List<User> usersArray, String eventID) {

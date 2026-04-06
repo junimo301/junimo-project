@@ -144,7 +144,7 @@ public class CreateEvent extends AppCompatActivity {
      *  - Upload event poster
      *  - co-organizer invite
      *  - Private event
-     * @param savedInstanceState
+     * @param savedInstanceState saved instance state
      * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {

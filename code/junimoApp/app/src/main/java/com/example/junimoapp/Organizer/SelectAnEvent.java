@@ -31,7 +31,7 @@ public class SelectAnEvent extends AppCompatActivity {
 
     /**
      * starts activity
-     * @param savedInstanceState
+     * @param savedInstanceState saved instance state
      * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
