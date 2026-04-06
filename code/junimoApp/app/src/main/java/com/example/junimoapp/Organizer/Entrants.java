@@ -40,7 +40,7 @@ import java.util.List;
  */
 public class Entrants extends AppCompatActivity {
 
-    private LinearLayout invitedEntrants, cancelledEntrants, enrolledEntrants;
+    private LinearLayout invitedEntrants, cancelledEntrants, enrolledEntrants, acceptedEntrants;
 
     private String eventID;
     FirebaseFirestore db;
@@ -57,6 +57,7 @@ public class Entrants extends AppCompatActivity {
         setContentView(R.layout.activity_entrants);
 
         eventName         = findViewById(R.id.event_name);
+        acceptedEntrants  = findViewById(R.id.accepted_entrants);
         invitedEntrants   = findViewById(R.id.invited_entrants);
         cancelledEntrants = findViewById(R.id.cancelled_entrants);
         enrolledEntrants  = findViewById(R.id.enrolled_entrants);
@@ -102,6 +103,17 @@ public class Entrants extends AppCompatActivity {
                     Log.e("lottery button", "Failed to load waitlist from Firestore", e);
                     WaitlistUsers(selectEvent);
                 });
+        ArrayList<String> acceptedUsersString= new ArrayList<String>();
+        db.collection("events").document(eventID).collection("acceptedUsers").get()
+                .addOnSuccessListener(docs -> {
+           for(DocumentSnapshot document : docs){
+               if (document.exists()){
+                  String deviceID=document.getString("name");
+                  acceptedUsersString.add(deviceID);
+               }
+           }
+           acceptedUsersInitialize(acceptedUsersString);
+        });
 
         lotteryButton.setOnClickListener(v -> startLottery());
 
@@ -126,6 +138,40 @@ public class Entrants extends AppCompatActivity {
         });
     }
 
+    private void acceptedUsersInitialize(ArrayList<String> acceptedUsersString){
+        if (acceptedUsersString.size() == 0) {
+            Log.d("waitlist", "no users have accepted");
+            return;
+        }
+        CollectionReference usersRef = db.collection("users");
+        for(String deviceID : acceptedUsersString){
+            if (deviceID == null || deviceID.equals("")) {
+                continue;
+            }
+            usersRef.document(deviceID).get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful() && task.getResult().exists()) {
+                            DocumentSnapshot document = task.getResult();
+                            User user = new User(
+                                    deviceID,
+                                    document.getString("name"),
+                                    document.getString("email"),
+                                    document.getString("phone"),
+                                    document.getString("organizedEvents"),
+                                    document.getString("invitedEvents"),
+                                    document.getString("waitlistedEvents")
+                            );
+                            TextView textView = new TextView(Entrants.this);
+                            textView.setText(user.getName());
+                            acceptedEntrants.addView(textView);
+                            user.initializeEvents();
+                        } else {
+                            Log.d("Firestore", "get failed or no document");
+                        }
+                    });
+
+        }
+    }
     private void WaitlistUsers(Event selectEvent) {
         String[] deviceIDs = selectEvent.getWaitList().split(",");
 
@@ -254,7 +300,7 @@ public class Entrants extends AppCompatActivity {
         }
         if (noneInvited) {
             TextView textView = new TextView(Entrants.this);
-            textView.setText("No users have been invited");
+            textView.setText(R.string.no_users_have_been_invited);
             invitedEntrants.addView(textView);
         }
     }
@@ -287,7 +333,7 @@ public class Entrants extends AppCompatActivity {
         }
         if (noneCancelled) {
             TextView textView = new TextView(Entrants.this);
-            textView.setText("No users have been cancelled");
+            textView.setText(R.string.no_users_have_been_cancelled);
             cancelledEntrants.addView(textView);
         }
     }
@@ -301,7 +347,7 @@ public class Entrants extends AppCompatActivity {
             }
         } else {
             TextView textView = new TextView(Entrants.this);
-            textView.setText("No users have enrolled in the waitlist");
+            textView.setText(R.string.no_users_have_enrolled_in_the_waitlist);
             enrolledEntrants.addView(textView);
         }
     }

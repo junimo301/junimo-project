@@ -175,4 +175,8 @@
     <string name="select_language_description">Choisir votre langue préférée:</string>
     <string name="language">Langue</string>
     <string name="back_sett">Retourner</string>
+    <string name="no_users_have_been_invited">No users have been invited</string>
+    <string name="no_users_have_been_cancelled">No users have been cancelled</string>
+    <string name="no_users_have_enrolled_in_the_waitlist">No users have enrolled in the waitlist</string>
+    <string name="entrants_that_accepted_invite">• Entrants that accepted invite</string>
 </resources>
