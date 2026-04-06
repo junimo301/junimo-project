@@ -23,12 +23,15 @@ import com.example.junimoapp.utils.NotificationHelper;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Entrants names who have joined, cancelled, enrolled, or joined the waiting list of an event.
@@ -282,25 +285,65 @@ public class Entrants extends AppCompatActivity {
         Log.d("lottery button", "button was pressed");
         Log.d("lottery button", "users size: " + users.size());
 
-        Collections.shuffle(users);
+        db.collection("events").document(eventID).collection("acceptedUsers").get()
+                .addOnSuccessListener(acceptedSnapshot -> {
+                    Set<String> acceptedIds = new HashSet<>();
+                    for (QueryDocumentSnapshot document : acceptedSnapshot) {
+                        acceptedIds.add(document.getId());
+                    }
 
-        int max = selectEvent.getMaxCapacity();
+                    db.collection("events").document(eventID).collection("declinedUsers").get()
+                            .addOnSuccessListener(declinedSnapshot -> {
+                                Set<String> declinedIds = new HashSet<>();
+                                for (QueryDocumentSnapshot document : declinedSnapshot) {
+                                    declinedIds.add(document.getId());
+                                }
+                                drawReplacementApplicants(acceptedIds, declinedIds);
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("lottery button", "Failed to load declined users", e);
+                                drawReplacementApplicants(acceptedIds, new HashSet<>());
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("lottery button", "Failed to load accepted users", e);
+                    drawReplacementApplicants(new HashSet<>(), new HashSet<>());
+                });
+    }
+
+    private void drawReplacementApplicants(Set<String> acceptedIds, Set<String> declinedIds) {
+        ArrayList<User> eligibleUsers = new ArrayList<>();
+        ArrayList<User> currentlyInvitedUsers = new ArrayList<>();
+
+        for (User user : users) {
+            String userId = user.getDeviceId();
+            if (acceptedIds.contains(userId) || declinedIds.contains(userId) || user.isCancelled(eventID)) {
+                continue;
+            }
+            if (user.isInvited(eventID)) {
+                currentlyInvitedUsers.add(user);
+                continue;
+            }
+            eligibleUsers.add(user);
+        }
+
+        int openSpots = selectEvent.getMaxCapacity() - acceptedIds.size() - currentlyInvitedUsers.size();
+        if (openSpots <= 0 || eligibleUsers.isEmpty()) {
+            refreshUI();
+            lotteryButton.setEnabled(true);
+            return;
+        }
+
+        boolean initialLottery = acceptedIds.isEmpty() && declinedIds.isEmpty() && currentlyInvitedUsers.isEmpty();
+
+        Collections.shuffle(eligibleUsers);
         ArrayList<User> selectedUsers = new ArrayList<>();
-        int index = Math.min(max, users.size());
-        Log.d("lottery button", "selecting " + index + " out of " + users.size() + " users");
+        int index = Math.min(openSpots, eligibleUsers.size());
+        Log.d("lottery button", "selecting " + index + " replacement users out of " + eligibleUsers.size());
 
         for (int i = 0; i < index; i++) {
-            User selected = users.get(i);
-
-            // ─────────────────────────────────────────────────────────────
-            // US 01.04.01
-            // Invite user and notify them they were selected by the lottery.
-            // NotificationHelper checks their opt-out preference (US 01.04.03)
-            // before writing the notification.
-            // ─────────────────────────────────────────────────────────────
-            if (!selected.isInvited(eventID)) {
-                selected.inviteUser(selectEvent);
-            }
+            User selected = eligibleUsers.get(i);
+            selected.inviteUser(selectEvent);
             NotificationHelper.notifyInvited(
                     selected.getDeviceId(),
                     eventID,
@@ -310,22 +353,21 @@ public class Entrants extends AppCompatActivity {
             Log.d("lottery", "selected: " + selected.getName());
         }
 
-        // ─────────────────────────────────────────────────────────────────
-        // US 01.04.02
-        // Notify users who were NOT selected by the lottery.
-        // ─────────────────────────────────────────────────────────────────
-        for (User user : users) {
-            if (!selectedUsers.contains(user)) {
-                NotificationHelper.notifyNotChosen(
-                        user.getDeviceId(),
-                        eventID,
-                        selectEvent.getTitle()
-                );
-                Log.d("lottery", "not chosen: " + user.getName());
+        if (initialLottery) {
+            for (User user : eligibleUsers) {
+                if (!selectedUsers.contains(user)) {
+                    NotificationHelper.notifyNotChosen(
+                            user.getDeviceId(),
+                            eventID,
+                            selectEvent.getTitle()
+                    );
+                    Log.d("lottery", "not chosen: " + user.getName());
+                }
             }
         }
 
         refreshUI();
+        lotteryButton.setEnabled(true);
     }
 
     /**
