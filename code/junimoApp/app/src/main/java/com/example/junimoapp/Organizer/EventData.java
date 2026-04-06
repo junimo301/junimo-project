@@ -20,7 +20,7 @@ public class EventData {
 
     /**
      * searches event by ID
-     * @param eventID
+     * @param eventID event id
      * @return the event, otherwise returns null
      * */
     public static Event searchEventID(String eventID) {

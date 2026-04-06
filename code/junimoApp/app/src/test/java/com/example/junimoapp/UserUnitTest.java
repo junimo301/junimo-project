@@ -29,7 +29,7 @@ public class UserUnitTest {
                 20,                    // maxCapacity
                 0,                     // waitingListLimit (0 = no limit)
                 60.0,                  // price
-                null,                  // geoLocation
+                false,                  // geoLocation
                 "",                    // poster
                 "event-uuid-001",      // eventID
                 "Rec Centre",          // eventLocation
@@ -57,7 +57,7 @@ public class UserUnitTest {
                 20,                    // maxCapacity
                 0,                     // waitingListLimit (0 = no limit)
                 60.0,                  // price
-                null,                  // geoLocation
+                false,                  // geoLocation
                 "",                    // poster
                 "event-uuid-001",      // eventID
                 "Rec Centre",          // eventLocation

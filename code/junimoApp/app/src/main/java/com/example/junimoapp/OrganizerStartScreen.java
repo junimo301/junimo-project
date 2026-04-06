@@ -40,6 +40,9 @@ import java.util.List;
  *  - view entrants
  *  - view my events
  *  - edit events
+ *  - View map
+ *  - send notifications
+ *  - View event QR code
  * */
 public class OrganizerStartScreen extends BaseActivity {
     //Create and edit event
@@ -59,12 +62,13 @@ public class OrganizerStartScreen extends BaseActivity {
     /**
      * when activity is first created
      * listeners for create event and view entrants buttons
+     * @param savedInstanceState saved instance state
      * */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer_start_screen);
-        /** settings button */
+        //settings button
         settingsButton = findViewById(R.id.settingsButton);
         settingsButton.setOnClickListener(v->{
             Intent intent = new Intent(OrganizerStartScreen.this, ProfileActivity.class);
@@ -72,7 +76,7 @@ public class OrganizerStartScreen extends BaseActivity {
             intent.putExtra("organizer",true);
             startActivity(intent);
         });
-        /** back button*/
+        //back button
         backButton = findViewById(R.id.backToHomeText);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,8 +128,6 @@ public class OrganizerStartScreen extends BaseActivity {
             }
         });
 
-
-        /** View My Events */
         //----------VIEW MY EVENTS-------------------
         scrollable = findViewById(R.id.scrollable);
         scrollable.setLayoutManager(new LinearLayoutManager(this));
@@ -149,6 +151,11 @@ public class OrganizerStartScreen extends BaseActivity {
         super.onResume();
         loadEvents();
     }
+
+    /**
+     * Loads the organizers events from Firestore
+     * Adds to local event list
+     * */
     private void loadEvents() {
         Log.d("organizer browse activity", "on load events of browse activity");
         db.collection("events").get().addOnSuccessListener(queryDocumentSnapshots -> {

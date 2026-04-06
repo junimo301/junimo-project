@@ -44,6 +44,10 @@ public class InvitationsActivity extends BaseActivity {
     private String deviceId;
     private FirebaseFirestore db;
 
+    /**
+     * Start activity
+     * @param savedInstanceState saved instance state
+     * */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

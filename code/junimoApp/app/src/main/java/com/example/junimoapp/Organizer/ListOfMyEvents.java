@@ -3,9 +3,11 @@ package com.example.junimoapp.Organizer;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,8 +31,14 @@ import java.util.List;
 
 /**
  * Views list of the organizers events
- * shows event title, descrition and an edit button to edit the event
+ * Shows:
+ *  - event title
+ *  - description,
+ *  - an edit button to edit the event,
+ *  - and a QR code button to view the qrcode associated with the event
+ *  Buttons functions:
  *  - edit buttons opens CreateEvent screen
+ *  - QR code button opens a qrcode pop up screen
  * */
 public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventViewHolder> {
 
@@ -38,7 +46,7 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
     private List<Event> eventList;
 
     /** constructor
-     * @param eventList
+     * @param eventList event list to display
      */
     public ListOfMyEvents(List<Event> eventList) {
         this.eventList = eventList;
@@ -56,7 +64,7 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
 
         /**
          * initializes the view for each event
-         * @param itemView
+         * @param itemView view for each event
          * */
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -70,8 +78,8 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
 
     /**
      * creates a new view holder when needed
-     * @param parent
-     * @param viewType
+     * @param parent view group
+     * @param viewType view type
      * @return new view holder
      * */
     @NonNull
@@ -83,8 +91,8 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
 
     /**
      * binds event data to view holder
-     * @param holder
-     * @param position
+     * @param holder view holder
+     * @param position position of event in list
      * */
     @Override
     public void onBindViewHolder(@NonNull ListOfMyEvents.EventViewHolder holder, int position) {
@@ -124,16 +132,30 @@ public class ListOfMyEvents extends RecyclerView.Adapter<ListOfMyEvents.EventVie
                 AlertDialog dialog = new AlertDialog.Builder(view.getContext())
                         .setView(dialogView)
                         .create();
-                if (dialog.getWindow() != null) {
-                    dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                    dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                    dialog.getWindow().setDimAmount(0.5f);
-                }
+
                 dialogView.findViewById(R.id.close_button).setOnClickListener(v -> dialog.dismiss());
                 dialog.show();
+
+                Window window = dialog.getWindow();
+                if (window != null) {
+                    window.setBackgroundDrawableResource(android.R.color.transparent);
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                    window.setDimAmount(0.5f);
+
+                    window.setGravity(Gravity.CENTER);
+                    int screenWidth = view.getResources().getDisplayMetrics().widthPixels;
+                    int dialogWidth = (int) (screenWidth * 0.75);
+                    window.setLayout(dialogWidth, WindowManager.LayoutParams.WRAP_CONTENT);
+
+                    ImageView QRCodeImageView = dialogView.findViewById(R.id.QR_image);
+                    int QRCodeSize = (int) (dialogWidth * 0.90);
+                    QRCodeImageView.getLayoutParams().width = QRCodeSize;
+                    QRCodeImageView.getLayoutParams().height = QRCodeSize;
+                    QRCodeImageView.requestLayout();
+                }
+
             } catch (Exception ignored) {}
         });
-
     }
 
     /**

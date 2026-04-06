@@ -42,10 +42,19 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * Main activity for the app.
+ * Handles navigation to other screens. Primarily between Admin, Organizer, and User
+ * Gets deviceID and logins in the user, if user isn't in users goes to login page
+ * */
 public class MainActivity extends BaseActivity {
     String deviceId;
     private FirebaseManager firebase = new FirebaseManager();
 
+    /**
+     * Called when the activity is first created.
+     * @param savedInstanceState
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

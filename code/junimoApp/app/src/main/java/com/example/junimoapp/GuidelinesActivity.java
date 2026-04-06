@@ -14,6 +14,10 @@ import com.example.junimoapp.utils.BaseActivity;
 
 public class GuidelinesActivity extends BaseActivity {
 
+    /**
+     * Start activity
+     * @param savedInstanceState saved instance state
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -69,6 +69,10 @@ public class UserHomeActivity extends BaseActivity {
     // ---------------------------------------------------
     Button searchEventsButton;
 
+    /**
+     * Start activity
+     * @param savedInstanceState saved instance state
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,6 +176,10 @@ public class UserHomeActivity extends BaseActivity {
                 startActivity(new Intent(this, QRScanActivity.class)));
     }
 
+    /**
+     * load all public events from firestore
+     * adds to local event list
+     * */
     private void loadEvents() {
         Log.d("user browse activity", "on load events of browse activity");
         db.collection("events").get()

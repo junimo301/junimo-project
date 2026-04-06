@@ -47,6 +47,10 @@ public class UserNotificationsActivity extends BaseActivity {
     private FirebaseFirestore db;
     private String deviceId;
 
+    /**
+     * Start activity
+     * @param savedInstanceState saved instance state
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +82,11 @@ public class UserNotificationsActivity extends BaseActivity {
     // Marks each notification as read after loading so the user
     // knows they have been seen.
     // ─────────────────────────────────────────────────────────────────────
+    /**
+     * Loads all notifications from Firestore, newest first.
+     * Marks each notification as read after loading so the user
+     * knows they have been seen.
+     * */
     private void loadNotifications() {
         db.collection("users").document(deviceId)
                 .collection("notifications")
@@ -127,6 +136,9 @@ public class UserNotificationsActivity extends BaseActivity {
     }
 
     // ── Simple RecyclerView adapter for notification messages ─────────────
+    /**
+     * Recycler view adapter for notification messages
+     * */
     static class NotifAdapter extends RecyclerView.Adapter<NotifAdapter.VH> {
 
         private final List<String> items;

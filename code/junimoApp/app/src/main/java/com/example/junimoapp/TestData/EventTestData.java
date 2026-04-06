@@ -6,6 +6,9 @@ import com.example.junimoapp.models.Event;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Fake event data for testing
+ * */
 public class EventTestData {
     /*
     * TEST DATA: fake event details to test myEvents

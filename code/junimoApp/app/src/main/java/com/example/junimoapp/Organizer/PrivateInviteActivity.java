@@ -51,6 +51,10 @@ public class PrivateInviteActivity extends AppCompatActivity {
     private String eventId;
     private String eventTitle;
 
+    /**
+     * Starts activity.
+     * @param savedInstanceState saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +101,11 @@ public class PrivateInviteActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Firestore search for users
+     * Can search by: name, email, phone number
+     * @param query the search string
+     * */
     private void searchUsers(String query) {
         if (query.equals("")) {
             results.clear();
@@ -123,6 +132,11 @@ public class PrivateInviteActivity extends AppCompatActivity {
                 .get().addOnSuccessListener(s -> mergeResults(s.getDocuments()));
     }
 
+    /**
+     * Merges Firestore results into local results list
+     * Prevents duplicate user results
+     * @param docs the Firestore results
+     * */
     private void mergeResults(List<DocumentSnapshot> docs) {
         for (DocumentSnapshot doc : docs) {
             String uid = doc.getString("deviceId");
@@ -168,6 +182,10 @@ public class PrivateInviteActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Results of user search
+     * User info
+     * */
     static class UserResult {
         String deviceId, name, email, phone;
         UserResult(String d, String n, String e, String p) {
@@ -175,6 +193,11 @@ public class PrivateInviteActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Adapter for displaying search results of user
+     * Shows user info: name, email, phone number
+     * Can invite user by clicking the invite button
+     * */
     static class UserResultAdapter extends RecyclerView.Adapter<UserResultAdapter.VH> {
         interface InviteListener { void onInvite(String userId); }
         private final List<UserResult> items;
