@@ -76,7 +76,19 @@
             android:layout_height="48dp"
             android:layout_marginTop="10dp"
             android:backgroundTint="#EAEAEA"
-            android:text="Invite Entrants"
+            android:text="@string/invite_entrants"
+            android:textAllCaps="false"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+
+<!--        organizer can export CSV of all accepted invites-->
+        <Button
+            android:id="@+id/accepted_entrants_button"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#EAEAEA"
+            android:text="@string/export_csv_of_accepted_entrants"
             android:textAllCaps="false"
             android:textColor="#000000"
             android:textStyle="bold" />

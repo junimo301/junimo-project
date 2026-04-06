@@ -1,9 +1,11 @@
 package com.example.junimoapp.Organizer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,6 +23,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,10 +49,11 @@ public class Entrants extends AppCompatActivity {
     private String eventID;
     FirebaseFirestore db;
     private TextView eventName, backButton;
-    private Button lotteryButton, inviteEntrantsButton;
+    private Button lotteryButton, inviteEntrantsButton, exportButton;
 
     private List<User> users = Collections.synchronizedList(new ArrayList<>());
 
+    private ArrayList<User> acceptedUsers;
     Event selectEvent;
 
     @Override
@@ -63,9 +68,11 @@ public class Entrants extends AppCompatActivity {
         enrolledEntrants  = findViewById(R.id.enrolled_entrants);
         backButton        = findViewById(R.id.backButton);
         lotteryButton     = findViewById(R.id.startLotteryButton);
+        exportButton      = findViewById(R.id.accepted_entrants_button);
 
         eventID = getIntent().getStringExtra("eventID");
         lotteryButton.setEnabled(false);
+        exportButton.setEnabled(false);
 
         selectEvent = EventData.searchEventID(eventID);
         if (selectEvent != null) {
@@ -103,6 +110,7 @@ public class Entrants extends AppCompatActivity {
                     Log.e("lottery button", "Failed to load waitlist from Firestore", e);
                     WaitlistUsers(selectEvent);
                 });
+
         ArrayList<String> acceptedUsersString= new ArrayList<String>();
         db.collection("events").document(eventID).collection("acceptedUsers").get()
                 .addOnSuccessListener(docs -> {
@@ -136,10 +144,46 @@ public class Entrants extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+
+        exportButton.setOnClickListener(view ->{
+            exportCSV();
+        });
     }
 
+    private void exportCSV(){
+        EditText filepath;
+
+        new AlertDialog.Builder(this)
+                .setTitle("Export CSV")
+                .setMessage("Export a list of all entrants that accepted their invitations into a CSV file.")
+                .setView(filepath = new EditText(this))
+                .setPositiveButton("Export", (dialog, which) -> {
+                    String chosenFilePath = filepath.getText().toString();
+                    String csv_content="Name,Email,Phone,";
+                    for(User user : acceptedUsers){
+                        String user_line=user.getName()+","+user.getEmail()+","+user.getPhone()+",";
+                        csv_content += user_line;
+                    }
+                    Log.d("CSV contents",csv_content);
+                    writeToFile(csv_content,this,chosenFilePath);
+                })
+                .setNegativeButton(this.getString(R.string.cancel), null)
+                .show();
+    }
+    private void writeToFile(String data,Context context, String filename) {
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(filename, Context.MODE_PRIVATE));
+            outputStreamWriter.write(data);
+            outputStreamWriter.close();
+            Log.d("write to file","file writing complete");
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
     private void acceptedUsersInitialize(ArrayList<String> acceptedUsersString){
-        if (acceptedUsersString.size() == 0) {
+        acceptedUsers=new ArrayList<>();
+        if (acceptedUsersString.isEmpty()) {
             Log.d("waitlist", "no users have accepted");
             return;
         }
@@ -165,6 +209,8 @@ public class Entrants extends AppCompatActivity {
                             textView.setText(user.getName());
                             acceptedEntrants.addView(textView);
                             user.initializeEvents();
+                            acceptedUsers.add(user);
+                            exportButton.setEnabled(true);
                         } else {
                             Log.d("Firestore", "get failed or no document");
                         }
