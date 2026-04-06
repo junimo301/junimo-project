@@ -1,5 +1,6 @@
 package com.example.junimoapp.Organizer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.junimoapp.OrganizerStartScreen;
 import com.example.junimoapp.R;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.User;
@@ -31,15 +33,10 @@ import java.util.List;
  * Allows an organizer to invite specific entrants to a private event's
  * waiting list by searching via name, phone number, and/or email.
  *
- * How it works:
- *  1. Organizer types in the search box (name, email, or phone).
- *  2. Three Firestore prefix queries run and results are merged.
- *  3. Organizer taps "Invite" next to a user.
- *  4. The user's invitedEvents string is updated via FirebaseManager.updateUser()
- *     — consistent with how User.inviteUser() works throughout the app.
- *  5. A private invite notification is sent via NotificationHelper (US 01.05.06).
- *
- * Layout: activity_private_invite.xml
+ * Navigation:
+ *  - Launched from CreateEvent after a private event is saved.
+ *  - Back button uses FLAG_ACTIVITY_CLEAR_TOP to bring OrganizerStartScreen
+ *    to the front, triggering its onResume() to reload the event list.
  */
 public class PrivateInviteActivity extends AppCompatActivity {
 
@@ -51,10 +48,6 @@ public class PrivateInviteActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseManager firebase;
 
-    // ─────────────────────────────────────────────────────────────────────
-    // US 02.01.03
-    // eventId and eventTitle passed in from CreateEvent via Intent
-    // ─────────────────────────────────────────────────────────────────────
     private String eventId;
     private String eventTitle;
 
@@ -76,10 +69,6 @@ public class PrivateInviteActivity extends AppCompatActivity {
         adapter = new UserResultAdapter(results, userId -> inviteUser(userId));
         recyclerView.setAdapter(adapter);
 
-        // ─────────────────────────────────────────────────────────────────
-        // US 02.01.03
-        // Search on every keystroke — blank query clears results list
-        // ─────────────────────────────────────────────────────────────────
         searchField.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int st, int c, int a) {}
             @Override public void onTextChanged(CharSequence s, int st, int b, int c) {
@@ -88,15 +77,26 @@ public class PrivateInviteActivity extends AppCompatActivity {
             @Override public void afterTextChanged(Editable s) {}
         });
 
+        // ─────────────────────────────────────────────────────────────────
+        // US 02.01.03
+        // Back button clears the stack and brings OrganizerStartScreen
+        // to the front — this triggers onResume() which reloads the
+        // event list so the new private event appears immediately.
+        // ─────────────────────────────────────────────────────────────────
         findViewById(R.id.back_button_private).setOnClickListener(v -> finish());
     }
 
     /**
-     * US 02.01.03
-     * Prefix-searches Firestore users by name, email, and phone.
-     * Runs three separate queries (Firestore has no OR across fields)
-     * and merges results, skipping duplicates.
+     * Navigates back to OrganizerStartScreen using FLAG_ACTIVITY_CLEAR_TOP
+     * so onResume() fires and reloads the event list.
      */
+    private void goToOrganizerHome() {
+        Intent intent = new Intent(PrivateInviteActivity.this, OrganizerStartScreen.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
+
     private void searchUsers(String query) {
         if (query.equals("")) {
             results.clear();
@@ -105,8 +105,6 @@ public class PrivateInviteActivity extends AppCompatActivity {
         }
         results.clear();
         adapter.notifyDataSetChanged();
-
-        // \uf8ff upper-bounds the range so all strings starting with query match
         String queryEnd = query + "\uf8ff";
 
         db.collection("users")
@@ -125,10 +123,6 @@ public class PrivateInviteActivity extends AppCompatActivity {
                 .get().addOnSuccessListener(s -> mergeResults(s.getDocuments()));
     }
 
-    /**
-     * US 02.01.03
-     * Adds incoming docs to the results list, skipping duplicates by deviceId.
-     */
     private void mergeResults(List<DocumentSnapshot> docs) {
         for (DocumentSnapshot doc : docs) {
             String uid = doc.getString("deviceId");
@@ -149,43 +143,23 @@ public class PrivateInviteActivity extends AppCompatActivity {
 
     /**
      * US 02.01.03 / US 01.05.06
-     * Invites a user to this private event:
-     *  1. Reads their current invitedEvents string from Firestore.
-     *  2. Appends this eventId (same format as User.inviteUser()).
-     *  3. Saves back using FirebaseManager.updateUser() as requested in review.
-     *  4. Sends a private invite notification via NotificationHelper (US 01.05.06)
-     *     which respects the user's opt-out preference (US 01.04.03).
+     * Invites a user by appending eventId to their invitedEvents string
+     * using FirebaseManager.updateUser(), then sends a notification.
      */
     private void inviteUser(String userId) {
         db.collection("users").document(userId).get()
                 .addOnSuccessListener(snap -> {
                     if (!snap.exists()) return;
 
-                    // ─────────────────────────────────────────────────────
-                    // US 02.01.03
-                    // invitedEvents is a comma-separated String on the User doc
-                    // (per User.java — same format used by User.inviteUser()).
-                    // We use firebase.updateUser() as requested in code review.
-                    // ─────────────────────────────────────────────────────
                     String current = snap.getString("invitedEvents");
                     if (current == null) current = "";
 
                     if (!current.contains(eventId)) {
                         String updated = current + eventId + ",";
-
-                        // User shell just provides the deviceId for the doc path
                         User shell = new User(userId, "", "", "", "", "", "");
-                        firebase.updateUser(
-                                db.collection("users"),
-                                shell,
-                                "invitedEvents",
-                                updated
-                        );
+                        firebase.updateUser(db.collection("users"), shell, "invitedEvents", updated);
 
-                        // ─────────────────────────────────────────────────
-                        // US 01.05.06
-                        // Send notification — respects opt-out (US 01.04.03)
-                        // ─────────────────────────────────────────────────
+                        // US 01.05.06 — notify invited user (respects opt-out US 01.04.03)
                         NotificationHelper.notifyPrivateInvite(userId, eventId, eventTitle);
                         Toast.makeText(this, "Invitation sent!", Toast.LENGTH_SHORT).show();
                     } else {
@@ -194,7 +168,6 @@ public class PrivateInviteActivity extends AppCompatActivity {
                 });
     }
 
-    // ── Data holder for one search result row ─────────────────────────────
     static class UserResult {
         String deviceId, name, email, phone;
         UserResult(String d, String n, String e, String p) {
@@ -202,7 +175,6 @@ public class PrivateInviteActivity extends AppCompatActivity {
         }
     }
 
-    // ── RecyclerView adapter ──────────────────────────────────────────────
     static class UserResultAdapter extends RecyclerView.Adapter<UserResultAdapter.VH> {
         interface InviteListener { void onInvite(String userId); }
         private final List<UserResult> items;

@@ -4,6 +4,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import com.example.junimoapp.admin.AdminUserAdapter;
+import com.example.junimoapp.admin.AdminImageAdapter;
+import com.example.junimoapp.admin.AdminNotificationAdapter;
+import com.example.junimoapp.admin.AdminCommentAdapter;
 
 /**
  * Unit tests for admin functionality.
@@ -291,6 +294,90 @@ public class AdminUnitTest {
         //check docId validity (needs to be valid for deletion)
         assertNotNull(organizer.documentId);
         assertFalse(organizer.documentId.isEmpty());
+    }
+
+
+    /**
+     * US 03.06.01
+     * As an admin, I want to browse images
+     * Tests ImageItem created correctly (simulates loading and wrapping image from Firestore)
+     */
+    @Test
+    public void testImageItemCreation() {
+        AdminImageAdapter.ImageItem item = new AdminImageAdapter.ImageItem(
+                "event123", "events", "poster",
+                "https://example.com/poster.jpg", "Poster", "Event: an event"
+        );
+
+        assertEquals("event123", item.documentId);
+        assertEquals("events", item.collection);
+        assertEquals("poster", item.fieldName);
+        assertEquals("https://example.com/poster.jpg", item.imageUrl);
+        assertEquals("Poster", item.type);
+        assertEquals("Event: an event", item.label);
+    }
+
+    /**
+     * US 03.03.01
+     * As an admin, I want to remove images
+     * Tests item is gone after simulated removal
+     */
+    @Test
+    public void testImageRemovedFromListAfterDeletion() {
+        java.util.List<AdminImageAdapter.ImageItem> imageList = new java.util.ArrayList<>();
+
+        AdminImageAdapter.ImageItem poster = new AdminImageAdapter.ImageItem(
+                "event123", "events", "poster",
+                "https://example.com/poster.jpg", "Poster", "Event: an event"
+        );
+        AdminImageAdapter.ImageItem profile = new AdminImageAdapter.ImageItem(
+                "user456", "users", "profilePhoto",
+                "https://example.com/profile.jpg", "Profile Photo", "User: some guy"
+        );
+
+        imageList.add(poster);
+        imageList.add(profile);
+        assertEquals(2, imageList.size());
+
+        imageList.remove(poster);
+
+        assertEquals(1, imageList.size());
+        assertFalse(imageList.contains(poster));
+        assertTrue(imageList.contains(profile));
+    }
+
+    /**
+     * US 03.08.01
+     * As an admin, I want to review notification logs
+     * Tests NotifItem correctly created, simulating reading/wrapping notification
+     */
+    @Test
+    public void testNotificationItemCreation() {
+        AdminNotificationAdapter.NotifItem notif = new AdminNotificationAdapter.NotifItem(
+                "You've been chosen",
+                "Sent by: someone",
+                "2026-04-03 10:39:00"
+        );
+
+        assertEquals("You've been chosen", notif.message);
+        assertEquals("Sent by: someone", notif.organizerName);
+        assertEquals("2026-04-03 10:39:00", notif.timestamp);
+    }
+
+    /**
+     * US 03.10.01
+     * As an admin, I want to remove comments
+     * Tests CommentItem stores correct stuff
+     */
+    @Test
+    public void testCommentItemCreation() {
+        AdminCommentAdapter.CommentItem comment = new AdminCommentAdapter.CommentItem(
+                "comment789", "deviceXYZ", "bad comment"
+        );
+
+        assertEquals("comment789", comment.commentId);
+        assertEquals("deviceXYZ", comment.userId);
+        assertEquals("bad comment", comment.text);
     }
 
 }

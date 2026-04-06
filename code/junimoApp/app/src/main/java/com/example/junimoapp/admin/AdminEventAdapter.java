@@ -60,20 +60,31 @@ public class AdminEventAdapter extends RecyclerView.Adapter<AdminEventAdapter.Ev
         void onDeleteClick(EventItem event);
     }
 
+    /**
+     * callback interface for tapping a row (not the delete button)
+     */
+    public interface OnRowClickListener {
+        void onRowClick(EventItem event);
+    }
+
     // the list of events to display - passed in from the Activity
     private final List<EventItem> eventList;
 
     // the callback that fires when the admin taps "Remove" on an event row
     private final OnDeleteClickListener deleteListener;
 
+    private final OnRowClickListener rowClickListener;
+
     /**
      * Constructor for AdminEventAdapter.
      * @param eventList      the list of EventItem objects to display
      * @param deleteListener callback to handle delete button clicks (handled by Activity)
+     * @param rowClickListener callback for row clicks
      */
-    public AdminEventAdapter(List<EventItem> eventList, OnDeleteClickListener deleteListener) {
+    public AdminEventAdapter(List<EventItem> eventList, OnDeleteClickListener deleteListener, OnRowClickListener rowClickListener) {
         this.eventList = eventList;
         this.deleteListener = deleteListener;
+        this.rowClickListener = rowClickListener;
     }
 
     /**
@@ -96,7 +107,7 @@ public class AdminEventAdapter extends RecyclerView.Adapter<AdminEventAdapter.Ev
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         EventItem event = eventList.get(position);
-        holder.bind(event, deleteListener);
+        holder.bind(event, deleteListener, rowClickListener);
     }
 
     /**
@@ -107,6 +118,18 @@ public class AdminEventAdapter extends RecyclerView.Adapter<AdminEventAdapter.Ev
     public int getItemCount() {
         return eventList.size();
     }
+
+    /**
+     * replaces displayed list with a new (filtered) list, refreshes UI
+     * Called whenever search text changes
+     * @param filteredList the new list to display
+     */
+    public void filterList(List<EventItem> filteredList) {
+        this.eventList.clear();
+        this.eventList.addAll(filteredList);
+        notifyDataSetChanged();
+    }
+
 
     /**
      * EventViewHolder holds references to the views inside one event row (item_admin_event.xml).
@@ -135,11 +158,12 @@ public class AdminEventAdapter extends RecyclerView.Adapter<AdminEventAdapter.Ev
          * @param event    the EventItem whose data we're displaying
          * @param listener the callback to fire when delete is clicked
          */
-        public void bind(final EventItem event, final OnDeleteClickListener listener) {
+        public void bind(final EventItem event, final OnDeleteClickListener listener, final OnRowClickListener rowClickListener) {
             titleText.setText(event.title);
             descText.setText(event.description);
             // when delete is clicked, pass this event back to the Activity to handle
             deleteButton.setOnClickListener(v -> listener.onDeleteClick(event));
+            itemView.setOnClickListener(v -> rowClickListener.onRowClick(event));
         }
     }
 }

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- russian -->
+    <string name="app_name">джунимоАпп</string>
+    <string name="settings">Настройки</string>
+    <string name="event_lottery">Лотерея на Мероприятие</string>
+    <string name="back_to_home">← Вернуться</string>
+    <string name="admin">Администратор</string>
+    <string name="search_profiles">Поиск Анкет</string>
+    <string name="search">Поиск</string>
+    <string name="organize_alphabetical_order_u2191">Сортировка : По Алфавиту ↑</string>
+    <string name="browse_delete_profiles">Просмотр/Удаление Профилей</string>
+    <string name="browse_remove_organizers">Просмотр/Удаление Организаторов</string>
+    <string name="browse_images">Просмотреть Изображения</string>
+    <string name="browse_events">Просмотреть Мероприятия</string>
+    <string name="search_events_label">Поиск Мероприятий</string>
+
+    <!-- Admin notification stuff -->
+    <string name="browse_notification_log">Просмотреть Журнал Уведомлений</string>
+    <string name="notification_log_title">Журнал Уведомлений</string>
+    <string name="sent_by">Отправитель: </string>
+    <string name="no_notifications_found">Уведомлений не найдено.</string>
+
+    <!-- Admin event detail screen (comments) -->
+    <string name="event_details_admin">Подробности Мероприятия</string>
+    <string name="comments_header">Комментарии</string>
+    <string name="remove_comment">Удалить Комментарий</string>
+    <string name="remove_comment_confirm">Вы уверены, что хотите удалить этот комментарий? </string>
+    <string name="no_comments">Комментариев к этому событию нет.</string>
+    <string name="organizer_id_label">Идентификатор Организатора: </string>
+    <string name="description_label">Описание: </string>
+    <string name="location_label">Местоположение: </string>
+    <string name="date_label">Дата: </string>
+
+    <!-- Admin image browsing screen -->
+    <string name="browse_images_title"> Просмотреть Изображения</string>
+    <string name="remove_image">Удалить Изображение</string>
+    <string name="remove_image_confirm">Вы уверены, что хотите удалить это изображение? </string>
+    <string name="no_image">Изображение Отсутствует</string>
+    <string name="image_type_poster">Плакат</string>
+    <string name="image_type_profile">Фото Профиля</string>
+    <string name="event_title_label">Мероприятие: </string>
+    <string name="user_label">Пользователь: </string>
+
+    <!-- Search/filter stuff -->
+    <string name="search_events">Поиск Мероприятий</string>
+    <string name="event_tag_prompt">Выбрать Тег Мероприятия</string>
+    <string-array name="event_tags">
+        <item>Без Категории</item>
+        <item>Спорт</item>
+        <item>Развлечения</item>
+        <item>Социальное</item>
+        <item>Профессиональный</item>
+        <item>Образование</item>
+    </string-array>
+
+    <string name="sys_description">Записывайтесь в списки ожидания на популярные общественные Мероприятия через нашу систему лотереи</string>
+    <string name="add">Добавить</string>
+    <string name="create_new_event">Создать Новое Мероприятие</string>
+    <string name="spec_title">Название*</string>
+    <string name="description">Описание</string>
+    <string name="spec_date">Дата*</string>
+    <string name="spec_location">Местоположение*</string>
+    <string name="spec_max_capacity">Максимальная Вместимость*</string>
+    <string name="registration_period">Период Регистрации</string>
+    <string name="start">Начать</string>
+    <string name="end">Конец</string>
+    <string name="waiting_list_limit">Лимит Списка Ожидания</string>
+    <string name="spec_price">Цена*</string>
+    <string name="generate_qr_code">Создать QR-Код</string>
+    <string name="generate">Создать</string>
+    <string name="spec_geo_location">Географическое Положение*</string>
+    <string name="private_event_invite_only_no_qr_code">Закрытое Мероприятие (Только По Приглашениям, Без QR-Кода)</string>
+    <string name="poster">Плакат</string>
+    <string name="insert_image">Вставить Изображение</string>
+    <string name="fields_with_must_be_filled_in">Поля, Отмеченные Знаком *, Обязательны Для Заполнения</string>
+    <string name="preview">Предварительный Просмотр</string>
+    <string name="publish">Опубликовать</string>
+    <string name="cancel">Отменить</string>
+    <string name="organizer">Организатор</string>
+    <string name="event">Мероприятие</string>
+    <string name="start_lottery">Начать Лотерею</string>
+    <string name="entrants_invited_to_apply">• Приглашаем Желающих Подать Заявки</string>
+    <string name="cancelled_entrants">• Отменившие Участие</string>
+    <string name="enrolled_entrants">• Зарегистрированные Участники</string>
+    <string name="event_preview">Предварительный Просмотр Мероприятия</string>
+    <string name="title">Название</string>
+    <string name="registration">Регистрация</string>
+    <string name="event_date">Дата Мероприятия</string>
+    <string name="location">Местоположение</string>
+    <string name="max_capacity">Максимальная Вместимость</string>
+    <string name="price">Цена</string>
+    <string name="geo_location">Географическое Положение</string>
+    <string name="back">Вернуться</string>
+    <string name="platform_guidelines">1. Цель приложения\n\nСистема «Лотерея мероприятий» помогает людям регистрироваться на популярные общественные мероприятия справедливым способом. Вместо того чтобы места занимали те, кто кликнул первым, пользователи могут записаться в список ожидания и быть выбранными случайным образом.\n\nЭта система дает всем равный шанс участвовать, даже если они не могут зарегистрироваться сразу после открытия регистрации.\n\n2. Общие правила\n\nЧтобы платформа оставалась справедливой и удобной для всех, пожалуйста, соблюдайте следующие правила:\n\n- Каждый пользователь может записаться в список ожидания только один раз на одно мероприятие.\n- Пользователи должны предоставлять точную личную информацию при регистрации.\n- Если пользователь выбран для участия, он должен принять или отклонить приглашение в течение указанного времени.\n- Если ответа нет, место может быть предложено другому участнику.\n\n3. Как работает лотерея\n\n- Пользователи записываются в список ожидания в период регистрации на мероприятие.\n- После закрытия регистрации система случайным образом выбирает участников.\n- Выбранные пользователи получают уведомление с приглашением зарегистрироваться.\n- Если кто-то отклоняет приглашение или не отвечает, может быть выбран другой человек из списка ожидания.\n- Этот процесс продолжается, пока все доступные места не будут заполнены.\n\n4. Обязанности участников\n\n- Записываться в списки ожидания только на мероприятия, которые они планируют посетить.\n- Своевременно отвечать на приглашения.\n- Соблюдать правила, установленные организатором мероприятия.\n- Держать актуальной информацию в своем профиле.\n- Участники могут покинуть список ожидания в любое время до проведения лотереи.\n\n5. Обязанности организаторов\n\n- Предоставлять точную и ясную информацию о мероприятии (дата, время, место, вместимость).\n- Устанавливать даты начала и окончания регистрации.\n- Использовать систему лотереи справедливо.\n- Сообщать участникам об обновлениях через приложение.\n- Организаторы могут обновлять или отменять мероприятия при необходимости.\n\n6. Доступ через QR-код\n\nМероприятия могут включать QR-код для упрощения регистрации. Сканирование QR-кода направляет пользователя прямо на страницу мероприятия, где можно просмотреть детали и записаться в список ожидания. QR-коды следует использовать только для легитимного продвижения мероприятий.\n\n7. Проверка местоположения\n\nНекоторые мероприятия могут требовать проверки местоположения. Если эта функция включена, приложение может проверять местоположение устройства при записи в список ожидания. Данные о местоположении используются только для этой цели.\n\n8. Уведомления\n\nПриложение может отправлять уведомления, когда:\n- Пользователь выбран для мероприятия\n- Пользователь не выбран\n- Мероприятие обновлено или отменено\n- Организаторы отправляют важные объявления\n\nПользователи могут отключить уведомления в настройках.\n\n9. Конфиденциальность и данные\n\nЛичная информация хранится безопасно с использованием Firebase и используется только для регистрации на мероприятия и связи с участниками. Пользователи могут удалить свой профиль в любое время.\n\n10. Административный контроль\n\nАдминистраторы помогают управлять платформой, удаляя неподходящие мероприятия, блокируя нарушающие правила профили, управляя загруженными изображениями и проверяя логи уведомлений.\n\n11. Честное использование\n\nПользователи, которые злоупотребляют платформой, могут быть удалены. Примеры: создание нескольких аккаунтов для увеличения шансов в лотерее, загрузка неподобающего или оскорбительного контента, нарушение правил платформы.</string>
+    <string name="choose_your_role">Выберите свою роль</string>
+    <string name="user">Пользователь</string>
+    <string name="notifications">Уведомления</string>
+    <string name="organizer_home">Главная Страница Организатора</string>
+    <string name="map">Карта</string>
+    <string name="entrants">Участники</string>
+    <string name="my_events">Мои Мероприятия</string>
+    <string name="invite_entrants">Пригласить Участников</string>
+    <string name="search_entrants_by_name_email_or_phone">Поиск участников по имени, адресу электронной почты или телефону</string>
+    <string name="type_a_name_email_or_phone_number">Введите имя, адрес электронной почты или номер телефона...</string>
+    <string name="your_name">Ваше Имя</string>
+    <string name="email">Электронная Почта</string>
+    <string name="phone">Телефон</string>
+    <string name="save_changes">Сохранить изменения</string>
+    <string name="change_roles">Поменять роли</string>
+    <string name="delete_account">Удалить аккаунт</string>
+    <string name="scan_event_qr_code">Отсканируйте QR-Код Мероприятия</string>
+    <string name="point_your_camera_at_a_junimo_event_qr_code">Наведите камеру на QR-код Мероприятия Джунимо</string>
+    <string name="select_event">Выбрать Мероприятие</string>
+    <string name="user_home">Главная Страница Пользователя</string>
+    <string name="invitations">Приглашения</string>
+    <string name="profile">Профиль</string>
+    <string name="guidelines">Правила</string>
+    <string name="scan_qr_code">Отсканируйте QR-Код</string>
+    <string name="receive_notifications">Получать Уведомления</string>
+    <string name="event_name">Название Мероприятия</string>
+    <string name="organized_by">Организатор %1$s</string>
+    <string name="add_a_description_develop_the_ultimate_core_strength_and_coordination_with_pilates_movement">Добавьте описание: Развивайте максимальную силу мышц туловища и координацию с помощью упражнений пилатеса...</string>
+    <string name="event_details">Подробности Мероприятия</string>
+    <string name="event_location_address">Адрес Места Проведения Мероприятия</string>
+    <string name="registration_details">Детали Регистрации</string>
+    <string name="capacity">Вместимость</string>
+    <string name="current_status">Текущее Состояние</string>
+    <string name="join_waitlist">Записаться в список ожидания</string>
+    <string name="leave_waitlist">Выйти из списка ожидания</string>
+    <string name="comments">Комментарии</string>
+    <string name="write_a_comment">Написать комментарий...</string>
+    <string name="post_comment">Оставить Комментарий</string>
+    <string name="congratulations_you_ve_been_selected_accept_your_invite_and_secure_a_spot">Поздравляем! Вы прошли отбор. Примите приглашение и забронируйте себе место!</string>
+    <string name="accept">Принять</string>
+    <string name="decline">Отклонить</string>
+    <string name="remove">Удалить</string>
+    <string name="organizer_name">Имя Организатора</string>
+    <string name="flagged_no">Помечено: Нет</string>
+    <string name="organizer_email_example_com">organizer.email@example.com</string>
+    <string name="remove_status">Снять Статус</string>
+    <string name="invite">Пригласить</string>
+    <string name="edit">Редактировать</string>
+    <string name="view_booking_history">Просмотреть Историю Мероприятий</string>
+    <string name="address">Адрес</string>
+    <string name="edmonton">Эдмонтон</string>
+    <string name="province">Провинция</string>
+    <string name="postal_code">Почтовый Индекс</string>
+    <string name="event_history">История Мероприятий</string>
+    <string name="past_events">Прошедшие Мероприятия</string>
+    <string name="date">Дата</string>
+    <string name="no_tag">Без Тега</string>
+    <string name="capacity_colon">"Вместимость: "</string>
+    <string name="none">Нет</string>
+    <string name="remove_event">Удалить Мероприятие</string>
+    <string name="are_you_sure">Вы уверены, что хотите удалить</string>
+    <string name="permanent">(Постоянно!)</string>
+    <string name="event_removed">Мероприятие Удалено</string>
+    <string name="failed_to_remove">Не удалось удалить Мероприятие.</string>
+    <string name="remove_organizer">Снять Статус Организатора</string>
+    <string name="remove_organizer_message">Статус Организатора « »? Это также удалит все созданные им Мероприятия</string>
+    <string name="remove_profile">Удалить Профиль</string>
+    <string name="remove_profile_message">Профиль « »?</string>
+
+    <string name="upload">Загрузить</string>
+    <string name="enable">Включить</string>
+    <string name="enabled">Включено</string>
+    <string name="disabled">Отключено</string>
+    <string name="close">Закрыть</string>
+    <string name="map_of_entrants">Карта Участников</string>
+    <string name="click_to_enlarge">Нажмите, Чтобы Увеличить</string>
+
+    <!-- settings -->
+    <string name="select_language">Выберите Язык</string>
+    <string name="select_language_description">Выберите желаемый язык приложения:</string>
+    <string name="language">Язык</string>
+    <string name="back_sett">Вернуться</string>
+</resources>

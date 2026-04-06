@@ -18,9 +18,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.junimoapp.adapters.EventSearchAdapter;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
+import com.example.junimoapp.utils.BaseActivity;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,7 +36,7 @@ import java.util.Locale;
  * US 01.01.05: Search by tag/category
  * US 01.01.06: Search by date/capacity range
  */
-public class EventSearchActivity extends AppCompatActivity {
+public class EventSearchActivity extends BaseActivity {
     private EditText keywordInput, startDateInput, endDateInput;
     private EditText minCapacityInput, maxCapacityInput; //capacity ranges
     private Spinner tagSpinner;
@@ -104,7 +104,7 @@ public class EventSearchActivity extends AppCompatActivity {
         resultsListView.setOnItemClickListener((parent, view, position, id) -> {
             Event clickedEvent = filteredEvents.get(position);
             Intent intent = new Intent(EventSearchActivity.this, EventDetailsActivity.class);
-            intent.putExtra("eventId", clickedEvent.getEventID());
+            intent.putExtra("eventID", clickedEvent.getEventID());
             startActivity(intent);
         });
     }
@@ -162,7 +162,7 @@ public class EventSearchActivity extends AppCompatActivity {
                         Double priceDouble = doc.getDouble("price");
                         double price = priceDouble != null ? priceDouble : 0.0;
 
-                        GeoPoint geoLocation = doc.getGeoPoint("geoLocation");
+                        boolean geoLocation = doc.getBoolean("geoLocation");
                         String poster = doc.getString("poster");
                         String eventID = doc.getString("eventID");
                         String eventLocation = doc.getString("eventLocation");

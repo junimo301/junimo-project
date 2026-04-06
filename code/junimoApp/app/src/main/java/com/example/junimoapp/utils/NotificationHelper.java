@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * How it works:
  *  - Notifications stored at: users/{userId}/notifications/{autoId}
- *  - Each document has: message, eventId, type, read, timestamp
+ *  - Each document has: message, eventID, type, read, timestamp
  *  - Before writing, we read notificationsEnabled from the user's Firestore doc.
  *    This is a boolean field added to User and saved by User.setNotificationsEnabled()
  *    via FirebaseManager.updateUser(). If false, nothing is written.
@@ -32,8 +32,8 @@ public class NotificationHelper {
     // Call this after the lottery runs and a user has been selected.
     // Called from Entrants.java inside the lottery button click listener.
     // ─────────────────────────────────────────────────────────────────────
-    public static void notifyInvited(String userId, String eventId, String eventTitle) {
-        sendIfEnabled(userId, eventId, "invited",
+    public static void notifyInvited(String userId, String eventID, String eventTitle) {
+        sendIfEnabled(userId, eventID, "invited",
                 "You've been invited to join: " + eventTitle);
     }
 
@@ -42,8 +42,8 @@ public class NotificationHelper {
     // Call this after the lottery runs and a user was NOT selected.
     // Called from Entrants.java inside the lottery button click listener.
     // ─────────────────────────────────────────────────────────────────────
-    public static void notifyNotChosen(String userId, String eventId, String eventTitle) {
-        sendIfEnabled(userId, eventId, "not_chosen",
+    public static void notifyNotChosen(String userId, String eventID, String eventTitle) {
+        sendIfEnabled(userId, eventID, "not_chosen",
                 "Unfortunately you were not selected for: " + eventTitle);
     }
 
@@ -52,8 +52,8 @@ public class NotificationHelper {
     // Call this when an organizer invites a user to a private event waitlist.
     // Called from PrivateInviteActivity.inviteUser().
     // ─────────────────────────────────────────────────────────────────────
-    public static void notifyPrivateInvite(String userId, String eventId, String eventTitle) {
-        sendIfEnabled(userId, eventId, "private_invite",
+    public static void notifyPrivateInvite(String userId, String eventID, String eventTitle) {
+        sendIfEnabled(userId, eventID, "private_invite",
                 "You've been invited to the waiting list for private event: " + eventTitle);
     }
 
@@ -66,7 +66,7 @@ public class NotificationHelper {
     // The notification document uses a Map because it is a subcollection
     // record with no corresponding model class.
     // ─────────────────────────────────────────────────────────────────────
-    private static void sendIfEnabled(String userId, String eventId,
+    private static void sendIfEnabled(String userId, String eventID,
                                       String type, String message) {
         db.collection("users").document(userId).get()
                 .addOnSuccessListener(snapshot -> {
@@ -79,7 +79,7 @@ public class NotificationHelper {
                     // Write notification document to subcollection
                     Map<String, Object> notif = new HashMap<>();
                     notif.put("message", message);
-                    notif.put("eventId", eventId);
+                    notif.put("eventID", eventID);
                     notif.put("type", type);
                     notif.put("read", false);
                     notif.put("timestamp", System.currentTimeMillis());

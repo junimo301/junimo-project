@@ -1,22 +1,32 @@
 package com.example.junimoapp;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
+import com.example.junimoapp.utils.BaseActivity;
 import com.example.junimoapp.utils.DeviceUtils;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -45,11 +55,11 @@ import java.util.HashMap;
  * Displays comments
  */
 
-public class EventDetailsActivity extends AppCompatActivity {
+public class EventDetailsActivity extends BaseActivity {
 
     FirebaseFirestore db;
     String deviceId;
-    String eventId;
+    String eventID;
     Event selectedEvent;
 
     TextView eventTitle;
@@ -61,6 +71,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     TextView registrationDetails;
     TextView capacity;
     TextView countOnList;
+    ImageView backgroundPoster;
 
     TextView backButton;
     Button joinWaitlistButton;
@@ -74,7 +85,20 @@ public class EventDetailsActivity extends AppCompatActivity {
     ArrayList<String> commentsList = new ArrayList<>();
     ArrayList<String> commentIds = new ArrayList<>();
 
-    boolean isOrganizer = false;
+    //for locations
+    private FusedLocationProviderClient fusedLocationClient;
+
+    //geo location
+    private final ActivityResultLauncher<String> requestLocationPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    saveUserLocation(selectedEvent,UserSession.getCurrentUser());
+                } else {
+                    //DELETE LATER
+                    Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
+                }
+            });
+    boolean isOrganizer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,12 +108,13 @@ public class EventDetailsActivity extends AppCompatActivity {
         db = FirebaseManager.getDB();
         User user = UserSession.getCurrentUser();
         deviceId = user.getDeviceId();
-        //eventId should be passed from previous activity
-        eventId = getIntent().getStringExtra("eventId");
+        //eventID should be passed from previous activity
+        eventID = getIntent().getStringExtra("eventID");
         boolean fromHistory = getIntent().getBooleanExtra("fromHistory",false);
         boolean organizer = getIntent().getBooleanExtra("organizer",false);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        db.collection("events").document(eventId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        db.collection("events").document(eventID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -103,21 +128,41 @@ public class EventDetailsActivity extends AppCompatActivity {
                     int maxCapacity = (doc.getLong("maxCapacity")).intValue();
                     int waitingListLimit = (doc.getLong("waitingListLimit")).intValue();
                     double price = doc.getDouble("price");
-                    GeoPoint geoLocation = doc.getGeoPoint("geoLocation"); //geoPoint is a type apparently? seems helpful??
+                    boolean geoLocation = doc.getBoolean("geoLocation");
                     String poster = doc.getString("poster");
                     String eventID = doc.getString("eventID");
                     String eventLocation = doc.getString("eventLocation");
                     String organizerID = doc.getString("organizerID");
                     String tag = doc.getString("tag");
 
-                    selectedEvent=(new Event(title, description, startDate, endDate, dateEvent, maxCapacity, waitingListLimit, price, geoLocation, poster, eventID, eventLocation, organizerID, tag));
+                    selectedEvent=(new Event(title, description, startDate, endDate, dateEvent,
+                            maxCapacity, waitingListLimit, price, geoLocation, poster, eventID,
+                            eventLocation, organizerID, tag));
                     Log.d("Firebase",selectedEvent.toString());
+
+                    if (poster != null && !poster.equals("")) {
+                        Glide.with(EventDetailsActivity.this).load(poster)
+                                .placeholder(R.drawable.bg_event_tile)
+                                .into(backgroundPoster);
+                    }
 
                     isOrganizer = deviceId.equals(organizerID);
 
                     eventTitle.setText(selectedEvent.getTitle());
                     descriptionText.setText(selectedEvent.getDescription());
+
                     organizerText.setText(selectedEvent.getOrganizerID());
+                    db.collection("users").document(organizerID).get().addOnSuccessListener(userDocument -> {
+                        if (userDocument.exists()) {
+                            String organizerName = userDocument.getString("name");
+                            String text = getString(R.string.organized_by, organizerName != null ? organizerName : organizerID);
+                            organizerText.setText(text);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("Firestore", "Error getting organizer name", e);
+                    });
+
                     eventDate.setText(selectedEvent.getDateEvent());
                     eventLocationText.setText(selectedEvent.getEventLocation());
                     priceText.setText(String.valueOf(selectedEvent.getPrice()));
@@ -140,6 +185,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         backButton = findViewById(R.id.backToInvitesText);
         joinWaitlistButton = findViewById(R.id.joinWaitlistButton);
         declineButton = findViewById(R.id.declineButton);
+        backgroundPoster = findViewById(R.id.background_poster);
 
         eventTitle = findViewById(R.id.eventTitle);
         descriptionText = findViewById(R.id.descriptionText);
@@ -165,7 +211,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         commentsListView.setOnItemLongClickListener((parent, view, position, id) -> {
 
             //only organizers can del comms
-            if (!isOrganizer) return true;
+            if (!canDeleteComment()) return true;
 
             String commentId = commentIds.get(position);
 
@@ -175,7 +221,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                     .setPositiveButton("Delete", (dialog, which) -> {
 
                         db.collection("events")
-                                .document(eventId)
+                                .document(eventID)
                                 .collection("comments")
                                 .document(commentId)
                                 .delete()
@@ -191,13 +237,15 @@ public class EventDetailsActivity extends AppCompatActivity {
             String text = commentInput.getText().toString().trim();
 
             if (!text.isEmpty()) {
+                User currentUser = UserSession.getCurrentUser();
                 HashMap<String, Object> comment = new HashMap<>();
                 comment.put("text", text);
                 comment.put("userId", deviceId);
+                comment.put("username", currentUser.getName());
                 comment.put("timestamp", new Date());
 
                 db.collection("events")
-                        .document(eventId)
+                        .document(eventID)
                         .collection("comments")
                         .add(comment)
                         .addOnSuccessListener(docRef -> {
@@ -219,6 +267,38 @@ public class EventDetailsActivity extends AppCompatActivity {
         }
 
     }
+
+    private void requestUserLocation(Event event, User user) {
+        if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestLocationPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION);
+            return;
+        }
+        saveUserLocation(event,user);
+    }
+
+    @SuppressLint("MissingPermission")
+    private void saveUserLocation(Event event,User user) {
+        fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+            if (location != null) {
+                GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+                db.collection("events")
+                        .document(eventID)
+                        .collection("userLocations")
+                        .document(deviceId)
+                        .set(new HashMap<String, Object>() {{
+                            put("geoLocation", geoPoint);
+                            put("timestamp", new Date());
+                        }})
+                        .addOnSuccessListener(aVoid -> {
+                            Log.d("geoLocation", "User location saved: " + deviceId); })
+                        .addOnFailureListener(e -> {
+                            Log.e("geoLocation", "Error saving user location", e);
+                        });
+
+            } else { Log.w("geoLocation", "Location is null"); }
+        });
+    }
+
     private void JoinWaitlist(Event event, User user){
         Log.d("button click","waitlist button clicked");
         String startDate= event.getStartDate();
@@ -230,6 +310,9 @@ public class EventDetailsActivity extends AppCompatActivity {
                 String updatedList = event.getWaitList();
                 FirebaseManager.updateEvent(db.collection("events"), event, "waitList", updatedList);
                 joinWaitlistButton.setText("ADDED TO WAITLIST");
+
+                //GeoLocation
+                if (event.isGeoLocation()) { requestUserLocation(event, user); }
             }
             else {
                 joinWaitlistButton.setText("REGISTRATION PERIOD NOT OPEN");
@@ -241,7 +324,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
     //check if registration period is open
     public boolean registrationPeriod(String startDate, String endDate) {
-        if (startDate != "" && startDate != null) {
+        if (startDate != null && !startDate.equals("")) {
             try {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 Date start = format.parse(startDate);
@@ -270,7 +353,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     private void loadComments() {
         commentIds.clear();
         db.collection("events")
-                .document(eventId)
+                .document(eventID)
                 .collection("comments")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -278,10 +361,17 @@ public class EventDetailsActivity extends AppCompatActivity {
                         commentsList.clear();
                         for (QueryDocumentSnapshot doc : task.getResult()) {
                             String text = doc.getString("text");
-                            String user = doc.getString("userId");
-                            if (text == null || user == null) continue;
+                            String userId = doc.getString("userId");
+                            String username = doc.getString("username");
 
-                            String display = user + ": " + text;
+                            //in case old comments don't have a username
+                            if (username == null && userId != null) {
+                                username = userId;
+                            }
+
+                            if (text == null || username == null) continue;
+
+                            String display = username + ": " + text;
 
                             commentsList.add(display);
                             commentIds.add(doc.getId());
@@ -289,6 +379,10 @@ public class EventDetailsActivity extends AppCompatActivity {
                         commentsAdapter.notifyDataSetChanged();
                     }
                 });
+    }
+
+    public boolean canDeleteComment() {
+        return isOrganizer;
     }
 
 }

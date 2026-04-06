@@ -17,15 +17,15 @@ import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
+import com.example.junimoapp.utils.BaseActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 
-public class EventHistory extends AppCompatActivity {
+public class EventHistory extends BaseActivity {
     private TextView backButton;
     private ListView eventListView;
     private ArrayList<String> eventListString;
@@ -57,7 +57,7 @@ public class EventHistory extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(EventHistory.this, EventDetailsActivity.class);
-                intent.putExtra("eventId", eventList.get(i).getEventID());
+                intent.putExtra("eventID", eventList.get(i).getEventID());
                 intent.putExtra("fromHistory",true);
                 intent.putExtra("organizer",organizer);
                 startActivity(intent);
@@ -102,7 +102,7 @@ public class EventHistory extends AppCompatActivity {
                                             int maxCapacity = (doc.getLong("maxCapacity")).intValue();
                                             int waitingListLimit = (doc.getLong("waitingListLimit")).intValue();
                                             double price = doc.getDouble("price");
-                                            GeoPoint geoLocation = doc.getGeoPoint("geoLocation");
+                                            boolean geoLocation = doc.getBoolean("geoLocation");
                                             String poster = doc.getString("poster");
                                             String eventID = doc.getString("eventID");
                                             String eventLocation = doc.getString("eventLocation");

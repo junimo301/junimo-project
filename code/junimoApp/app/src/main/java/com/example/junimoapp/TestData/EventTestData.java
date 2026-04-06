@@ -2,7 +2,6 @@
 package com.example.junimoapp.TestData;
 
 import com.example.junimoapp.models.Event;
-import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,7 @@ public class EventTestData {
                 50,
                 60,
                 30.00,
-                new GeoPoint(53.5461,-113.4938),
+                false,
                 "poster1",
                 "event001",
                 "Downtown Park",
@@ -43,7 +42,7 @@ public class EventTestData {
                 100,
                 150,
                 50.00,
-                new GeoPoint(53.5232,-113.5263),
+                true,
                 "poster2",
                 "event002",
                 "University Hall",
@@ -60,7 +59,7 @@ public class EventTestData {
                 10,
                 15,
                 20.00,
-                new GeoPoint(53.5400,-113.5000),
+                true,
                 "poster3",
                 "event003",
                 "Community Center",

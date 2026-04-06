@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.junimoapp.models.UserSession;
+import com.example.junimoapp.utils.BaseActivity;
 import com.example.junimoapp.utils.DeviceUtils;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -34,7 +36,7 @@ import java.util.List;
  *
  * Treya
  */
-public class UserNotificationsActivity extends AppCompatActivity {
+public class UserNotificationsActivity extends BaseActivity {
 
     private NotifAdapter adapter;
     private final List<String> messages = new ArrayList<>();
@@ -46,7 +48,7 @@ public class UserNotificationsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
 
-        deviceId = DeviceUtils.getDeviceId(this);
+        deviceId = UserSession.getCurrentUser().getDeviceId();
         db = FirebaseFirestore.getInstance();
 
         RecyclerView rv = findViewById(R.id.notificationsRecycler);
@@ -74,10 +76,15 @@ public class UserNotificationsActivity extends AppCompatActivity {
                 .addOnSuccessListener(snaps -> {
                     messages.clear();
                     for (QueryDocumentSnapshot doc : snaps) {
-                        String msg = doc.getString("message");
-                        if (msg != null) messages.add(msg);
-                        // Mark as read now that the user has seen it
-                        doc.getReference().update("read", true);
+                        // Only show notifications from our system (not organizer broadcast notifications)
+                        String type = doc.getString("type");
+                        if (type != null && (type.equals("invited") ||
+                                type.equals("not_chosen") ||
+                                type.equals("private_invite"))) {
+                            String msg = doc.getString("message");
+                            if (msg != null) messages.add(msg);
+                            doc.getReference().update("read", true);
+                        }
                     }
                     adapter.notifyDataSetChanged();
                 });

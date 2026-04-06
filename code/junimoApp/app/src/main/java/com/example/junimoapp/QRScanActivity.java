@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.junimoapp.utils.BaseActivity;
 import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
@@ -29,13 +30,13 @@ import java.util.List;
  *  3. QR codes are in the format: junimo://event?id=<eventID>
  *     (set by CreateEvent when the organizer taps Generate QR).
  *  4. We parse the eventID and pass it to EventDetailsActivity via
- *     the "eventId" intent extra — the same key EventDetailsActivity
+ *     the "eventID" intent extra — the same key EventDetailsActivity
  *     already uses to load event data from Firestore.
  *
  * Layout: activity_qr_scan.xml
  * Camera permission is declared in AndroidManifest.xml.
  */
-public class QRScanActivity extends AppCompatActivity {
+public class QRScanActivity extends BaseActivity {
 
     // ─────────────────────────────────────────────────────────────────────
     // US 01.06.01
@@ -73,7 +74,7 @@ public class QRScanActivity extends AppCompatActivity {
      * US 01.06.01
      * Starts the continuous barcode scan.
      * On each successful decode, checks if it is a valid junimo event QR,
-     * parses the eventId, and opens EventDetailsActivity.
+     * parses the eventID, and opens EventDetailsActivity.
      */
     private void startScanning() {
         barcodeView.decodeContinuous(new BarcodeCallback() {
@@ -87,12 +88,12 @@ public class QRScanActivity extends AppCompatActivity {
 
                 // ─────────────────────────────────────────────────────────
                 // US 01.06.01
-                // Parse the eventId from the QR string.
+                // Parse the eventID from the QR string.
                 // Format set by CreateEvent: "junimo://event?id=<eventID>"
                 // ─────────────────────────────────────────────────────────
-                String eventId = parseEventId(raw);
+                String eventID = parseEventId(raw);
 
-                if (eventId == null) {
+                if (eventID == null) {
                     Toast.makeText(QRScanActivity.this,
                             "Invalid QR code — not a Junimo event code",
                             Toast.LENGTH_SHORT).show();
@@ -103,11 +104,11 @@ public class QRScanActivity extends AppCompatActivity {
 
                 // ─────────────────────────────────────────────────────────
                 // US 01.06.01
-                // Pass the parsed eventId to EventDetailsActivity using the
-                // "eventId" key — the same key it already reads from in onCreate.
+                // Pass the parsed eventID to EventDetailsActivity using the
+                // "eventID" key — the same key it already reads from in onCreate.
                 // ─────────────────────────────────────────────────────────
                 Intent intent = new Intent(QRScanActivity.this, EventDetailsActivity.class);
-                intent.putExtra("eventId", eventId);
+                intent.putExtra("eventID", eventID);
                 startActivity(intent);
                 finish();
             }
@@ -121,11 +122,11 @@ public class QRScanActivity extends AppCompatActivity {
 
     /**
      * US 01.06.01
-     * Parses "junimo://event?id=<eventId>" and returns just the eventId portion.
+     * Parses "junimo://event?id=<eventID>" and returns just the eventID portion.
      * Returns null if the string is not in the expected format.
      */
     private String parseEventId(String raw) {
-        String prefix = "junimo://event?id=";
+        String prefix = "https://junimo.app/event?id=";
         if (raw != null && raw.startsWith(prefix)) {
             String id = raw.substring(prefix.length()).trim();
             return id.equals("") ? null : id;

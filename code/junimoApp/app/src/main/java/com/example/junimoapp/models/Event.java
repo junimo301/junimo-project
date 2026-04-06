@@ -9,11 +9,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.google.firebase.firestore.PropertyName;
 
 /**
  * Event specific information
@@ -41,10 +37,11 @@ public class Event {
     private double price;
 
     /** unique QR code for the event */
-    private String QRCode = null;
+    @PropertyName("qrcode")
+    private String qrcode;
 
     /** the location of the entrants for the event */
-    private GeoPoint geoLocation;
+    private boolean geoLocation = false;
 
     /** the location of the event */
     private String eventLocation;
@@ -57,6 +54,8 @@ public class Event {
 
     /** the organizer id */
     private String organizerID;
+
+    private String coOrganizers;
 
     // ─────────────────────────────────────────────────────────────────────
     // US 02.01.02
@@ -75,6 +74,11 @@ public class Event {
     FirebaseManager firebase;
     FirebaseFirestore db;
 
+    private String cancelledUsers;
+    private String invitedUsers;
+    private String enrolledUsers;
+
+    public Event() {}
 
     /**
      * Constructs event with all the details
@@ -95,7 +99,7 @@ public class Event {
      */
     public Event(String title, String description, String startDate, String endDate,
                  String dateEvent, int maxCapacity, int waitingListLimit, double price,
-                 GeoPoint geoLocation, String poster, String eventID,
+                 boolean geoLocation, String poster, String eventID,
                  String eventLocation, String organizerID, String tag) {
         this.title = title;
         this.description = description;
@@ -112,11 +116,16 @@ public class Event {
         this.waitList = "";
         this.organizerID = organizerID;
         this.tag = tag;
+        this.cancelledUsers = "";
+        this.invitedUsers = "";
+        this.enrolledUsers = "";
+        this.coOrganizers = "";
 
         try {
             firebase = new FirebaseManager();
             db = firebase.getDB();
             initializeWaitlist();
+            initializeCoOrganizers();
         } catch (Exception e) {
             //unit testing environment, we don't need or want firebase
         }
@@ -136,12 +145,14 @@ public class Event {
         isPrivate = aPrivate;
         // Persist to Firestore so all screens that load events see the flag
         if (db != null) {
-            db.collection("events").document(eventID).update("isPrivate", aPrivate);
+            db.collection("events").document(eventID).update("private", aPrivate);
         }
+    }
+    public void restorePrivate(boolean aPrivate) {
+        this.isPrivate = aPrivate;
     }
 
     // ── Existing getters / setters (unchanged) ────────────────────────────
-
     public String getTag() { return tag; }
 
     public void setTag(String tag) { this.tag = tag; }
@@ -162,12 +173,13 @@ public class Event {
         this.organizerID = organizerID;
     }
 
+    @PropertyName("qrcode")
     public String getQRCode() {
-        return QRCode;
+        return qrcode;
     }
-
+    @PropertyName("qrcode")
     public void setQRCode(String QRCode) {
-        this.QRCode = QRCode;
+        this.qrcode = QRCode;
     }
 
     public String getDateEvent() {
@@ -242,12 +254,11 @@ public class Event {
         this.price = price;
     }
 
-    public GeoPoint getGeoLocation() {
-        return geoLocation;
-    }
-
-    public void setGeoLocation(GeoPoint geoLocation) {
+    public void setGeoLocation(boolean geoLocation) {
         this.geoLocation = geoLocation;
+    }
+    public boolean isGeoLocation() {
+        return geoLocation;
     }
 
     public String getEventLocation() {
@@ -267,6 +278,17 @@ public class Event {
     }
 
     // ── Existing methods (unchanged) ──────────────────────────────────────
+    /**
+     * Add user ID to invitedUsers
+     * @param deviceID
+     */
+    public void Invite(String deviceID) {
+        if (!invitedUsers.contains(deviceID)) {
+            invitedUsers = invitedUsers + deviceID + ",";
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("events").document(eventID).update("invitedUsers", invitedUsers);
+        }
+    }
 
     /**
      * Add user ID to waitList
@@ -274,6 +296,12 @@ public class Event {
      * @return true on success, false if already enrolled
      */
     public boolean enrollInWaitList(String accountId) {
+
+        //block co-orgs
+        if (isCoOrganizer(accountId)) {
+            return false;
+        }
+
         if (waitList.contains(accountId)) {
             return false;
         } else {
@@ -324,6 +352,52 @@ public class Event {
                             }
                         } else {
                             Log.d("Firestore", "get failed with ", task.getException());
+                        }
+                    }
+                });
+    }
+
+    public void addCoOrganizer(String userId) {
+        if (coOrganizers == null) coOrganizers = "";
+
+        if (!coOrganizers.contains(userId)) {
+
+            removeFromWaitList(userId);
+
+            coOrganizers = coOrganizers + userId + ",";
+
+            if (db != null) {
+                db.collection("events").document(eventID)
+                        .update("coOrganizers", coOrganizers);
+            }
+        }
+    }
+
+    public void removeCoOrganizer(String userId) {
+        if (coOrganizers != null && coOrganizers.contains(userId)) {
+            coOrganizers = coOrganizers.replace(userId + ",", "");
+
+            if (db != null) {
+                db.collection("events").document(eventID)
+                        .update("coOrganizers", coOrganizers);
+            }
+        }
+    }
+
+    public boolean isCoOrganizer(String userId) {
+        return coOrganizers != null && coOrganizers.contains(userId);
+    }
+
+    public void initializeCoOrganizers() {
+        db.collection("events").document(eventID).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            String data = document.getString("coOrganizers");
+                            if (data != null) {
+                                coOrganizers = data;
+                            }
                         }
                     }
                 });

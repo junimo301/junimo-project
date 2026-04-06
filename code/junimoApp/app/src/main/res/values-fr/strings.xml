@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    French     -->
+    <string name="app_name">junimoApp</string>
+    <string name="settings">Réglages</string>
+    <string name="event_lottery">Loterie d\'événement</string>
+    <string name="back_to_home">← Retourner</string>
+    <string name="admin">Administration</string>
+    <string name="search_profiles">Chercher profils</string>
+    <string name="search">Chercher</string>
+    <string name="organize_alphabetical_order_u2191">Organiser : ordre alphabétique ↑</string>
+    <string name="browse_delete_profiles">Naviguer/supprimer les profils</string>
+    <string name="browse_remove_organizers">Naviguer/supprimer les organisateurs</string>
+    <string name="browse_images">Naviguer les images</string>
+    <string name="browse_events">Naviguer les événements</string>
+    <string name="search_events_label">Feuilléter les événements</string>
+
+    <!-- Admin notification stuff -->
+    <string name="browse_notification_log">Naviguer les notifications</string>
+    <string name="notification_log_title">Liste des notifications</string>
+    <string name="sent_by">Envoyer par: </string>
+    <string name="no_notifications_found">Na pas trouver une notification.</string>
+
+    <!-- Admin event detail screen (comments) -->
+    <string name="event_details_admin">Details dévénement</string>
+    <string name="comments_header">Commentaires</string>
+    <string name="remove_comment">Enlever une commentaire</string>
+    <string name="remove_comment_confirm">Vous êtes certain vous voulez enlever cette commentaire? </string>
+    <string name="no_comments">Il ny a pas de commentaires pour cette événement.</string>
+    <string name="organizer_id_label">ID dorganisateur: </string>
+    <string name="description_label">Description: </string>
+    <string name="location_label">Endroit: </string>
+    <string name="date_label">Date: </string>
+
+    <!-- Admin image browsing screen -->
+    <string name="browse_images_title"> Naviguer les images</string>
+    <string name="remove_image">Enlever image</string>
+    <string name="remove_image_confirm">Vous êtes certain vous voulez enlever cette image? </string>
+    <string name="no_image">Pas de image</string>
+    <string name="image_type_poster">Affiche</string>
+    <string name="image_type_profile">Image de profil</string>
+    <string name="event_title_label">Événement: </string>
+    <string name="user_label">Utilisateur: </string>
+
+    <!-- Search/filter stuff -->
+    <string name="search_events">Chercher les événements</string>
+    <string name="event_tag_prompt">Choisir un tag pour l\'événements</string>
+    <string-array name="event_tags">
+        <item>Aucun</item>
+        <item>Athlétique</item>
+        <item>Divertissement</item>
+        <item>Social</item>
+        <item>Professionnel</item>
+        <item>Éducation</item>
+    </string-array>
+
+    <string name="sys_description">Régistrer pour les événements dans votre communitée avec notre système de loterie.</string>
+    <string name="add">Ajouter</string>
+    <string name="create_new_event">Créer un événement</string>
+    <string name="spec_title">Titre*</string>
+    <string name="description">Description</string>
+    <string name="spec_date">Date*</string>
+    <string name="spec_location">Endroit*</string>
+    <string name="spec_max_capacity">Max capacité*</string>
+    <string name="registration_period">Période de registration</string>
+    <string name="start">Début</string>
+    <string name="end">Fin</string>
+    <string name="waiting_list_limit">Limite pour liste d\'attente</string>
+    <string name="spec_price">Prix*</string>
+    <string name="generate_qr_code">Générer code QR</string>
+    <string name="generate">Générer</string>
+    <string name="spec_geo_location">Endroit géographique*</string>
+    <string name="private_event_invite_only_no_qr_code">Événement privée (seulement invitation, sans code QR)</string>
+    <string name="poster">Affiche</string>
+    <string name="insert_image">Join une image</string>
+    <string name="fields_with_must_be_filled_in">Les champs obligatoires sont marqués avec "*"</string>
+    <string name="preview">Aperçu</string>
+    <string name="publish">Publier</string>
+    <string name="cancel">Annuler</string>
+    <string name="organizer">Organisateur</string>
+    <string name="event">Événement</string>
+    <string name="start_lottery">Commence loterie</string>
+    <string name="entrants_invited_to_apply">• Concurrent invité</string>
+    <string name="cancelled_entrants">• Concurrent annuler</string>
+    <string name="enrolled_entrants">• Concurrent régistré en liste d\'attente</string>
+    <string name="event_preview">Aperçu l\'événement</string>
+    <string name="title">Titre</string>
+    <string name="registration">Registration</string>
+    <string name="event_date">Date de l\'événement</string>
+    <string name="location">Endroit</string>
+    <string name="max_capacity">Max capacité</string>
+    <string name="price">Prix</string>
+    <string name="geo_location">Endroit géographique</string>
+    <string name="back">Retourner</string>
+    <string name="platform_guidelines">1. Raison pour application\n\nLe système de loterie aide avec enregistrement pour les événements populaire dans un façon juste. Au lieu de les positions qui vas a la personne qui a cliquer en premier, les utilisateur peux joindre a liste d\'attente et son selectioner au hazard.\n\nCe système donne un chance juste a tout le monde pour participe, même s\'ils ne peuvent pas enregistrer immediament quand l\'événement est ouvert.\n\n2. Règles générale\n\nPour garder la platforme juste et divertissent pour tout, s\ils vous plait garde a ces règles:\n\n- Chaques utilisateurs peuvent joindre une liste d\'attente une foix par événement.\n- Utilisateurs doivent donner l\'information personnelle avant votre enregistrement\n- Si vous ètes sélectioner pour un événement, utilisateurs doivent accepter où rejecter l\'invitation avec la temp donner.\n- Si il n\'y a pas de réponse, la place peut être offrir a un different concurrent.\n\n3. Comment la loterie fonctionne\n\n- Utilisateurs joint la liste d\'attente durant la période de enregistration.\n- Quand la période est fini, la système selection les participants.\n- Les utilisateurs recoivent une notification qui les invitent à enregistrer.\n- Si quelqun ne répond pas, un autre personne est choisi de liste d\'attente peuvent être sélectioner.\n- Ce processu continue jusquà tout les position sont rempli.\n\n4. Les responsibilitiés des concurrents\n\n- Joindre les liste dattente pour seulement les événements quils veut attendre.\n- Réponder à les invitations vitements.\n- Garde tous les règles créer par lorganisateur.\n- Garde linformation sur votre profil précis.\n- Les concurrents peuvent quitter une liste dattente avant la loterie.\n\n5. Responsibilité d\'organisateurs\n\n- Donne les détails précis pour lévénement.\n- Done les dates pour la début et fin du période denregistration.\n- Utilise la système de loterie justement.\n- Communiquer les tenir avec les concurrents dans lapplication.\n- Loganisateurs peuvent modifier où annuler les événements si nécessaire.\n\n6. Laccès de code QR\n\nLes événements peuvent incluir un code QR pour enregistrer plus facilement. Scanner un code QR prend directment au page des détails pour lévénement ou utilisateur peux joindre une liste dattente. Les codes QR devrait être seulement pour la promotion des vrais événements.\n\n7. Verifier lendroit\n\nQuelque événement peut réquiser la verification dendroit des concurrents. Si activer, lapplication peut chercher lendroit de lutilisateurs qui sont sur liste dattente. Information dendroit est utiliser seulement pour cette raison.\n\n8. Notifications\n\nLapplication peut envoyer les notifications quand:\n- Un utilisateur est séléctioner pour un événement\n- Un utilisateur nest pas sélectioner\n- Un événement est modifier ou annuler\n- Les organisateurs envoient des annonces\n\nLes utilisateurs peuvent désactiver les notifications.\n\n9. Politique de confidentialité\n\nLinformation personnel est gardé sécurement avec Firebase et est utiliser seulement pour enregistrement pour les événements et communication. Les utilisateur peuvent supprimer leur profil a aucun temp.\n\n10. Supervision administrative\n\nLes administrateurs enlève les événements inapproprié, les profils offensives, les images inapproprié et les notifications si necessaire.\n\n11. Utilisation équitable\n\nLes utilisateurs qui abuse lapplication peuvent être annuler. Les exemples sont créer beaucoups de compte pour améliorer leur chance a gagner loterie, la poste de content inapproprié ou offensif ou la violation des règles lister.</string>
+    <string name="choose_your_role">Choisir votre role</string>
+    <string name="user">Utilisateur</string>
+    <string name="notifications">Notifications</string>
+    <string name="organizer_home">Accueil d\'organisateur</string>
+    <string name="map">Carte</string>
+    <string name="entrants">Concurrents</string>
+    <string name="my_events">Mes événements</string>
+    <string name="invite_entrants">Inviter concurrent</string>
+    <string name="search_entrants_by_name_email_or_phone">Chercher les concurrents par nom, email, où numéro de téléphone</string>
+    <string name="type_a_name_email_or_phone_number">Taper un nom, email, où numéro de téléphone...</string>
+    <string name="your_name">Votre nom</string>
+    <string name="email">Email</string>
+    <string name="phone">Numéro de téléphone</string>
+    <string name="save_changes">sauver les changements</string>
+    <string name="change_roles">changer votre role</string>
+    <string name="delete_account">supprimer votre compte</string>
+    <string name="scan_event_qr_code">Scanner un code QR</string>
+    <string name="point_your_camera_at_a_junimo_event_qr_code">Viser votre caméra à un code QR pour un événement Junimo</string>
+    <string name="select_event">Choisir un événement</string>
+    <string name="user_home">Acceuil d\'utilisateur</string>
+    <string name="invitations">Invitations</string>
+    <string name="profile">Profil</string>
+    <string name="guidelines">Lignes directives</string>
+    <string name="scan_qr_code">Scanner code QR</string>
+    <string name="receive_notifications">Recevoir les notifications</string>
+    <string name="event_name">Nom d\'événement</string>
+    <string name="organized_by">Organized par %1$s</string>
+    <string name="add_a_description_develop_the_ultimate_core_strength_and_coordination_with_pilates_movement">Ajouter une description:</string>
+    <string name="event_details">Détails d\'événement</string>
+    <string name="event_location_address">Adresse d\'événement</string>
+    <string name="registration_details">Détails de enregistrement</string>
+    <string name="capacity">Capacité</string>
+    <string name="current_status">État actuel</string>
+    <string name="join_waitlist">Joindre liste d\'attente</string>
+    <string name="leave_waitlist">Quitter liste d\'attente</string>
+    <string name="comments">Commentaires</string>
+    <string name="write_a_comment">Écriver un commentaire...</string>
+    <string name="post_comment">Post Commentaire</string>
+    <string name="congratulations_you_ve_been_selected_accept_your_invite_and_secure_a_spot">Félicitation! Vous étez sélectioner. Accepter votre invitation et assuré votre numéro!</string>
+    <string name="accept">Accepter</string>
+    <string name="decline">Décliner</string>
+    <string name="remove">Enlever</string>
+    <string name="organizer_name">Nom d\'organisateur</string>
+    <string name="flagged_no">Marqué: Non</string>
+    <string name="organizer_email_example_com">organisateur.email@exemple.com</string>
+    <string name="remove_status">Enlever état</string>
+    <string name="invite">Invitation</string>
+    <string name="edit">Modifier</string>
+    <string name="view_booking_history">Regarder histoire des événements</string>
+    <string name="address">Adresse</string>
+    <string name="edmonton">Edmonton</string>
+    <string name="province">Province</string>
+    <string name="postal_code">Postal Code</string>
+    <string name="event_history">Histoire des événements</string>
+    <string name="past_events">Événements passée</string>
+    <string name="date">Date</string>
+    <string name="no_tag">Sans tag</string>
+    <string name="capacity_colon">"Capacité: "</string>
+    <string name="none">Aucun</string>
+    <string name="remove_event">Enlever événement</string>
+    <string name="are_you_sure">Vous étes certain vous voulez enlever</string>
+    <string name="permanent">(Permanent!)</string>
+    <string name="event_removed">Événements enlever</string>
+    <string name="failed_to_remove">Raté à enlever l\'événement.</string>
+    <string name="remove_organizer">Enlever état d\'organisateur</string>
+    <string name="remove_organizer_message">\"\'s état d\'organisateur? Tous les événement créé par l\'organisateur seront enlever aussi</string>
+    <string name="remove_profile">Enlever profil</string>
+    <string name="remove_profile_message">"'s profil?</string>
+
+    <string name="upload">Uploader</string>
+    <string name="enable">Activer</string>
+    <string name="enabled">Activé</string>
+    <string name="disabled">Désactivé</string>
+    <string name="close">Ferme</string>
+    <string name="map_of_entrants">Carte de concurrents</string>
+    <string name="click_to_enlarge">Clic pour agrandir</string>
+
+    <!-- settings -->
+    <string name="select_language">Selectioner une langue</string>
+    <string name="select_language_description">Choisir votre langue préférée:</string>
+    <string name="language">Langue</string>
+    <string name="back_sett">Retourner</string>
+</resources>

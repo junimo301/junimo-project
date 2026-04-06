@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.junimoapp.firebase.FirebaseManager;
 import com.example.junimoapp.models.User;
 import com.example.junimoapp.models.UserSession;
+import com.example.junimoapp.utils.BaseActivity;
 import com.example.junimoapp.utils.DeviceUtils;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.CollectionReference;
@@ -29,7 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 /**
  * creates a profile for a user
  */
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends BaseActivity {
 
     private EditText nameInputLayout;
     private EditText emailInput, phoneInput;
