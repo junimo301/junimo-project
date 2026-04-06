@@ -380,4 +380,9 @@ public class AdminUnitTest {
         assertEquals("bad comment", comment.text);
     }
 
+    /**
+     * US 03.09.01
+     * As an administrator, I should also be able to be an organizer and/or an entrant with my admin profile.
+     * */
+
 }
