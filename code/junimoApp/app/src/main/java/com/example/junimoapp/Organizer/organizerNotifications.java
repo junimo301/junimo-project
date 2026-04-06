@@ -45,6 +45,7 @@ public class organizerNotifications extends AppCompatActivity {
     private static final String NOTIFICATIONS_COLLECTION = "notifications";
     private static final String WAITLIST_FIELD = "waitlist";
     private static final String LEGACY_WAITLIST_FIELD = "waitList";
+    private static final String INVITED_USERS_FIELD = "invitedUsers";
     private static final String TITLE_FIELD = "title";
 
     private final FirebaseFirestore db;
@@ -73,6 +74,12 @@ public class organizerNotifications extends AppCompatActivity {
 
     private interface RecipientIdsCallback {
         void onSuccess(@NonNull List<String> recipientIds);
+
+        void onFailure(@NonNull Exception exception);
+    }
+
+    private interface EnabledRecipientsCallback {
+        void onSuccess(@NonNull List<String> enabledRecipientIds);
 
         void onFailure(@NonNull Exception exception);
     }
@@ -345,9 +352,18 @@ public class organizerNotifications extends AppCompatActivity {
             return;
         }
 
-        if ("Selected Entrants".equals(notificationType) || "Sign-Up To Lottery Winners".equals(notificationType)) {
-            getFirestore().collection(USERS_COLLECTION)
-                    .whereArrayContains("invitations", eventId)
+        if ("Selected Entrants".equals(notificationType)) {
+            getFirestore().collection(EVENTS_COLLECTION).document(eventId)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot ->
+                            callback.onSuccess(parseWaitlist(readStringField(documentSnapshot.getData(), INVITED_USERS_FIELD))))
+                    .addOnFailureListener(callback::onFailure);
+            return;
+        }
+
+        if ("Sign-Up To Lottery Winners".equals(notificationType)) {
+            getFirestore().collection(EVENTS_COLLECTION).document(eventId)
+                    .collection("acceptedUsers")
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
                         List<String> ids = new ArrayList<>();
@@ -370,28 +386,86 @@ public class organizerNotifications extends AppCompatActivity {
                                          @NonNull String notificationMessage,
                                          @NonNull String notificationType,
                                          @Nullable NotificationCallback callback) {
-        WriteBatch batch = getFirestore().batch();
-        Timestamp sentAt = Timestamp.now();
+        filterEnabledRecipients(recipientIds, new EnabledRecipientsCallback() {
+            @Override
+            public void onSuccess(@NonNull List<String> enabledRecipientIds) {
+                if (enabledRecipientIds.isEmpty()) {
+                    dispatchSuccess(0, callback);
+                    return;
+                }
 
-        for (String userId : recipientIds) {
-            DocumentReference notificationRef = getFirestore().collection(USERS_COLLECTION)
-                    .document(userId)
-                    .collection(NOTIFICATIONS_COLLECTION)
-                    .document();
+                WriteBatch batch = getFirestore().batch();
+                Timestamp sentAt = Timestamp.now();
+                String organizerName = resolveOrganizerName();
 
-            batch.set(notificationRef, buildNotificationPayload(
-                    eventId,
-                    eventTitle,
-                    notificationTitle,
-                    notificationMessage,
-                    notificationType,
-                    sentAt
-            ));
+                for (String userId : enabledRecipientIds) {
+                    DocumentReference notificationRef = getFirestore().collection(USERS_COLLECTION)
+                            .document(userId)
+                            .collection(NOTIFICATIONS_COLLECTION)
+                            .document();
+
+                    batch.set(notificationRef, buildNotificationPayload(
+                            eventId,
+                            eventTitle,
+                            notificationTitle,
+                            notificationMessage,
+                            notificationType,
+                            organizerName,
+                            sentAt
+                    ));
+                }
+
+                batch.commit()
+                        .addOnSuccessListener(unused -> dispatchSuccess(enabledRecipientIds.size(), callback))
+                        .addOnFailureListener(exception -> dispatchFailure(exception, callback));
+            }
+
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                dispatchFailure(exception, callback);
+            }
+        });
+    }
+
+    private void filterEnabledRecipients(@NonNull List<String> recipientIds,
+                                         @NonNull EnabledRecipientsCallback callback) {
+        List<String> uniqueIds = new ArrayList<>(new LinkedHashSet<>(recipientIds));
+        if (uniqueIds.isEmpty()) {
+            callback.onSuccess(new ArrayList<>());
+            return;
         }
 
-        batch.commit()
-                .addOnSuccessListener(unused -> dispatchSuccess(recipientIds.size(), callback))
-                .addOnFailureListener(exception -> dispatchFailure(exception, callback));
+        List<String> enabledIds = new ArrayList<>();
+        final int[] pending = {uniqueIds.size()};
+        final boolean[] failed = {false};
+
+        for (String userId : uniqueIds) {
+            getFirestore().collection(USERS_COLLECTION).document(userId).get()
+                    .addOnSuccessListener(snapshot -> {
+                        if (failed[0]) {
+                            return;
+                        }
+
+                        if (snapshot.exists()) {
+                            Boolean enabled = snapshot.getBoolean("notificationsEnabled");
+                            if (enabled == null || enabled) {
+                                enabledIds.add(userId);
+                            }
+                        }
+
+                        pending[0]--;
+                        if (pending[0] == 0) {
+                            callback.onSuccess(enabledIds);
+                        }
+                    })
+                    .addOnFailureListener(exception -> {
+                        if (failed[0]) {
+                            return;
+                        }
+                        failed[0] = true;
+                        callback.onFailure(exception);
+                    });
+        }
     }
 
     private Map<String, Object> buildNotificationPayload(@NonNull String eventId,
@@ -399,16 +473,29 @@ public class organizerNotifications extends AppCompatActivity {
                                                          @NonNull String notificationTitle,
                                                          @NonNull String notificationMessage,
                                                          @NonNull String notificationType,
+                                                         @Nullable String organizerName,
                                                          @NonNull Timestamp sentAt) {
         Map<String, Object> notification = new HashMap<>();
+        notification.put("eventID", eventId);
         notification.put("eventId", eventId);
         notification.put("eventTitle", eventTitle);
         notification.put("title", notificationTitle);
         notification.put("message", notificationMessage);
         notification.put("type", notificationType);
+        notification.put("organizerName", organizerName);
+        notification.put("timestamp", sentAt.toDate().getTime());
         notification.put("sentAt", sentAt);
         notification.put("read", false);
         return notification;
+    }
+
+    @Nullable
+    private String resolveOrganizerName() {
+        User currentUser = UserSession.getCurrentUser();
+        if (currentUser == null) {
+            return null;
+        }
+        return currentUser.getName();
     }
 
     @NonNull

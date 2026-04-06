@@ -76,15 +76,9 @@ public class UserNotificationsActivity extends BaseActivity {
                 .addOnSuccessListener(snaps -> {
                     messages.clear();
                     for (QueryDocumentSnapshot doc : snaps) {
-                        // Only show notifications from our system (not organizer broadcast notifications)
-                        String type = doc.getString("type");
-                        if (type != null && (type.equals("invited") ||
-                                type.equals("not_chosen") ||
-                                type.equals("private_invite"))) {
-                            String msg = doc.getString("message");
-                            if (msg != null) messages.add(msg);
-                            doc.getReference().update("read", true);
-                        }
+                        String msg = doc.getString("message");
+                        if (msg != null) messages.add(msg);
+                        doc.getReference().update("read", true);
                     }
                     adapter.notifyDataSetChanged();
                 });
