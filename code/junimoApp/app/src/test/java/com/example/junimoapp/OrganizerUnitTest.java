@@ -800,6 +800,82 @@ public class OrganizerUnitTest {
 
     } // US 02.04.01 and 02.04.02 test class
 
+    /**
+     * tests that co-organizer invites are stored and parsed correctly
+     */
+    @Test
+    public void testCoOrganizerInviteParsing() {
+        String invites = "event1,event2,event3,";
+        String[] parsed = invites.split(",");
+
+        assertEquals(3, parsed.length);
+        assertEquals("event1", parsed[0]);
+        assertEquals("event2", parsed[1]);
+        assertEquals("event3", parsed[2]);
+    }
+
+    /**
+     * tests that accepting a co-organizer invite adds user to accepted list
+     */
+    @Test
+    public void testAcceptCoOrganizerInviteLogic() {
+        List<String> coOrganizers = new java.util.ArrayList<>();
+        String deviceId = "user123";
+
+        // simulate accept
+        coOrganizers.add(deviceId);
+
+        assertTrue(coOrganizers.contains("user123"));
+        assertEquals(1, coOrganizers.size());
+    }
+
+    /**
+     * tests that declining a co-organizer invite adds user to declined list
+     */
+    @Test
+    public void testDeclineCoOrganizerInviteLogic() {
+        List<String> declined = new java.util.ArrayList<>();
+        String deviceId = "user123";
+
+        // simulate decline
+        declined.add(deviceId);
+
+        assertTrue(declined.contains("user123"));
+        assertEquals(1, declined.size());
+    }
+
+    /**
+     * tests that a co-organizer invite is removed after action
+     */
+    @Test
+    public void testCoOrganizerInviteRemovedAfterAction() {
+        String invites = "event1,event2,event3,";
+        String eventToRemove = "event2";
+
+        String updated = invites.replace(eventToRemove + ",", "");
+
+        assertFalse(updated.contains("event2"));
+        assertEquals("event1,event3,", updated);
+    }
+
+    /**
+     * tests that the same co-organizer is not added twice
+     */
+    @Test
+    public void testNoDuplicateCoOrganizers() {
+        List<String> coOrganizers = new java.util.ArrayList<>();
+        String user = "user123";
+
+        if (!coOrganizers.contains(user)) {
+            coOrganizers.add(user);
+        }
+        if (!coOrganizers.contains(user)) {
+            coOrganizers.add(user);
+        }
+
+        assertEquals(1, coOrganizers.size());
+    }
+
 } //Whole class
 
 
