@@ -3,6 +3,7 @@ package com.example.junimoapp.Organizer;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -155,7 +156,7 @@ public class Entrants extends AppCompatActivity {
 
         new AlertDialog.Builder(this)
                 .setTitle("Export CSV")
-                .setMessage("Export a list of all entrants that accepted their invitations into a CSV file.")
+                .setMessage("Export a list of all entrants that accepted their invitations into a CSV file.\nEnter filename: ")
                 .setView(filepath = new EditText(this))
                 .setPositiveButton("Export", (dialog, which) -> {
                     String chosenFilePath = filepath.getText().toString();
@@ -174,8 +175,9 @@ public class Entrants extends AppCompatActivity {
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(filename, Context.MODE_PRIVATE));
             outputStreamWriter.write(data);
+            Log.d("write to file",outputStreamWriter.getEncoding()+"or null");
             outputStreamWriter.close();
-            Log.d("write to file","file writing complete");
+            Log.d("write to file","write to file complete");
         }
         catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
