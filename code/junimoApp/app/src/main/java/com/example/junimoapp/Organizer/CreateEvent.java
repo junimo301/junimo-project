@@ -245,24 +245,27 @@ public class CreateEvent extends AppCompatActivity {
                 // ─────────────────────────────────────────────────────────
                 checkPrivate.setChecked(createdEvent.isPrivate());
                 geoLocation = createdEvent.isGeoLocation();
-                /* enableGeoLocationButton.setText(geoLocation
-                        ? getString(R.string.enabled)
-                        : getString(R.string.disabled));
-                 */
+
                 enableGeoLocationButton.setEnabled(!geoLocation);
+                enableGeoLocationButton.setAlpha(geoLocation ? 0.5f : 1.0f);
                 disableGeoLocationButton.setEnabled(geoLocation);
+                disableGeoLocationButton.setAlpha(geoLocation ? 1.0f : 0.5f);
             }
         }
 
         enableGeoLocationButton.setOnClickListener(view -> {
             geoLocation = true;
             enableGeoLocationButton.setEnabled(false);
+            enableGeoLocationButton.setAlpha(0.5f);
             disableGeoLocationButton.setEnabled(true);
+            disableGeoLocationButton.setAlpha(1.0f);
         });
         disableGeoLocationButton.setOnClickListener(view -> {
             geoLocation = false;
             enableGeoLocationButton.setEnabled(true);
+            enableGeoLocationButton.setAlpha(1.0f);
             disableGeoLocationButton.setEnabled(false);
+            disableGeoLocationButton.setAlpha(0.5f);
         });
 
 
