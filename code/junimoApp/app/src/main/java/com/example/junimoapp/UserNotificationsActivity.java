@@ -28,6 +28,10 @@ import java.util.List;
  *  - US 01.04.01: Shows notification when entrant was invited from waiting list
  *  - US 01.04.02: Shows notification when entrant was not chosen in lottery
  *  - US 01.05.06: Shows notification when entrant invited to private event waitlist
+ * Ayema edits:
+ *  - US 02.07.01: Shows organizer notifications sent to entrants on the waiting list
+ *  - US 02.07.02: Shows organizer notifications sent to selected entrants
+ *  - US 02.07.03: Shows organizer notifications sent to cancelled entrants
  *
  * Notifications are loaded from: users/{userId}/notifications
  * Ordered newest first. Each notification is marked as read after loading.
@@ -62,8 +66,14 @@ public class UserNotificationsActivity extends BaseActivity {
         loadNotifications();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadNotifications();
+    }
+
     // ─────────────────────────────────────────────────────────────────────
-    // US 01.04.01 / US 01.04.02 / US 01.05.06
+    // US 01.04.01 / US 01.04.02 / US 01.05.06 / US 02.07.01 / US 02.07.02 / US 02.07.03
     // Loads all notifications from Firestore, newest first.
     // Marks each notification as read after loading so the user
     // knows they have been seen.
@@ -76,12 +86,44 @@ public class UserNotificationsActivity extends BaseActivity {
                 .addOnSuccessListener(snaps -> {
                     messages.clear();
                     for (QueryDocumentSnapshot doc : snaps) {
-                        String msg = doc.getString("message");
+                        String msg = buildDisplayMessage(doc);
                         if (msg != null) messages.add(msg);
                         doc.getReference().update("read", true);
                     }
                     adapter.notifyDataSetChanged();
                 });
+    }
+
+    private String buildDisplayMessage(@NonNull QueryDocumentSnapshot doc) {
+        String message = doc.getString("message");
+        String title = doc.getString("title");
+        String type = doc.getString("type");
+        String eventTitle = doc.getString("eventTitle");
+
+        if (message != null && !message.trim().isEmpty()) {
+            if (title != null && !title.trim().isEmpty() && !title.equals(message)) {
+                return title + ": " + message;
+            }
+            return message;
+        }
+
+        if (type != null && eventTitle != null && !eventTitle.trim().isEmpty()) {
+            if ("Entrants On Waiting List".equals(type)) {
+                return "Waiting list update: " + eventTitle;
+            }
+            if ("Selected Entrants".equals(type)) {
+                return "Selected entrants update: " + eventTitle;
+            }
+            if ("Cancelled Entrants".equals(type)) {
+                return "Cancelled entrants update: " + eventTitle;
+            }
+        }
+
+        if (title != null && !title.trim().isEmpty()) {
+            return title;
+        }
+
+        return null;
     }
 
     // ── Simple RecyclerView adapter for notification messages ─────────────
