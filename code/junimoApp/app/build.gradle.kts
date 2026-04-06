@@ -62,5 +62,6 @@ dependencies {
     testImplementation("org.mockito:mockito-core:5.23.0")
     testImplementation("org.robolectric:robolectric:4.16.1")
 
+    //implementation(files("/Users/treyaputhumbaku/Library/Android/sdk/platforms/android-35/android.jar"))
 }
 

@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Event Lottery"
+            android:text="@string/event_lottery_notiorg"
             android:textColor="#FFFFFF"
             android:textSize="28sp"
             android:textStyle="bold" />
@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Organizer Notifications"
+            android:text="@string/organizer_notifications"
             android:textColor="#D2D2D2"
             android:textSize="16sp" />
 
@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:text="← Back to Home"
+            android:text="@string/back_to_home_notiorg"
             android:textColor="#FFFFFF"
             android:textSize="18sp" />
 
@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
-            android:text="Select Event"
+            android:text="@string/select_event_notiorg"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -61,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Notification Type"
+            android:text="@string/notification_type"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -80,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:text="Message"
+            android:text="@string/message_notiorg"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -91,7 +91,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@drawable/bg_rounded_dark"
-            android:hint="Optional"
+            android:hint="@string/optional_notiorg"
             android:inputType="textMultiLine"
             android:minHeight="56dp"
             android:padding="14dp"
@@ -104,7 +104,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="28dp"
             android:backgroundTint="#ECECEC"
-            android:text="Send"
+            android:text="@string/send_notiorg"
             android:textAllCaps="false"
             android:textColor="#000000"
             android:textStyle="bold" />
@@ -115,7 +115,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
             android:backgroundTint="#ECECEC"
-            android:text="Cancel"
+            android:text="@string/cancel_notiorg"
             android:textAllCaps="false"
             android:textColor="#000000"
             android:textStyle="bold" />
