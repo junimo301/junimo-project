@@ -42,6 +42,7 @@ import java.util.Set;
  * US 02.07.03: Sends a notification to all cancelled entrants
  * US 02.05.01: Sends a notification to chosen entrants to sign up for events
  * */
+
 public class organizerNotifications extends AppCompatActivity {
 
     private static final String EVENTS_COLLECTION = "events";
@@ -73,6 +74,7 @@ public class organizerNotifications extends AppCompatActivity {
     /**
      * Callback for sending notifications
      * */
+
     public interface NotificationCallback {
         void onSuccess(int notifiedCount);
 
@@ -82,6 +84,7 @@ public class organizerNotifications extends AppCompatActivity {
     /**
      * Internal callback for fetching recipient IDs
      * */
+
     private interface RecipientIdsCallback {
         void onSuccess(@NonNull List<String> recipientIds);
 
@@ -94,9 +97,6 @@ public class organizerNotifications extends AppCompatActivity {
         void onFailure(@NonNull Exception exception);
     }
 
-    /**
-     * Represents an event option with its ID and title
-     * */
     private static class EventOption {
         final String documentId;
         final String eventId;
@@ -152,6 +152,7 @@ public class organizerNotifications extends AppCompatActivity {
     /**
      * Loads all organizer's events
      * */
+
     private void loadOrganizerEvents() {
         User currentUser = UserSession.getCurrentUser();
         List<com.example.junimoapp.models.Event> cachedEvents = EventData.listOfEvents();
@@ -212,8 +213,8 @@ public class organizerNotifications extends AppCompatActivity {
      * Adds an event option to the event options list
      * @param eventId event ID
      * @param title event name
+     * @param documentId documents id
      * */
-    private void addEventOption(@NonNull String eventId, @NonNull String title) {
     private void addEventOption(@NonNull String documentId,
                                 @NonNull String eventId,
                                 @NonNull String title) {
@@ -279,13 +280,13 @@ public class organizerNotifications extends AppCompatActivity {
 
     /**
      * Sends notifications to users based on notification type
+     * @param eventDocumentId event document ID
      * @param eventId event Id
      * @param eventTitle events title
      * @param notificationType the type of notification to send
      * @param customMessage optional custom message
      * @param callback result callback
      * */
-    private void sendNotificationByType(@NonNull String eventId,
     private void sendNotificationByType(@NonNull String eventDocumentId,
                                         @NonNull String eventId,
                                         @NonNull String eventTitle,
@@ -427,13 +428,6 @@ public class organizerNotifications extends AppCompatActivity {
                         );
                     }
 
-    /**
-     * Get the users ID to send notifications
-     * @param eventId event ID
-     * @param notificationType notification type
-     * @param callback result callback
-     * */
-    private void fetchRecipientIds(@NonNull String eventId,
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         dispatchFailure(exception, callback);
@@ -448,6 +442,14 @@ public class organizerNotifications extends AppCompatActivity {
         });
     }
 
+    /**
+     * Get the users ID to send notifications
+     *
+     * @param eventId          event ID
+     * @param notificationType notification type
+     * @param callback         result callback
+     * @param eventDocumentId event document id
+     */
     private void fetchRecipientIds(@NonNull String eventDocumentId,
                                    @NonNull String eventId,
                                    @NonNull String notificationType,
@@ -536,6 +538,12 @@ public class organizerNotifications extends AppCompatActivity {
         callback.onSuccess(new ArrayList<>());
     }
 
+    /**
+     *  Get all user for the specific event in a given membership filed
+     * @param eventId event id
+     * @param callback recipient callback
+     * @param membershipField field to search
+     * */
     private void fetchUsersByEventMembership(@NonNull String eventId,
                                              @NonNull String membershipField,
                                              @NonNull RecipientIdsCallback callback) {
@@ -555,6 +563,12 @@ public class organizerNotifications extends AppCompatActivity {
                 .addOnFailureListener(callback::onFailure);
     }
 
+    /**
+     * Get all user Ids for the specific event
+     * @param callback list of users id
+     * @param eventId  event id
+     * @param eventDocumentId firebase event document id
+     * */
     private void fetchAllEventRecipientIds(@NonNull String eventDocumentId,
                                            @NonNull String eventId,
                                            @NonNull RecipientIdsCallback callback) {
@@ -603,6 +617,12 @@ public class organizerNotifications extends AppCompatActivity {
                 .addOnFailureListener(callback::onFailure);
     }
 
+    /**
+     * checks for a specific value
+     * @param expectedValue expected value
+     * @param rawValue string to search
+     * @return true if value is found, false otherwise
+     * */
     private boolean containsListValue(@Nullable String rawValue, @NonNull String expectedValue) {
         if (rawValue == null || rawValue.trim().isEmpty()) {
             return false;
@@ -619,14 +639,15 @@ public class organizerNotifications extends AppCompatActivity {
 
     /**
      * Sends notifications to users for the specific event
-     * @param recipientIds list of user IDs
-     * @param eventId event ID
-     * @param eventTitle event title
-     * @param notificationTitle notification title
+     *
+     * @param recipientIds        list of user IDs
+     * @param eventId             event ID
+     * @param eventTitle          event title
+     * @param notificationTitle   notification title
      * @param notificationMessage notification message
-     * @param notificationType notification type
-     * @param callback result callback
-     * */
+     * @param notificationType    notification type
+     * @param callback            result callback
+     */
     private void sendNotificationToUsers(@NonNull List<String> recipientIds,
                                          @NonNull String eventId,
                                          @NonNull String eventTitle,
@@ -675,6 +696,11 @@ public class organizerNotifications extends AppCompatActivity {
         });
     }
 
+    /**
+     * Filters out notification disabled users
+     * @param callback receive filtered list
+     * @param recipientIds list of users ids
+     * */
     private void filterEnabledRecipients(@NonNull List<String> recipientIds,
                                          @NonNull EnabledRecipientsCallback callback) {
         List<String> uniqueIds = new ArrayList<>(new LinkedHashSet<>(recipientIds));
@@ -718,12 +744,14 @@ public class organizerNotifications extends AppCompatActivity {
 
     /**
      * Creates notification object to be stored database
-     * @param eventId event ID
-     * @param eventTitle event title
-     * @param notificationTitle notification title
+     *
+     * @param eventId             event ID
+     * @param eventTitle          event title
+     * @param notificationTitle   notification title
      * @param notificationMessage notification message
-     * @param notificationType notification type
-     * */
+     * @param notificationType    notification type
+     *
+     */
     private Map<String, Object> buildNotificationPayload(@NonNull String eventId,
                                                          @NonNull String eventTitle,
                                                          @NonNull String notificationTitle,
@@ -745,6 +773,9 @@ public class organizerNotifications extends AppCompatActivity {
         return notification;
     }
 
+    /**
+     * Gets the organizer's name from the current user
+     * */
     @Nullable
     private String resolveOrganizerName() {
         User currentUser = UserSession.getCurrentUser();
@@ -756,9 +787,11 @@ public class organizerNotifications extends AppCompatActivity {
 
     /**
      * Default notification messages to send out to users by notification type
-     * @param eventTitle event title
+     *
+     * @param eventTitle       event title
      * @param notificationType notification type
-     * */
+     *
+     */
     @NonNull
     private String buildDefaultMessage(@NonNull String notificationType, @NonNull String eventTitle) {
         if ("Cancelled Entrants".equals(notificationType)) {
@@ -775,9 +808,11 @@ public class organizerNotifications extends AppCompatActivity {
 
     /**
      * Parses the waitlist string into a list of user IDs
+     *
      * @param rawWaitlist waitlist string
      * @return list of user IDs
-     * */
+     *
+     */
     @NonNull
     private List<String> parseWaitlist(@Nullable String rawWaitlist) {
         Set<String> userIds = new LinkedHashSet<>();
@@ -802,9 +837,11 @@ public class organizerNotifications extends AppCompatActivity {
 
     /**
      * Gets waitlist string from event document
+     *
      * @param document Firestore document for the event
      * @return raw waitlist string if exists, null if not
-     * */
+     *
+     */
     @Nullable
     private String resolveWaitlistValue(@NonNull DocumentSnapshot document) {
         return resolveWaitlistValue(document.getData());
@@ -812,9 +849,11 @@ public class organizerNotifications extends AppCompatActivity {
 
     /**
      * Gets waitlist string from event data
+     *
      * @param eventData event data
      * @return raw waitlist string if exists, null if not
-     * */
+     *
+     */
     @Nullable
     String resolveWaitlistValue(@Nullable Map<String, Object> eventData) {
         if (eventData == null) {
@@ -831,10 +870,11 @@ public class organizerNotifications extends AppCompatActivity {
 
     /**
      * Returns a safe value from a string
-     * @param value value to check
+     *
+     * @param value    value to check
      * @param fallback string to use if value is null or empty
      * @return the original value if not null or empty, fallback otherwise
-     * */
+     */
     @NonNull
     private String safeValue(@Nullable String value, @NonNull String fallback) {
         if (value == null || value.trim().isEmpty()) {
@@ -844,10 +884,12 @@ public class organizerNotifications extends AppCompatActivity {
     }
 
     /**
-     * Reports a successfull notifcation
+     * Reports a successfully notification
+     *
      * @param notifiedCount number of notified users
-     * @param callback result callback
-     * */
+     * @param callback      result callback
+     *
+     */
     private void dispatchSuccess(int notifiedCount, @Nullable NotificationCallback callback) {
         if (callback != null) {
             callback.onSuccess(notifiedCount);
@@ -856,9 +898,11 @@ public class organizerNotifications extends AppCompatActivity {
 
     /**
      * reports a failed notification
+     *
      * @param exception exception to report
-     * @param callback result callback
-     * */
+     * @param callback  result callback
+     *
+     */
     private void dispatchFailure(@Nullable Exception exception, @Nullable NotificationCallback callback) {
         if (callback != null) {
             callback.onFailure(exception != null ? exception : new RuntimeException("Notification send failed"));
@@ -867,8 +911,11 @@ public class organizerNotifications extends AppCompatActivity {
 
     /**
      * returns Firestore instance
+     *
      * @return Firestore instance
-     * */
+     *
+     */
+
     @NonNull
     private FirebaseFirestore getFirestore() {
         if (db != null) {
@@ -879,10 +926,12 @@ public class organizerNotifications extends AppCompatActivity {
 
     /**
      * Read string value from map for field name
+     *
      * @param eventData map with event data
      * @param fieldName key of field to read
      * @return value of field if exists, null otherwise
-     * */
+     *
+     */
     @Nullable
     private String readStringField(@NonNull Map<String, Object> eventData, @NonNull String fieldName) {
         Object value = eventData.get(fieldName);

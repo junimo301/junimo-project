@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Entrants names who have joined, cancelled, enrolled, or joined the waiting list of an event.
@@ -46,6 +47,8 @@ import java.util.Set;
  *  - US 01.04.02: Notify entrant when they are NOT selected by the lottery
  *  - US 02.05.02: Sample a specified number of attendees to register for the event
  *  - US 02.05.03: Draws a replacement applicant from the pooling system when a previously selected applicant cancels/rejects invitation
+ *  - US 02.06.05: Export a final list of entrants who enrolled for the event in CSV format.
+ *  - US 02.05.03: Draw a replacement applicant from the pooling system when a previously selected applicant cancels or rejects the invitation.
  */
 public class Entrants extends AppCompatActivity {
 
@@ -58,7 +61,7 @@ public class Entrants extends AppCompatActivity {
 
     private List<User> users = Collections.synchronizedList(new ArrayList<>());
 
-    private ArrayList<User> acceptedUsers;
+    private ArrayList<User> acceptedUsers = new ArrayList<>();
     Event selectEvent;
 
     /**
@@ -142,6 +145,7 @@ public class Entrants extends AppCompatActivity {
         // ─────────────────────────────────────────────────────────────────
         inviteEntrantsButton = findViewById(R.id.inviteEntrantsButton);
         inviteEntrantsButton.setOnClickListener(v -> {
+            if (selectEvent == null) return;
             Intent intent = new Intent(Entrants.this, PrivateInviteActivity.class);
             intent.putExtra("eventId", eventID);
             intent.putExtra("eventTitle", selectEvent.getTitle());
@@ -160,6 +164,9 @@ public class Entrants extends AppCompatActivity {
         });
     }
 
+    /**
+     * Gets a lsit of enrolled user in CSV format
+     * */
     private void exportCSV(){
         EditText filepath;
 
@@ -180,6 +187,12 @@ public class Entrants extends AppCompatActivity {
                 .setNegativeButton(this.getString(R.string.cancel), null)
                 .show();
     }
+
+    /**
+     * Writes to file
+     * @param data data to write
+     * @param filename filename
+     * */
     private void writeToFile(String data,Context context, String filename) {
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(filename, Context.MODE_PRIVATE));
@@ -192,6 +205,11 @@ public class Entrants extends AppCompatActivity {
             Log.e("Exception", "File write failed: " + e.toString());
         }
     }
+
+    /**
+     * Initilizes the list of accepted users
+     * @param acceptedUsersString list of accepted users
+     * */
     private void acceptedUsersInitialize(ArrayList<String> acceptedUsersString){
         acceptedUsers=new ArrayList<>();
         if (acceptedUsersString.isEmpty()) {
@@ -234,6 +252,13 @@ public class Entrants extends AppCompatActivity {
      * @param selectEvent the waitLists event
      * */
     private void WaitlistUsers(Event selectEvent) {
+        String waitList = selectEvent.getWaitList();
+        if (waitList == null || waitList.equals("")) {
+            Log.d("waitlist", "no users in waitlist");
+            lotteryButton.setEnabled(false);
+            return;
+        }
+
         String[] deviceIDs = selectEvent.getWaitList().split(",");
 
         if (deviceIDs.length == 0 || (deviceIDs.length == 1 && deviceIDs[0].equals(""))) {
@@ -244,17 +269,21 @@ public class Entrants extends AppCompatActivity {
 
         CollectionReference usersRef = db.collection("users");
         final int total = deviceIDs.length;
-        final int[] count = {0};
+        final AtomicInteger count = new AtomicInteger(0);
 
         for (String deviceID : deviceIDs) {
             if (deviceID == null || deviceID.equals("")) {
-                count[0]++;
+                int current = count.incrementAndGet();
+                if (current == total) {
+                    lotteryButton.setEnabled(true);
+                    refreshUI();
+                }
                 continue;
             }
             Log.d("waitlist populating", deviceID);
             usersRef.document(deviceID).get()
                     .addOnCompleteListener(task -> {
-                        count[0]++;
+                        int current = count.incrementAndGet();
                         if (task.isSuccessful() && task.getResult().exists()) {
                             DocumentSnapshot document = task.getResult();
                             User user = new User(
@@ -271,7 +300,7 @@ public class Entrants extends AppCompatActivity {
                         } else {
                             Log.d("Firestore", "get failed or no document");
                         }
-                        if (count[0] == total) {
+                        if (current == total) {
                             lotteryButton.setEnabled(true);
                             refreshUI();
                         }
@@ -329,6 +358,11 @@ public class Entrants extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Draws a replacement user if another user cancels their event
+     * @param acceptedIds list of accepted users
+     * @param declinedIds list of declined users
+     * */
     private void drawReplacementApplicants(Set<String> acceptedIds, Set<String> declinedIds) {
         ArrayList<User> eligibleUsers = new ArrayList<>();
         ArrayList<User> currentlyInvitedUsers = new ArrayList<>();
