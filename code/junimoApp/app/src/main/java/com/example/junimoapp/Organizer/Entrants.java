@@ -160,6 +160,7 @@ public class Entrants extends AppCompatActivity {
                                     document.getString("waitlistedEvents")
                             );
                             users.add(user);
+                            user.initializeEvents();
                         } else {
                             Log.d("Firestore", "get failed or no document");
                         }
