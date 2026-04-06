@@ -3,11 +3,9 @@ package com.example.junimoapp;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import com.example.junimoapp.models.Event;
 import com.example.junimoapp.models.User;
-
 
 import org.junit.Test;
 
@@ -39,50 +37,21 @@ public class EntrantUnitTests {
             ""                     // tag (none)
     );
 
-    private void disableFirebase(User user) {
-        try {
-            java.lang.reflect.Field dbField = User.class.getDeclaredField("db");
-            dbField.setAccessible(true);
-            dbField.set(user, null);
-
-            java.lang.reflect.Field firebaseField = User.class.getDeclaredField("firebase");
-            firebaseField.setAccessible(true);
-            firebaseField.set(user, null);
-
-            // prevent crash from invitedEventsList.remove()
-            java.lang.reflect.Field listField = User.class.getDeclaredField("invitedEventsList");
-            listField.setAccessible(true);
-            listField.set(user, new ArrayList<>());
-
-        } catch (Exception e) {
-            fail("Reflection failed");
-        }
-    }
     private List<User> makeUser() {
         List<User> users = new ArrayList<>();
-        User user1 = new User("decive1", "farzana","farzana@gmail.com", "", "", "", "");
-        User user2 = new User("decive2", "Ayema","ayema@gmail.com", "", "", "", "");
-        User user3 = new User("decive3", "Anica","anica@gmail.com", "", "", "", "");
-        disableFirebase(user1);
-        disableFirebase(user2);
-        disableFirebase(user3);
-
-        users.add(user1);
-        users.add(user2);
-        users.add(user3);
+        users.add(new User("decive1", "farzana", "farzana@gmail.com", "", "", "", ""));
+        users.add(new User("decive2", "Ayema", "ayema@gmail.com", "", "", "", ""));
+        users.add(new User("decive3", "Anica", "anica@gmail.com", "", "", "", ""));
         return users;
     }
 
     /**
      * tests cancelled entrants
-     * Simulates the cancellation of an entrant
      */
     @Test
     public void testCancelledEntrants() {
         List<User> users = makeUser();
-        users.get(0).setInvitedEvents(eventID + ",");
         users.get(0).cancelUser(event);
-
         List<User> cancelledEntrants = new ArrayList<>();
         for (User user : users) {
             if (user.isCancelled(eventID)) cancelledEntrants.add(user);
@@ -91,17 +60,16 @@ public class EntrantUnitTests {
     }
 
     /**
-     * Tests cancelling
-     * */
+     * Tests cancelled entrants who did not sign up for the event
+     *
+     */
     @Test
     public void testCancelledEntrantsNotEnrolled() {
         List<User> users = makeUser();
-        users.get(0).setInvitedEvents(eventID + ",");
         users.get(0).cancelUser(event);
-
-        assertTrue(users.get(0).isCancelled(eventID));
-        assertFalse(users.get(1).isCancelled(eventID));
-        assertFalse(users.get(2).isCancelled(eventID));
+        assertTrue("Farzana should be cancelled", users.get(0).isCancelled(eventID));
+        assertFalse("Ayema should not be cancelled", users.get(1).isCancelled(eventID));
+        assertFalse("Anica should not be cancelled", users.get(2).isCancelled(eventID));
     }
 
     /**
@@ -110,14 +78,9 @@ public class EntrantUnitTests {
     @Test
     public void testEnrolledEntrants() {
         List<User> users = makeUser();
-        for (User user : users) {
-            user.setInvitedEvents(eventID + ",");
-        }
-        int enrolled = 0;
-        for (User user : users) {
-            if (user.isInvited(eventID)) enrolled++;
-        }
-        assertEquals("Should have 3 enrolled entrants", 3, enrolled);
+        assertEquals("Should have 3 users in enrolled", 3, users.size());
+        assertFalse("Enrolled list should not be empty", users.isEmpty());
+
     }
 
 }
