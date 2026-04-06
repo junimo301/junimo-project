@@ -141,7 +141,11 @@ public class User {
     }
 
     public boolean isCancelled(String eventID) {
-        return cancelledEvents.contains(eventID);
+        if(eventID == null || cancelledEvents==null){
+            return false;
+        } else {
+            return cancelledEvents.contains(eventID);
+        }
     }
 
     public void addOrganizedEvent(Event event) {
