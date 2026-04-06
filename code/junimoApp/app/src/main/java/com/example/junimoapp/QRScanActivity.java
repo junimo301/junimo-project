@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -54,6 +55,11 @@ public class QRScanActivity extends BaseActivity {
         setContentView(R.layout.activity_qr_scan);
 
         barcodeView = findViewById(R.id.barcode_scanner);
+        TextView backButton = findViewById(R.id.backToHomeText);
+        backButton.setOnClickListener(v->{
+            Intent intent = new Intent(this,UserHomeActivity.class);
+            startActivity(intent);
+        });
 
         // ─────────────────────────────────────────────────────────────────
         // US 01.06.01
