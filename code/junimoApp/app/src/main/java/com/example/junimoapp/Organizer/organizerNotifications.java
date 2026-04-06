@@ -246,14 +246,14 @@ public class organizerNotifications extends AppCompatActivity {
         String title = notificationType;
         String message = safeValue(customMessage, buildDefaultMessage(notificationType, eventTitle));
 
-        fetchAllEventRecipientIds(eventDocumentId, eventId, new RecipientIdsCallback() {
+        fetchRecipientIds(eventDocumentId, eventId, notificationType, new RecipientIdsCallback() {
             @Override
-            public void onSuccess(@NonNull List<String> allRecipientIds) {
-                if (allRecipientIds.isEmpty()) {
+            public void onSuccess(@NonNull List<String> recipientIds) {
+                if (recipientIds.isEmpty()) {
                     dispatchSuccess(0, callback);
                     return;
                 }
-                sendNotificationToUsers(allRecipientIds, eventId, eventTitle, title, message, notificationType, callback);
+                sendNotificationToUsers(recipientIds, eventId, eventTitle, title, message, notificationType, callback);
             }
 
             @Override
